@@ -4,7 +4,8 @@
     id: number,
     loc: "ToyBox" | "PlayMat",
     color: string,
-    type: "triangle" | "circle" | "square"
+    type: "triangle" | "circle" | "square",
+    position?: { x: number, y: number }
   }
   import Baby from "./lib/Baby.svelte";
   import BasicShape from "./lib/BasicShape.svelte";
@@ -37,18 +38,15 @@
   const handleDragEnd = (event: DragEvent) => {
   }
 
-  const handleDragDrop = (event: DragEvent) => {
+  const handleDragDrop = (event: DragEvent, dropZone: "PlayMat" | "ToyBox") => {
     event.preventDefault();
     const id = event.dataTransfer?.getData("id");
     if (!id) return;
     status = `dropped ${id}`
     const draggedToyIndex = toys.findIndex(toy => toy.id === parseInt(id));
     if (draggedToyIndex === -1) return;
-    toys[draggedToyIndex].loc = "PlayMat";
-    console.log(toys)
-    console.log(event.x)
-    console.log(event.pageX)
-    console.log(event.layerX)
+    toys[draggedToyIndex].loc = dropZone;
+    toys[draggedToyIndex].position = { x: event.offsetX, y: event.offsetY };
   }
 
   const handleDragOver = (event: DragEvent) => {
@@ -61,7 +59,7 @@
   <h3>Drag Status: {status || "none"}</h3>
   <PlayMat
     on:dragover={handleDragOver}
-    on:drop={handleDragDrop}
+    on:drop={(event) => handleDragDrop(event, "PlayMat")}
   >
     <Baby slot="baby" />
     {#each toys.filter(toy => toy.loc === "PlayMat") as toy, i}
@@ -73,12 +71,16 @@
         on:dragstart={handleDragStart}
         on:dragend={handleDragEnd}
         role="presentation"
+        style="position: absolute; left: {toy.position?.x}px; top: {toy.position?.y}px;"
       >
         <BasicShape type={toy.type} color={toy.color} size={60} />
       </div>
     {/each}
   </PlayMat>
-  <ToyBox>
+  <ToyBox
+    on:dragover={handleDragOver}
+    on:drop={(event) => handleDragDrop(event, "ToyBox")}
+  >
     {#each toys.filter(toy => toy.loc === "ToyBox") as toy, i}
       <div
         id="{toy.id.toString()}"

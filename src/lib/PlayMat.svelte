@@ -14,5 +14,6 @@
     height: 500px;
     width: 800px;
     border-radius: 15px;
+    position: relative;
   }
 </style>

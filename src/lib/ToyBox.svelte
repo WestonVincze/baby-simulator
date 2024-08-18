@@ -1,7 +1,7 @@
 <script lang="ts">
 </script>
 
-<div class="toy-box">
+<div class="toy-box" on:drop on:dragover role="presentation">
   <slot class="item" />
 </div>
 
