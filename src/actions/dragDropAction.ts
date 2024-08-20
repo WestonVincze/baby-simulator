@@ -1,6 +1,6 @@
 import { toys } from "../stores/ToyStore";
 import type { Action } from "svelte/action"
-import type { DragData, DropZone, Toy } from "../types";
+import type { DragData, DropZone } from "../types";
 
 interface DragDropOptions {
   dropZone: DropZone;

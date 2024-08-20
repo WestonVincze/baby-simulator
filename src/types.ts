@@ -6,7 +6,7 @@ export interface DragData {
   height: number,
 }
 
-export type Toy = {
+export type ToyData = {
   id: string,
   loc: DropZone,
   color: string,

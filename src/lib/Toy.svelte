@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { DragData, Toy } from "../types";
+  import type { DragData, ToyData } from "../types";
   import BasicShape from "./BasicShape.svelte";
 
-  export let toy: Toy
+  export let toy: ToyData
   export let absolutePosition = false;
 
   const handleDragStart = (event: DragEvent) => {

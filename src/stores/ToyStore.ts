@@ -1,12 +1,12 @@
 import { writable } from "svelte/store"
-import type { DropZone, Toy } from "../types";
+import type { DropZone, ToyData } from "../types";
 
 const createToyStore = () => {
-  const { subscribe, update } = writable<Toy[]>([]);
+  const { subscribe, update } = writable<ToyData[]>([]);
 
   return {
     subscribe,
-    addToy: (toy: Pick<Partial<Toy>, "position"> & Omit<Toy, "id" | "position">) => update(toys => [
+    addToy: (toy: Pick<Partial<ToyData>, "position"> & Omit<ToyData, "id" | "position">) => update(toys => [
       ...toys,
       { ...toy, id: (toys.length + 1).toString(), position: toy.position || { x: 0, y: 0 }},
     ]),
