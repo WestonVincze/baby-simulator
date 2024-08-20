@@ -1,13 +1,31 @@
 <script lang="ts">
+  import BasicShape from "./BasicShape.svelte";
+  import Toy from "./Toy.svelte";
   import { dragDrop } from "../actions/dragDropAction";
   import { toys } from "../stores/ToyStore";
-  import Toy from "./Toy.svelte";
+  import type { ToyData } from "../types";
+
+  let baby: HTMLImageElement;
 
   $: currentToy = $toys.filter(toy => toy.loc === "Baby")[0] ?? null;
 
+  $: desiredToy = currentToy || $toys
+      .filter(toy => toy.loc === "PlayMat")
+      .map(toy => ({ toy, distance: Math.sqrt(
+        Math.pow(toy.position.x - 400, 2) +
+        Math.pow(toy.position.y - 250, 2))
+      } as { toy: ToyData | null, distance: number }))
+      .reduce((closestToy, toy) =>
+        closestToy.distance < toy.distance
+        ? closestToy
+        : toy, { toy: null, distance: Infinity })
+      .toy || null;
+  
+  $: console.log(baby?.getBoundingClientRect())
+
   const handleDrop = (id: string) => {
     if (currentToy && currentToy.id !== id) {
-      toys.updateToy(currentToy.id, "ToyBox", 200, 200);
+      toys.updateToy(currentToy.id, "ToyBox", Infinity, 0);
     }
   }
 </script>
@@ -16,19 +34,25 @@
   class="baby-container"
   use:dragDrop={{ dropZone: "Baby", onDrop:  handleDrop }}
 >
-  <!-- does not look good in current state
-  <img
-    class="thoughts"
-    draggable="false"
-    src="thought-bubbles.svg"
-    alt="thought bubble graphic"
-  />
-  -->
+  {#if desiredToy}
+    <div class="desired-toy">
+      <div class="desired-toy-container">
+        <img
+          class="thought-bubble"
+          draggable="false"
+          src="thought-bubbles.svg"
+          alt="thought bubble graphic"
+        />
+        <BasicShape type={desiredToy.type} color={desiredToy.color} />
+      </div>
+    </div>
+  {/if}
   <img
     class="baby"
     draggable="false"
     src="sitting-baby.png"
     alt="Sitting baby"
+    bind:this={baby}
   />
   {#if currentToy}
     <div class="current-toy">
@@ -46,17 +70,32 @@
     position: relative;
     margin: 0 auto;
   }
-  .thoughts {
-    width: 150px;
+  .desired-toy {
     position: absolute;
     bottom: 85%;
-    opacity: 0.5;
     pointer-events: none;
     z-index: 5;
+  }
+  .desired-toy-container {
+    height: 130px;
+    width: 150px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .thought-bubble {
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0.5;
   }
   .baby {
     width: 200px;
     pointer-events: none;
+    z-index: 3;
   }
   .current-toy {
     z-index: 4;
