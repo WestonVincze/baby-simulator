@@ -1,23 +1,16 @@
 import { writable } from "svelte/store"
-
-type Toy = {
-  id: number,
-  loc: "ToyBox" | "PlayMat",
-  color: string,
-  type: "triangle" | "circle" | "square",
-  position?: { x: number, y: number }
-}
+import type { DropZone, Toy } from "../types";
 
 const createToyStore = () => {
   const { subscribe, update } = writable<Toy[]>([]);
 
   return {
     subscribe,
-    addToy: (toy: Omit<Toy, "id">) => update(toys => [
+    addToy: (toy: Pick<Partial<Toy>, "position"> & Omit<Toy, "id" | "position">) => update(toys => [
       ...toys,
-      { ...toy, id: toys.length + 1}
+      { ...toy, id: (toys.length + 1).toString(), position: toy.position || { x: 0, y: 0 }},
     ]),
-    updateToy: (id: number, loc: "PlayMat" | "ToyBox", x: number, y: number) => update(toys => {
+    updateToy: (id: string, loc: DropZone, x: number, y: number) => update(toys => {
       const toy = toys.find(toy => toy.id === id);
       if (!toy) return toys;
       toy.loc = loc;

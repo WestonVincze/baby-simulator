@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { TOY_SIZE } from "../constants";
+
   export let type: "triangle" | "square" | "circle";
   export let color: string = "red";
-  export let size: number = 50;
+  export let size: number = TOY_SIZE;
 </script>
 
 <svg width="{size}" height="{size}" viewBox="0 0 100 100">
@@ -14,5 +16,3 @@
   {/if}
 </svg>
 
-<style>
-</style>

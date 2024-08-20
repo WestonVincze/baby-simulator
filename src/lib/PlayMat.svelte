@@ -1,11 +1,15 @@
 <script lang="ts">
-  // visual representation of play mat
-  // accepts "drag" events
+  import Baby from "./Baby.svelte";
+  import Toy from "./Toy.svelte";
+  import { toys } from "../stores/ToyStore";
+  import { dragDrop } from "../actions/dragDropAction";
 </script>
 
-<div class="playMat" on:drop on:dragover role="presentation">
-  <slot name="baby"></slot>
-  <slot />
+<div class="playMat" use:dragDrop={{ dropZone: "PlayMat" }} role="presentation">
+  <Baby />
+  {#each $toys.filter(toy => toy.loc === "PlayMat") as toy}
+    <Toy {toy} absolutePosition={true} />
+  {/each}
 </div>
 
 <style>
