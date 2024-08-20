@@ -19,5 +19,7 @@
     width: 800px;
     border-radius: 15px;
     position: relative;
+    display: flex;
+    place-items: center;
   }
 </style>

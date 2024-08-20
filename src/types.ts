@@ -1,4 +1,4 @@
-export type DropZone = "PlayMat" | "ToyBox";
+export type DropZone = "PlayMat" | "ToyBox" | "Baby";
 
 export interface DragData {
   id: string,
@@ -8,7 +8,7 @@ export interface DragData {
 
 export type Toy = {
   id: string,
-  loc: "ToyBox" | "PlayMat",
+  loc: DropZone,
   color: string,
   type: "triangle" | "circle" | "square",
   position: { x: number, y: number }
