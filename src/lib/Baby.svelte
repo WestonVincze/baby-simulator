@@ -21,8 +21,6 @@
         : toy, { toy: null, distance: Infinity })
       .toy || null;
   
-  $: console.log(baby?.getBoundingClientRect())
-
   const handleDrop = (id: string) => {
     if (currentToy && currentToy.id !== id) {
       toys.updateToy(currentToy.id, "ToyBox", Infinity, 0);
