@@ -15,7 +15,7 @@ const createToyStore = () => {
       if (!toy) return toys;
       toy.loc = loc;
       toy.position = { x, y };
-      toy.lastMoveTime = 0;
+      toy.lastMoveTime = performance.now();
       return toys;
     })
   }
