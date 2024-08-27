@@ -41,7 +41,7 @@
           src="thought-bubbles.svg"
           alt="thought bubble graphic"
         />
-        <BasicShape type={desiredToy.type} color={desiredToy.color} />
+        <BasicShape type={desiredToy.properties.shape} color={desiredToy.properties.colors[0]} />
       </div>
     </div>
   {/if}
