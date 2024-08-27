@@ -43,7 +43,7 @@
        top: ${toy.position?.y}px;`
     : ""}"
   >
-  <BasicShape type={toy.type} color={toy.color} />
+  <BasicShape type={toy.properties.shape} color={toy.properties.colors[0]} />
 </div>
 
 <style>

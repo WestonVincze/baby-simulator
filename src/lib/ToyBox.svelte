@@ -3,10 +3,9 @@
   import { toys } from "../stores/ToyStore";
   import { dragDrop } from "../actions/dragDropAction";
   import { TOY_SIZE } from "../constants";
+  import { toyProperties } from "../data/Toys";
 
-  toys.addToy({ loc: "ToyBox", type: "triangle", color: "red" });
-  toys.addToy({ loc: "ToyBox", type: "square", color: "blue" });
-  toys.addToy({ loc: "ToyBox", type: "circle", color: "green" });
+  toyProperties.forEach(properties => toys.addToy({ loc: "ToyBox", properties }));
 
   $: toyBoxToys = $toys
     .filter(toy => toy.loc === "ToyBox")

@@ -1,0 +1,40 @@
+import type { ToyProperties } from "../types";
+
+export const toyProperties: ToyProperties[] = [
+  {
+    shape: "triangle",
+    colors: ["red"],
+    patterns: [],
+    sounds: [],
+    points: 3,
+    complexity: 5,
+    interactivity: 4,
+    symmetry: 4,
+    smoothness: 0,
+    luster: 0,
+  },
+  {
+    shape: "square",
+    colors: ["blue"],
+    patterns: [],
+    sounds: [],
+    points: 4,
+    complexity: 2,
+    interactivity: 3,
+    symmetry: 10,
+    smoothness: 0,
+    luster: 0,
+  },
+  {
+    shape: "circle",
+    colors: ["green"],
+    patterns: [],
+    sounds: [],
+    points: 0,
+    complexity: 0,
+    interactivity: 8,
+    symmetry: 10,
+    smoothness: 10,
+    luster: 0,
+  },
+]
