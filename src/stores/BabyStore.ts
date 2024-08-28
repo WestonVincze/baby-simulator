@@ -1,28 +1,31 @@
 import { writable } from "svelte/store";
-import type { ToyData } from "../types";
+import type { ToyData, ToyProperties } from "../types";
 
 type BabyData = {
   boredom: number,
   currentToy: ToyData | null,
-  interestMap: Record<ToyProperty, Record<string, number>>,
-  favorites: Partial<Record<ToyProperty, Record<string, number>>>,
+  interestMap: Partial<Record<keyof ToyProperties, number | string | string[]>>,
+  favorites: Partial<ToyProperties>
+}
+
+const updateBabyInterests = () => {
+  // decrease interest for each property of the held toy
+  // increase interest for every other property
 }
 
 const Baby: BabyData = {
   boredom: 0,
   currentToy: null,
   interestMap: {
-    color: {},
-    shape: {},
-    type: {},
+    colors: ["red"],
+    shape: ["triangle"],
   },
-  favorites: {}
+  favorites: {
+    shape: "circle",
+    colors: ["red"],
+    complexity: 10,
+  }
 }
-
-type ToyProperty = 
-  | "color"
-  | "shape"
-  | "type"
 
 /**
  * BABY DATA
