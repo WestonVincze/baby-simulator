@@ -4,12 +4,21 @@
 
   const interests = [
     {
-      "Shapes": [
-        { "triangle": 0 },
-        { "square": 0 },
-        { "circle": 0 }
+      category: "Shapes",
+      items: [
+        { name: "triangle", interest: 0 },
+        { name: "square", interest: 0 },
+        { name: "circle", interest: 0 }
       ]
-    }
+    },
+    {
+      category: "Colors",
+      items: []
+    },
+    {
+      category: "Patterns",
+      items: []
+    },
   ]
 </script>
 
@@ -19,6 +28,16 @@
   </div>
   <Bar min={boredom} max={100} />
 </div>
+
+{#each interests as interest}
+    <div>{interest.category}</div>
+    {#each interest.items as item}
+      <div class="stats">
+      <div>{item.name}</div>
+      <Bar min={item.interest} max={100} />
+    </div>
+  {/each}
+{/each}
 
 <style>
   .stats {
