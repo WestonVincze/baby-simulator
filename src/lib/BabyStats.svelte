@@ -2,41 +2,39 @@
   import Bar from "./Bar.svelte";
   let boredom = 40;
 
-  const interests = [
-    {
-      category: "Shapes",
-      items: [
-        { name: "triangle", interest: 0 },
-        { name: "square", interest: 0 },
-        { name: "circle", interest: 0 }
-      ]
-    },
-    {
-      category: "Colors",
-      items: []
-    },
-    {
-      category: "Patterns",
-      items: []
-    },
+  type Interest = {
+    category?: string,
+    name: string,
+    value: number
+  }
+
+  const interests: Interest[] = [
+    { category: "Shape", name: "triangle", value: 100 },
+    { category: "Shape", name: "square", value: 100 },
+    { category: "Shape", name: "circle", value: 100 },
+    { category: "Colors", name: "Blue", value: 100 },
+    { category: "Patterns", name: "stripes", value: 100 },
+    { category: "Sounds", name: "beep", value: 100 },
+    { name: "points", value: 100 },
+    { name: "complexity", value: 100 },
+    { name: "interactivity", value: 100 },
+    { name: "symmetry", value: 100 },
+    { name: "smoothness", value: 100 },
+    { name: "luster", value: 100 },
   ]
 </script>
 
 <div class="stats">
-  <div>
-    Boredom:
-  </div>
+  <span>Boredom:</span>
   <Bar min={boredom} max={100} />
 </div>
+<br>
 
 {#each interests as interest}
-    <div>{interest.category}</div>
-    {#each interest.items as item}
-      <div class="stats">
-      <div>{item.name}</div>
-      <Bar min={item.interest} max={100} />
-    </div>
-  {/each}
+  <div class="stats">
+    <span>{interest.name}:</span>
+    <Bar min={interest.value} max={100} />
+  </div>
 {/each}
 
 <style>
@@ -45,5 +43,11 @@
     place-content: center;
     place-items: center;
     gap: 15px;
+  }
+  .stats > * {
+    width: 120px;
+  }
+  .stats > span {
+    text-align: right;
   }
 </style>

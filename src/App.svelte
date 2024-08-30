@@ -5,13 +5,13 @@
 </script>
 
 <main>
-  <header>
-    <h1>Baby Simulator</h1>
-  </header>
   <aside>
     <BabyStats />
   </aside>
   <section>
+    <header>
+      <h1>Baby Simulator</h1>
+    </header>
     <PlayMat />
     <ToyBox />
   </section>
@@ -19,6 +19,13 @@
 
 <style>
   main {
+    display: flex;
+  }
+  aside {
+    padding: 15px;
+    padding-top: 75px;
+  }
+  section {
     display: flex;
     flex-direction: column;
     gap: 15px;
