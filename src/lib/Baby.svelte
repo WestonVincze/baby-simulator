@@ -4,10 +4,17 @@
   import { dragDrop } from "../actions/dragDropAction";
   import { toys } from "../stores/ToyStore";
   import type { ToyData } from "../types";
+  import { onDestroy } from "svelte";
 
   let baby: HTMLImageElement;
 
   $: currentToy = $toys.filter(toy => toy.loc === "Baby")[0] ?? null;
+
+  const update = setInterval(() => {
+    if (!currentToy) return;
+
+    console.log(currentToy.properties);
+  }, 1000);
 
   $: desiredToy = currentToy || $toys
       .filter(toy => toy.loc === "PlayMat")
@@ -26,6 +33,10 @@
       toys.updateToy(currentToy.id, "ToyBox", Infinity, 0);
     }
   }
+
+  onDestroy(() => {
+    clearInterval(update);
+  })
 </script>
 
 <div

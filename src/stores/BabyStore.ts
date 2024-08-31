@@ -8,6 +8,27 @@ type BabyData = {
   favorites: Partial<ToyProperties>
 }
 
+const createBabyStore = () => {
+  const { subscribe, update } = writable<BabyData>();
+
+  return {
+    subscribe,
+    updateStats: () => {
+      update(data => {
+        data.boredom = Math.min(data.boredom + 1, 100);
+
+        if (data.currentToy) {
+          data.currentToy.properties.forEach(property => {
+
+          })
+        }
+        return data;
+      })
+    }
+  }
+}
+
+
 const updateBabyInterests = () => {
   // decrease interest for each property of the held toy
   // increase interest for every other property
