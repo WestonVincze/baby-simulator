@@ -5,6 +5,7 @@
   import { toys } from "../stores/ToyStore";
   import type { ToyData } from "../types";
   import { onDestroy } from "svelte";
+  import { babyStore } from "../stores/BabyStore";
 
   let baby: HTMLImageElement;
 
@@ -13,7 +14,8 @@
   const update = setInterval(() => {
     if (!currentToy) return;
 
-    console.log(currentToy.properties);
+    // console.log(currentToy.properties);
+    babyStore.updateStats();
   }, 1000);
 
   $: desiredToy = currentToy || $toys

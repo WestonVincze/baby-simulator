@@ -18,8 +18,8 @@ const createBabyStore = () => {
         data.boredom = Math.min(data.boredom + 1, 100);
 
         if (data.currentToy) {
-          data.currentToy.properties.forEach(property => {
-
+          Object.keys(data.currentToy.properties).forEach(property => {
+            console.log(property);
           })
         }
         return data;
@@ -28,6 +28,7 @@ const createBabyStore = () => {
   }
 }
 
+export const babyStore = createBabyStore();
 
 const updateBabyInterests = () => {
   // decrease interest for each property of the held toy
