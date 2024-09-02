@@ -10,16 +10,11 @@
   let baby: HTMLImageElement;
 
   $: currentToy = $toys.filter(toy => toy.loc === "Baby")[0] ?? null;
-  $: () => {
-    if (currentToy !== null) babyStore.setCurrentToy(currentToy);
-  }
+  $: babyStore.setCurrentToy(currentToy);
 
   const update = setInterval(() => {
-    if (!currentToy) return;
-
-    // console.log(currentToy.properties);
     babyStore.updateStats();
-  }, 1000);
+  }, 200);
 
   $: desiredToy = currentToy || $toys
       .filter(toy => toy.loc === "PlayMat")

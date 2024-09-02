@@ -16,15 +16,12 @@ export type ToyData = {
   properties: ToyProperties
 }
 
+type PropertyData = Record<string,number>
+
 export type ToyProperties = {
   shape: Shape,             // main shape
   colors: string[],         // ordered from highest to lowest %
   patterns: string[],       // list of patterns on the toy
   sounds: string[],         // list of sounds the toy can make
-  points: number,           // the number of verticies
-  complexity: number,       // 0-10
-  interactivity: number,    // 0-10
-  symmetry: number,         // 0-10
-  smoothness: number,       // 0-10
-  luster: number,           // 0-10
+  attributes: PropertyData, // 0-1
 }
