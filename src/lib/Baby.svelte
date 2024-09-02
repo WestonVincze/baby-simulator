@@ -10,6 +10,9 @@
   let baby: HTMLImageElement;
 
   $: currentToy = $toys.filter(toy => toy.loc === "Baby")[0] ?? null;
+  $: () => {
+    if (currentToy !== null) babyStore.setCurrentToy(currentToy);
+  }
 
   const update = setInterval(() => {
     if (!currentToy) return;

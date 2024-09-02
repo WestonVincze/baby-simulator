@@ -9,10 +9,21 @@ type BabyData = {
 }
 
 const createBabyStore = () => {
-  const { subscribe, update } = writable<BabyData>();
+  const { subscribe, update } = writable<BabyData>({
+    boredom: 0,
+    currentToy: null,
+    interestMap: {},
+    favorites: {}
+  });
 
   return {
     subscribe,
+    setCurrentToy: (toy: ToyData) => {
+      update(data => {
+        console.log('setting toy')
+        return ({ ...data, currentToy: toy })
+      })
+    },
     updateStats: () => {
       update(data => {
         data.boredom = Math.min(data.boredom + 1, 100);
