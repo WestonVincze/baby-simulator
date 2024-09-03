@@ -1,11 +1,11 @@
 import { writable } from "svelte/store";
-import type { ToyData, ToyProperties } from "../types";
+import type { ToyAttributes, ToyData, ToyProperty } from "../types";
 
 type BabyData = {
-  boredom: number,
   currentToy: ToyData | null,
-  boredomMap: Record<string, number>,
-  favorites: Partial<ToyProperties>
+  boredom: number,               // 0-100
+  aversions: ToyAttributes,      // 0-100
+  favorites: ToyAttributes,      // 0-100
 }
 
 const setOrIncrementProperty = (map: Record<string, number>, property: string, value: number) => {
@@ -21,7 +21,7 @@ const createBabyStore = () => {
   const { subscribe, update } = writable<BabyData>({
     boredom: 0,
     currentToy: null,
-    boredomMap: {},
+    aversions: {},
     favorites: {}
   });
 
@@ -35,37 +35,50 @@ const createBabyStore = () => {
     updateStats: () => {
       update(data => {
         const updatedProperties: string[] = [];
+        // update aversions and boredom based on data from currentToy
         if (data.currentToy !== null) {
-          setOrIncrementProperty(data.boredomMap, data.currentToy.properties.shape, 1);
-          updatedProperties.push(data.currentToy.properties.shape);
-          data.currentToy.properties.colors.forEach(color => {
-            setOrIncrementProperty(data.boredomMap, color, 1);
+          const { shape, colors, patterns, sounds, attributes } = data.currentToy.properties;
+
+          setOrIncrementProperty(data.aversions, shape, 1);
+          updatedProperties.push(shape);
+
+          colors.forEach(color => {
+            setOrIncrementProperty(data.aversions, color, 1);
             updatedProperties.push(color);
           })
-          data.currentToy.properties.patterns.forEach(pattern => {
-            setOrIncrementProperty(data.boredomMap, pattern, 1);
+
+          patterns.forEach(pattern => {
+            setOrIncrementProperty(data.aversions, pattern, 1);
             updatedProperties.push(pattern);
           })
-          data.currentToy.properties.sounds.forEach(sound => {
-            setOrIncrementProperty(data.boredomMap, sound, 1);
+
+          sounds.forEach(sound => {
+            setOrIncrementProperty(data.aversions, sound, 1);
             updatedProperties.push(sound);
           })
-          Object.keys(data.currentToy.properties.attributes).forEach(attribute => {
-            const value = data.currentToy?.properties.attributes[attribute] || 0;
+
+          Object.keys(attributes).forEach(attribute => {
+            const value = attributes[attribute as ToyProperty] || 0;
             if (value === 0) return;
 
-            setOrIncrementProperty(data.boredomMap, attribute, value);
+            setOrIncrementProperty(data.aversions, attribute, value);
             updatedProperties.push(attribute);
           })
+
           data.boredom = Math.max(data.boredom - 1, 0);
         } else {
           data.boredom = Math.min(data.boredom + 1, 100);
         }
-        Object.keys(data.boredomMap).forEach(property => {
+
+        // depreciate aversion for properties that currentToy does not contain
+        Object.keys(data.aversions).forEach(key => {
+          const property = key as ToyProperty;
+
           if (updatedProperties.findIndex(updated => updated === property) === -1) {
-            data.boredomMap[property] = Math.max(data.boredomMap[property] -= 0.5, 0);
+            data.aversions[property] = Math.max(data.aversions[property]! -= 0.5, 5);
           }
         })
+
         // console.table(data.boredomMap);
         return data;
       })
@@ -74,27 +87,6 @@ const createBabyStore = () => {
 }
 
 export const babyStore = createBabyStore();
-
-const updateBabyInterests = () => {
-  // decrease interest for each property of the held toy
-  // increase interest for every other property
-}
-
-/*
-const Baby: BabyData = {
-  boredom: 0,
-  currentToy: null,
-  boredomMap: {
-    colors: ["red"],
-    shape: ["triangle"],
-  },
-  favorites: {
-    shape: "circle",
-    colors: ["red"],
-    complexity: 10,
-  }
-}
-*/
 
 /**
  * BABY DATA
