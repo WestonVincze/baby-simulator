@@ -28,12 +28,23 @@
 
   const handleDragEnd = (event: DragEvent) => {}
 
+  const handleClick = (event: Event) => {
+    /* debug: print toy data */
+    console.log(`toy ${toy.id}`);
+    console.log(`lastMoveTime: ${toy.lastMoveTime}`);
+    console.log(`shape: ${toy.properties.shape}`);
+    console.log(`colors: ${toy.properties.colors.join(", ")}`);
+    console.log(`patterns: ${toy.properties.patterns.join(", ")}`);
+    console.log(`sounds: ${toy.properties.sounds.join(", ")}`);
+    console.table(toy.properties.attributes);
+  }
 </script>
 
 <div
   id="{toy.id.toString()}"
-  class="draggable"
+  class="toy"
   draggable="true"
+  on:click={handleClick}
   on:dragstart={handleDragStart}
   on:dragend={handleDragEnd}
   role="presentation"
@@ -47,7 +58,7 @@
 </div>
 
 <style>
-  .draggable {
+  .toy {
     cursor: pointer;
   }
 </style>

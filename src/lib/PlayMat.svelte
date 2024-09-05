@@ -3,11 +3,13 @@
   import Toy from "./Toy.svelte";
   import { toys } from "../stores/ToyStore";
   import { dragDrop } from "../actions/dragDropAction";
+
+  $: playMatToys = $toys.filter(toy => toy.loc === "PlayMat");
 </script>
 
 <div class="playMat" use:dragDrop={{ dropZone: "PlayMat" }} role="presentation">
   <Baby />
-  {#each $toys.filter(toy => toy.loc === "PlayMat") as toy}
+  {#each playMatToys as toy}
     <Toy {toy} absolutePosition={true} />
   {/each}
 </div>

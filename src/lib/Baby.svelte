@@ -17,17 +17,17 @@
   }, 200);
 
   $: desiredToy = currentToy || $toys
-      .filter(toy => toy.loc === "PlayMat")
-      .map(toy => ({ toy, distance: Math.sqrt(
-        Math.pow(toy.position.x - 400, 2) +
-        Math.pow(toy.position.y - 250, 2))
-      } as { toy: ToyData | null, distance: number }))
-      .reduce((closestToy, toy) =>
-        closestToy.distance < toy.distance
-        ? closestToy
-        : toy, { toy: null, distance: Infinity })
-      .toy || null;
-  
+    .filter(toy => toy.loc === "PlayMat")
+    .map(toy => ({ toy, distance: Math.sqrt(
+      Math.pow(toy.position.x - 400, 2) +
+      Math.pow(toy.position.y - 250, 2))
+    } as { toy: ToyData | null, distance: number }))
+    .reduce((closestToy, toy) =>
+      closestToy.distance < toy.distance
+      ? closestToy
+      : toy, { toy: null, distance: Infinity })
+    .toy || null;
+
   const handleDrop = (id: string) => {
     if (currentToy && currentToy.id !== id) {
       toys.updateToy(currentToy.id, "ToyBox", Infinity, 0);
