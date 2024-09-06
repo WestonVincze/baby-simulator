@@ -21,6 +21,9 @@
       width: rect.width,
       height: rect.height
     }
+    
+    // center drag image under the cursor
+    event.dataTransfer.setDragImage(el, rect.width / 2, rect.height / 2);
 
     event.dataTransfer.dropEffect = "move";
     event.dataTransfer.setData("application/json", JSON.stringify(dragData));
@@ -60,5 +63,8 @@
 <style>
   .toy {
     cursor: pointer;
+  }
+  .custom-drag-image {
+    opacity: 0;
   }
 </style>
