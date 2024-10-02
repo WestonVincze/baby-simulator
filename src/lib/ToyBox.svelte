@@ -4,6 +4,7 @@
   import { dragDrop } from "../actions/dragDropAction";
   import { TOY_SIZE } from "../constants";
   import { toyProperties } from "../data/Toys";
+  import InfoTooltip from "./InfoTooltip.svelte";
 
   toyProperties.forEach(properties => toys.addToy({ loc: "ToyBox", properties }));
 
@@ -17,6 +18,8 @@
     });
 </script>
 
+<h2>Toy Box <InfoTooltip text="Drag & drop toys to and from the play mat." /></h2>
+
 <div class="toy-box" use:dragDrop={{ dropZone: "ToyBox"}} role="presentation">
   {#each toyBoxToys as toy}
     <Toy {toy} />
@@ -25,6 +28,7 @@
 
 <style>
   .toy-box {
+    position: relative;
     background-color: burlywood;
     width: 100%;
     height: 100px;
@@ -32,5 +36,11 @@
     display: flex;
     align-items: center;
     gap: 15px;
+  }
+  h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
   }
 </style>
