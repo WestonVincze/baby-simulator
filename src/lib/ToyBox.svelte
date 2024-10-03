@@ -3,10 +3,10 @@
   import { toys } from "../stores/ToyStore";
   import { dragDrop } from "../actions/dragDropAction";
   import { TOY_SIZE } from "../constants";
-  import { toyProperties } from "../data/Toys";
+  import { Toys } from "../data/Toys";
   import InfoTooltip from "./InfoTooltip.svelte";
 
-  toyProperties.forEach(properties => toys.addToy({ loc: "ToyBox", properties }));
+  Toys.forEach(properties => toys.addToy({ loc: "ToyBox", properties }));
 
   $: toyBoxToys = $toys
     .filter(toy => toy.loc === "ToyBox")

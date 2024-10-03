@@ -1,8 +1,52 @@
 import type { ToyProperties } from "../types";
 
-export const toyProperties: ToyProperties[] = [
+export const Toys: ToyProperties[] = [
   {
-    shape: "triangle",
+    name: "abacus",
+    shapes: ["square", "circle"],
+    colors: [],
+    patterns: [],
+    sounds: [],
+    attributes: {
+      complexity: .8,
+      interactivity: .6,
+      symmetry: .1,
+      smoothness: .2,
+      luster: 0,
+    }
+  },
+  {
+    name: "ball",
+    shapes: ["circle"],
+    colors: ["red", "white"],
+    patterns: ["stripes"],
+    sounds: [],
+    attributes: {
+      complexity: 0.1,
+      interactivity: 0.5,
+      symmetry: 1,
+      smoothness: 1,
+      luster: 0.6
+    }
+  },
+  {
+    name: "castle",
+    shapes: ["square"],
+    colors: ["brown", "green"],
+    patterns: [],
+    sounds: [],
+    attributes: {
+      complexity: 0.3,
+      interactivity: 0.2,
+      symmetry: 0.9,
+      smoothness: 0.1,
+      luster: 0.2
+    }
+  }
+  /*
+  {
+    name: "triangle",
+    shapes: ["triangle"],
     colors: ["red"],
     patterns: [],
     sounds: [],
@@ -15,7 +59,8 @@ export const toyProperties: ToyProperties[] = [
     }
   },
   {
-    shape: "square",
+    name: "square",
+    shapes: ["square"],
     colors: ["blue"],
     patterns: [],
     sounds: [],
@@ -28,7 +73,8 @@ export const toyProperties: ToyProperties[] = [
     }
   },
   {
-    shape: "circle",
+    name: "circle",
+    shapes: ["circle"],
     colors: ["green"],
     patterns: [],
     sounds: [],
@@ -40,4 +86,5 @@ export const toyProperties: ToyProperties[] = [
       luster: 0,
     }
   },
+  */
 ]

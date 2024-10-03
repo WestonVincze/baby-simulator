@@ -6,15 +6,27 @@ export interface DragData {
   height: number,
 }
 
+export type ToyName = 
+  | "abacus"
+  | "ball"
+  | "castle"
+
 export type Shape = 
   | "triangle"
   | "circle"
   | "square";
 
 export type Color =
-  | "green"
+  | "white"
   | "red"
-  | "blue";
+  | "orange"
+  | "yellow"
+  | "brown"
+  | "green"
+  | "blue"
+  | "indigo"
+  | "violet"
+  | "black";
 
 export type Pattern =
   | "stars"
@@ -22,6 +34,8 @@ export type Pattern =
   | "stripes";
 
 export type Sound = 
+  | "rattle"
+  | "clank"
   | "ding"
   | "beep"
   | "pop";
@@ -42,7 +56,8 @@ export type ToyAttributes = {
 }
 
 export type ToyProperties = {
-  shape: Shape,              // main shape
+  name: ToyName,
+  shapes: Shape[],              // main shape
   colors: Color[],           // ordered from highest to lowest %
   patterns: Pattern[],       // list of patterns on the toy
   sounds: Sound[],           // list of sounds the toy can make

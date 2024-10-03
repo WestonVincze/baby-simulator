@@ -37,10 +37,12 @@ const createBabyStore = () => {
         const updatedProperties: string[] = [];
         // update aversions and boredom based on data from currentToy
         if (data.currentToy !== null) {
-          const { shape, colors, patterns, sounds, attributes } = data.currentToy.properties;
+          const { shapes, colors, patterns, sounds, attributes } = data.currentToy.properties;
 
-          setOrIncrementProperty(data.aversions, shape, 1);
-          updatedProperties.push(shape);
+          shapes.forEach(shape => {
+            setOrIncrementProperty(data.aversions, shape, 1);
+            updatedProperties.push(shape);
+          })
 
           colors.forEach(color => {
             setOrIncrementProperty(data.aversions, color, 1);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import BasicShape from "./BasicShape.svelte";
+  import BasicShape from "../icons/ToyIcon.svelte";
   import Toy from "./Toy.svelte";
   import { dragDrop } from "../actions/dragDropAction";
   import { toys } from "../stores/ToyStore";
@@ -52,7 +52,7 @@
           src="thought-bubbles.svg"
           alt="thought bubble graphic"
         />
-        <BasicShape type={desiredToy.properties.shape} color={desiredToy.properties.colors[0]} />
+        <BasicShape name={desiredToy.properties.name} colors={desiredToy.properties.colors} />
       </div>
     </div>
   {/if}

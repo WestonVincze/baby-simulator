@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { DragData, ToyData } from "../types";
-  import BasicShape from "./BasicShape.svelte";
+  import ToyIcon from "../icons/ToyIcon.svelte";
 
   export let toy: ToyData
   export let absolutePosition = false;
@@ -35,7 +35,7 @@
     /* debug: print toy data */
     console.log(`toy ${toy.id}`);
     console.log(`lastMoveTime: ${toy.lastMoveTime}`);
-    console.log(`shape: ${toy.properties.shape}`);
+    console.log(`shape: ${toy.properties.shapes}`);
     console.log(`colors: ${toy.properties.colors.join(", ")}`);
     console.log(`patterns: ${toy.properties.patterns.join(", ")}`);
     console.log(`sounds: ${toy.properties.sounds.join(", ")}`);
@@ -57,7 +57,7 @@
        top: ${toy.position?.y}px;`
     : ""}"
   >
-  <BasicShape type={toy.properties.shape} color={toy.properties.colors[0]} />
+  <ToyIcon name={toy.properties.name} colors={toy.properties.colors} />
 </div>
 
 <style>
