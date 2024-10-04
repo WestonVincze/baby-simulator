@@ -7,9 +7,15 @@ export interface DragData {
 }
 
 export type ToyName = 
+  | "abcBlocks"
   | "abacus"
   | "ball"
   | "castle"
+  | "ducky"
+  | "pyramidStack"
+  | "rattle"
+  | "teddy"
+  | "train"
 
 export type Shape = 
   | "triangle"
@@ -29,11 +35,13 @@ export type Color =
   | "black";
 
 export type Pattern =
-  | "stars"
   | "dots"
+  | "letters"
+  | "stars"
   | "stripes";
 
 export type Sound = 
+  | "squeak"
   | "rattle"
   | "clank"
   | "ding"
@@ -45,6 +53,9 @@ export type ToyProperty =
   | Color
   | Pattern
   | Sound
+//| Texture ?
+//| "singularity" (something to indicate whether a toy has multiple)
+//| "softness"
   | "complexity"
   | "interactivity"
   | "symmetry"
