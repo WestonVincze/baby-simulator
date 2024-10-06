@@ -1,22 +1,27 @@
 <script lang="ts">
+  import { HexColors } from "../../data/HexColors";
   import { mapDynamicColors } from "../../helpers";
   export let colors: string[] = [];
   export let size: number;
 
-  const defaultColors: string[] = [];
+  const defaultColors: string[] = [
+    HexColors.blue,
+    HexColors.green,
+    HexColors.red
+  ];
 
   $: appliedColors = mapDynamicColors(defaultColors, colors);
 </script>
 
 <svg height={size} width={size} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
   <title>Rattle</title>
-  <path style="fill:#97C2F7;"
+  <path style="fill:{appliedColors[0]};"
     d="M344.942,90.518c0.423,3.551,0.647,7.16,0.647,10.828c0,30.122-14.873,56.787-37.682,73.024 c-14.649,10.429-32.556,16.566-51.908,16.566s-37.258-6.137-51.908-16.566c-22.809-16.237-37.682-42.902-37.682-73.024 c0-3.668,0.223-7.278,0.647-10.828l2.963,0.341l42.984,23.514l42.996-23.514l42.984,23.514l42.996-23.514L344.942,90.518z">
   </path>
-  <path style="fill:#94C783;"
+  <path style="fill:{appliedColors[1]};"
     d="M344.942,90.518l-2.963,0.341l-42.996,23.514l-42.984-23.514l-42.996,23.514l-42.984-23.514 l-2.963-0.341c5.349-44.371,43.137-78.761,88.943-78.761S339.593,46.147,344.942,90.518z">
   </path>
-  <path style="fill:#FB7B76;"
+  <path style="fill:{appliedColors[2]};"
     d="M308.272,174.876v33.966c0,14.062-11.393,25.442-25.442,25.442h-26.83h-26.83 c-14.062,0-25.442-11.381-25.442-25.442v-33.966l0.364-0.506c14.649,10.429,32.556,16.566,51.908,16.566s37.258-6.137,51.908-16.566 L308.272,174.876z">
   </path>
   <path

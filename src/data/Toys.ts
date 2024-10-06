@@ -32,7 +32,7 @@ export const Toys: ToyProperties[] = [
   {
     name: "ball",
     shapes: ["circle"],
-    colors: ["red", "white"],
+    colors: [],
     patterns: ["stripes"],
     sounds: [],
     attributes: {
@@ -46,7 +46,7 @@ export const Toys: ToyProperties[] = [
   {
     name: "castle",
     shapes: ["square"],
-    colors: ["brown", "green"],
+    colors: [],
     patterns: [],
     sounds: [],
     attributes: {

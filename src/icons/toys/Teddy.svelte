@@ -1,9 +1,13 @@
 <script lang="ts">
+  import { HexColors } from "../../data/HexColors";
   import { mapDynamicColors } from "../../helpers";
   export let colors: string[] = [];
   export let size: number;
 
-  const defaultColors: string[] = ["#A3875E", "#DBB67E"];
+  const defaultColors: string[] = [
+    HexColors.brown,
+    HexColors.peach,
+  ];
 
   $: appliedColors = mapDynamicColors(defaultColors, colors);
 </script>

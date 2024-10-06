@@ -1,36 +1,42 @@
 <script lang="ts">
+  import { HexColors } from "../../data/HexColors";
   import { mapDynamicColors } from "../../helpers";
   export let colors: string[] = [];
   export let size: number;
 
-  const defaultColors: string[] = [];
+  const defaultColors: string[] = [
+    HexColors.white,
+    HexColors.red,
+    HexColors.green,
+    HexColors.blue,
+  ];
 
   $: appliedColors = mapDynamicColors(defaultColors, colors);
 </script>
 
 <svg width={size} height={size} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
   <title>Train</title>
-  <path style="fill:#FFF3E6;"
+  <path style="fill:{appliedColors[0]};"
     d="M276.322,124.75v116.908H174.397h-51.728H72.884L11.43,323.844h457.7V124.75 C469.131,124.75,276.322,124.75,276.322,124.75z M372.726,253.041c-21.544,0-39.019-17.475-39.019-39.019 s17.475-39.019,39.019-39.019c21.555,0,39.019,17.475,39.019,39.019S394.282,253.041,372.726,253.041z">
   </path>
-  <path style="fill:#FB7B76;"
+  <path style="fill:{appliedColors[1]};"
     d="M72.884,418.431h49.785l0,0c0-22.01,13.945-40.769,33.479-47.923c0.782-0.286,1.572-0.553,2.37-0.802 c1.598-0.497,3.229-0.918,4.889-1.257c0.83-0.17,1.667-0.32,2.512-0.449c1.689-0.258,3.405-0.433,5.143-0.521 c0.87-0.045,1.745-0.066,2.625-0.066c28.173,0,51.008,22.847,51.008,51.019h97.021c0-28.173,22.835-51.019,51.008-51.019 c28.173,0,51.019,22.847,51.019,51.019h45.385v-44.996v-49.591H11.43L72.884,418.431z">
   </path>
-  <path style="fill:#94C783;"
+  <path style="fill:{appliedColors[2]};"
     d="M489.68,124.75h-20.549H276.322h-20.549c0-28.858,23.395-52.254,52.254-52.254h129.4 c0.034,0,0.08,0,0.114,0c14.378,0.034,27.407,5.875,36.836,15.304C483.828,97.251,489.68,110.326,489.68,124.75z">
   </path>
-  <path style="fill:#D2E3F7;"
+  <path style="fill:{appliedColors[3]};"
     d="M372.726,175.003c21.555,0,39.019,17.475,39.019,39.019s-17.464,39.019-39.019,39.019 c-21.544,0-39.019-17.475-39.019-39.019S351.182,175.003,372.726,175.003z">
   </path>
-  <path style="fill:#94C783;"
+  <path style="fill:{appliedColors[2]};"
     d="M195.827,182.478v3.909h-21.43h-51.728h-21.43v-3.909c0-20.824,16.881-37.716,37.716-37.716h19.155 C178.935,144.762,195.827,161.654,195.827,182.478z">
   </path>
-  <rect x="122.669" y="186.387" style="fill:#F0C419;" width="51.728" height="55.271"></rect>
+  <rect x="122.669" y="186.387" style="fill:{appliedColors[1]};" width="51.728" height="55.271"></rect>
   <g>
-    <path style="fill:#FBCDCB;"
+    <path style="fill:{appliedColors[2]};"
       d="M372.726,367.412c28.173,0,51.019,22.847,51.019,51.019s-22.847,51.008-51.019,51.008 c-28.173,0-51.008-22.835-51.008-51.008S344.554,367.412,372.726,367.412z">
     </path>
-    <path style="fill:#FBCDCB;"
+    <path style="fill:{appliedColors[2]};"
       d="M173.689,367.412c28.173,0,51.008,22.847,51.008,51.019s-22.835,51.008-51.008,51.008 s-51.019-22.835-51.019-51.008S145.516,367.412,173.689,367.412z">
     </path>
   </g>

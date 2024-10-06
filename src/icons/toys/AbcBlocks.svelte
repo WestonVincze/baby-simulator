@@ -2,25 +2,30 @@
   import { mapDynamicColors } from "../../helpers";
   export let colors: string[] = [];
   export let size: number;
+  import { HexColors } from "../../data/HexColors";
 
-  const defaultColors: string[] = [];
+  const defaultColors: string[] = [
+    HexColors.yellow,
+    HexColors.red,
+    HexColors.blue
+  ];
 
   $: appliedColors = mapDynamicColors(defaultColors, colors);
 </script>
 
 <svg height={size} width={size} xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
   <title>ABC Blocks</title>
-  <path style="fill:#F0C419;"
+  <path style="fill:{appliedColors[0]};"
     d="M499.311,303.609v148.093c0,26.292-21.317,47.609-47.609,47.609H303.596 c-26.292,0-47.596-21.317-47.596-47.609V303.609C256,277.317,277.305,256,303.596,256h26.457h121.649 C477.994,256,499.311,277.317,499.311,303.609z">
   </path>
-  <path style="fill:#FB7B76;"
+  <path style="fill:{appliedColors[1]};"
     d="M377.662,60.298v148.093c0,26.292-21.317,47.609-47.609,47.609h-26.457h-95.205h-26.444 c-26.292,0-47.596-21.317-47.596-47.609V60.298c0-26.292,21.305-47.609,47.596-47.609h148.106 C356.344,12.689,377.662,34.006,377.662,60.298z">
   </path>
   <g>
-    <path style="fill:#97C2F7;"
+    <path style="fill:{appliedColors[2]};"
       d="M256,303.609v148.093c0,26.292-21.317,47.609-47.609,47.609H60.298 c-26.292,0-47.609-21.317-47.609-47.609V303.609c0-26.292,21.317-47.609,47.609-47.609h121.649h26.444 C234.683,256,256,277.317,256,303.609z M169.119,345.356c0-17.841-14.465-32.306-32.306-32.306H99.57v64.612v64.6h37.242 c8.92,0,16.991-3.616,22.84-9.466c5.85-5.837,9.466-13.92,9.466-22.84c0-17.841-14.465-32.293-32.306-32.293 c8.92,0,16.991-3.616,22.84-9.466C165.502,362.346,169.119,354.276,169.119,345.356z">
     </path>
-    <path style="fill:#97C2F7;"
+    <path style="fill:{appliedColors[2]};"
       d="M136.813,313.05c17.841,0,32.306,14.465,32.306,32.306c0,8.92-3.616,16.991-9.466,22.84 c-5.85,5.85-13.92,9.466-22.84,9.466H99.57V313.05H136.813z">
     </path>
     <path style="fill:#97C2F7;"

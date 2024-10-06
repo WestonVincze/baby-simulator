@@ -31,6 +31,7 @@ export type Color =
   | "green"
   | "blue"
   | "indigo"
+  | "peach"
   | "violet"
   | "black";
 
@@ -68,7 +69,7 @@ export type ToyAttributes = {
 
 export type ToyProperties = {
   name: ToyName,
-  shapes: Shape[],              // main shape
+  shapes: Shape[],           // primary shape
   colors: Color[],           // ordered from highest to lowest %
   patterns: Pattern[],       // list of patterns on the toy
   sounds: Sound[],           // list of sounds the toy can make
