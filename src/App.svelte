@@ -1,33 +1,20 @@
 <script lang="ts">
-  import PlayMat from "./lib/PlayMat.svelte";
-  import ToyBox from "./lib/ToyBox.svelte";
-  import BabyStats from "./lib/BabyStats.svelte";
+  import MainMenu from "./scenes/MainMenu.svelte";
+  import Game from "./scenes/Game.svelte";
 </script>
 
 <main>
-  <aside>
-    <BabyStats />
-  </aside>
+  <header>
+    <h1>Baby Simulator</h1>
+  </header>
   <section>
-    <header>
-      <h1>Baby Simulator</h1>
-    </header>
-    <PlayMat />
-    <ToyBox />
+    <Game />
+    <MainMenu />
   </section>
 </main>
 
 <style>
-  main {
-    display: flex;
-  }
-  aside {
-    padding: 15px;
-    padding-top: 75px;
-  }
-  section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  header {
+    margin-bottom: 25px;
   }
 </style>

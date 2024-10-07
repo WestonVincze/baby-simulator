@@ -18,18 +18,23 @@
     });
 </script>
 
-<h2>Toy Box <InfoTooltip text="Drag & drop toys to and from the play mat." /></h2>
+<div class="toy-box-container">
+  <h2>Toy Box <InfoTooltip text="Drag & drop toys to and from the play mat." /></h2>
 
-<div class="toy-box" use:dragDrop={{ dropZone: "ToyBox"}} role="presentation">
-  {#each toyBoxToys as toy}
-    <Toy {toy} />
-  {/each}
+  <div class="toy-box" use:dragDrop={{ dropZone: "ToyBox"}} role="presentation">
+    {#each toyBoxToys as toy}
+      <Toy {toy} />
+    {/each}
+  </div>
 </div>
 
 <style>
+  .toy-box-container {
+    background-color: #BB8493;
+    border-radius: 15px;
+  }
   .toy-box {
     position: relative;
-    background-color: burlywood;
     width: 100%;
     height: 100px;
     padding: 15px;
