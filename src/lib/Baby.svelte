@@ -39,6 +39,10 @@
   })
 </script>
 
+<svelte:head>
+  <link rel="preload" as="image" href="/thought-bubbles.svg" />
+</svelte:head>
+
 <div
   class="baby-container"
   use:dragDrop={{ dropZone: "Baby", onDrop:  handleDrop }}
