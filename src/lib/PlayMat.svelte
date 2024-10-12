@@ -3,13 +3,13 @@
   import Toy from "./Toy.svelte";
   import { toys } from "../stores/ToyStore";
   import { dragDrop } from "../actions/dragDropAction";
-    import InfoTooltip from "./InfoTooltip.svelte";
+  import InfoTooltip from "./InfoTooltip.svelte";
 
   $: playMatToys = $toys.filter(toy => toy.loc === "PlayMat");
 </script>
 
 <div class="playMat" use:dragDrop={{ dropZone: "PlayMat" }} role="presentation">
-  <h2>Play Mat<InfoTooltip text="Drag & drop toys to and from the play mat." /></h2>
+  <h2>Play Mat<InfoTooltip text="All toys within the Play Mat are visible to baby. The preferred toy is indicated in a thought bubble if there is at least one toy." /></h2>
   <Baby />
   {#each playMatToys as toy}
     <Toy {toy} absolutePosition={true} />

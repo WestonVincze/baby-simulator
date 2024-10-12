@@ -2,6 +2,7 @@
   import ProgressBar from "./ProgressBar.svelte";
   import { babyStore } from "../stores/BabyStore";
   import type { ToyProperty } from "../types";
+  import InfoTooltip from "./InfoTooltip.svelte";
 
   $: aversions = Object.keys($babyStore.aversions).map(
     aversion => ({ aversion, value: $babyStore.aversions[aversion as ToyProperty]})
@@ -14,7 +15,7 @@
 </div>
 <br>
 
-<h2>Aversions</h2>
+<h2>Aversions <InfoTooltip text="When a toy is played with by baby its properties become less appealing to baby and satisfy less boredom." /></h2>
 {#if Object.keys($babyStore.aversions).length === 0}
   <span class="italic">no aversions</span>
 {/if}
@@ -28,7 +29,9 @@
 
 <style>
   h2 {
-    text-align: right;
+    display: flex;
+    justify-content: right;
+    gap: 5px;
   }
   .italic {
     display: block;

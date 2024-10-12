@@ -19,7 +19,7 @@
 </script>
 
 <div class="toy-box-container">
-  <h2>Toy Box <InfoTooltip text="Drag & drop toys to and from the play mat." /></h2>
+  <h2>Toy Box <InfoTooltip text="Toy Box contains all available toys. Moving a toy to the Play Mat will make it available to baby." /></h2>
 
   <div class="toy-box" use:dragDrop={{ dropZone: "ToyBox"}} role="presentation">
     {#each toyBoxToys as toy}
