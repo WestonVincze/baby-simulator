@@ -13,8 +13,9 @@
   .progress-bar {
     overflow: hidden;
     position: relative;
-    width: 60px;
-    height: 10px;
+    width: 100%;
+    min-height: 10px;
+    height: 100%;
     border-radius: 5px;
     background-color: #0004;
     box-shadow: inset 0 0 4px 3px #0008;

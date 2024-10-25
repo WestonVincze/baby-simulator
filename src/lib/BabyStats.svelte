@@ -9,11 +9,13 @@
   );
 </script>
 
-<div class="stats">
-  <span>Boredom:</span>
-  <ProgressBar min={$babyStore.boredom} max={100} />
+
+<h2>Boredom <InfoTooltip text="Playing with toys reduces boredom but the meter fills to 100% the simulation ends." /></h2>
+<div class="boredom">
+  <div class="bar">
+    <ProgressBar min={$babyStore.boredom} max={100} />
+  </div>
 </div>
-<br>
 
 <h2>Aversions <InfoTooltip text="When a toy is played with by baby its properties become less appealing to baby and satisfy less boredom." /></h2>
 {#if Object.keys($babyStore.aversions).length === 0}
@@ -21,9 +23,11 @@
 {/if}
 
 {#each aversions as { aversion, value }}
-  <div class="stats">
+  <div class="aversions">
     <span>{aversion}:</span>
-    <ProgressBar min={value || 0} max={100} />
+    <div class="bar">
+      <ProgressBar min={value || 0} max={100} />
+    </div>
   </div>
 {/each}
 
@@ -38,16 +42,28 @@
     text-align: right;
     font-style: italic;
   }
-  .stats {
+  .boredom {
+    display: flex;
+    justify-content: right;
+    margin-bottom: 15px;
+  }
+  .boredom .bar {
+    width: 150px;
+    height: 15px;
+  }
+  .aversions {
     display: flex;
     place-content: center;
     place-items: center;
     gap: 15px;
   }
-  .stats > * {
+  .aversions > * {
     width: 120px;
   }
-  .stats > span {
+  .aversions > span {
     text-align: right;
+  }
+  .aversions .bar {
+    width: 60px;
   }
 </style>

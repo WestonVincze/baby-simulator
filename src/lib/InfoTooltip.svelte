@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tooltip } from "@svelte-plugins/tooltips"
-  import Info from "../icons/info.svelte";
+  import Info from "../icons/Info.svelte";
   export let text;
 </script>
 
