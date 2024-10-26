@@ -17,13 +17,15 @@ const setOrIncrementProperty = (map: Record<string, number>, property: string, v
   return property;
 }
 
+const initialState: BabyData = {
+  boredom: 0,
+  currentToy: null,
+  aversions: {},
+  favorites: {}
+}
+
 const createBabyStore = () => {
-  const { subscribe, update } = writable<BabyData>({
-    boredom: 0,
-    currentToy: null,
-    aversions: {},
-    favorites: {}
-  });
+  const { subscribe, update } = writable<BabyData>(initialState);
 
   return {
     subscribe,
@@ -84,6 +86,9 @@ const createBabyStore = () => {
         // console.table(data.boredomMap);
         return data;
       })
+    },
+    resetBabyStore: () => {
+      update(data => data = initialState)
     }
   }
 }

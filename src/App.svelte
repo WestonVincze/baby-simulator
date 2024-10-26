@@ -1,6 +1,5 @@
 <script lang="ts">
-  import MainMenu from "./scenes/MainMenu.svelte";
-  import Game from "./scenes/Game.svelte";
+  import GameManager from "./scenes/GameManager.svelte";
 </script>
 
 <main>
@@ -8,8 +7,7 @@
     <h1>Baby Simulator</h1>
   </header>
   <section>
-    <Game />
-    <MainMenu />
+    <GameManager />
   </section>
 </main>
 
