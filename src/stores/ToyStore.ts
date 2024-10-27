@@ -6,6 +6,9 @@ const createToyStore = () => {
 
   return {
     subscribe,
+    resetToys: () => {
+      update(state => []);
+    },
     addToy: (toy: Pick<Partial<ToyData>, "position"> & Omit<ToyData, "id" | "position">) => update(toys => [
       ...toys,
       { ...toy, id: (toys.length + 1).toString(), position: toy.position || { x: 0, y: 0 }},
@@ -23,4 +26,4 @@ const createToyStore = () => {
   }
 }
 
-export const toys = createToyStore();
+export const toyStore = createToyStore();

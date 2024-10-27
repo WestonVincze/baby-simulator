@@ -1,11 +1,11 @@
 <script lang="ts">
   import Baby from "./Baby.svelte";
   import Toy from "./Toy.svelte";
-  import { toys } from "../stores/ToyStore";
+  import { toyStore } from "../stores/ToyStore";
   import { dragDrop } from "../actions/dragDropAction";
   import InfoTooltip from "./InfoTooltip.svelte";
 
-  $: playMatToys = $toys.filter(toy => toy.loc === "PlayMat");
+  $: playMatToys = $toyStore.filter(toy => toy.loc === "PlayMat");
 </script>
 
 <div class="playMat" use:dragDrop={{ dropZone: "PlayMat" }} role="presentation">

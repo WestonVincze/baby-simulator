@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
 import { babyStore } from "./BabyStore";
+import { toyStore } from "./ToyStore";
 
 export enum Scene {
   MainMenu,
@@ -44,6 +45,7 @@ export const startGame = () => {
 
   // reset stores
   babyStore.resetBabyStore();
+  toyStore.resetToys();
 };
 
 /** 

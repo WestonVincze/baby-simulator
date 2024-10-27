@@ -2,21 +2,21 @@
   import BasicShape from "../icons/ToyIcon.svelte";
   import Toy from "./Toy.svelte";
   import { dragDrop } from "../actions/dragDropAction";
-  import { toys } from "../stores/ToyStore";
+  import { toyStore } from "../stores/ToyStore";
   import type { ToyData } from "../types";
   import { onDestroy } from "svelte";
   import { babyStore } from "../stores/BabyStore";
 
   let baby: HTMLImageElement;
 
-  $: currentToy = $toys.filter(toy => toy.loc === "Baby")[0] ?? null;
+  $: currentToy = $toyStore.filter(toy => toy.loc === "Baby")[0] ?? null;
   $: babyStore.setCurrentToy(currentToy);
 
   const update = setInterval(() => {
     babyStore.updateStats();
   }, 200);
 
-  $: desiredToy = currentToy || $toys
+  $: desiredToy = currentToy || $toyStore
     .filter(toy => toy.loc === "PlayMat")
     .map(toy => ({ toy, distance: Math.sqrt(
       Math.pow(toy.position.x - 400, 2) +
@@ -30,7 +30,7 @@
 
   const handleDrop = (id: string) => {
     if (currentToy && currentToy.id !== id) {
-      toys.updateToy(currentToy.id, "ToyBox", Infinity, 0);
+      toyStore.updateToy(currentToy.id, "ToyBox", Infinity, 0);
     }
   }
 

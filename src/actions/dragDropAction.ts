@@ -1,4 +1,4 @@
-import { toys } from "../stores/ToyStore";
+import { toyStore } from "../stores/ToyStore";
 import type { Action } from "svelte/action"
 import type { DragData, DropZone } from "../types";
 
@@ -40,7 +40,7 @@ export const dragDrop: Action<HTMLElement, DragDropOptions> = (node, options) =>
     const x = Math.max(0, Math.min(rect.width - width, offsetX));
     const y = Math.max(0, Math.min(rect.height - height, offsetY));
 
-    toys.updateToy(id, dropZone, x, y);
+    toyStore.updateToy(id, dropZone, x, y);
     options.onDrop?.(id);
   }
 

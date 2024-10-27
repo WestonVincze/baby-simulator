@@ -1,19 +1,19 @@
 <script lang="ts">
   import Toy from "./Toy.svelte";
-  import { toys } from "../stores/ToyStore";
+  import { toyStore } from "../stores/ToyStore";
   import { dragDrop } from "../actions/dragDropAction";
   import { TOY_SIZE } from "../constants";
   import { Toys } from "../data/Toys";
   import InfoTooltip from "./InfoTooltip.svelte";
 
-  Toys.forEach(properties => toys.addToy({ loc: "ToyBox", properties }));
+  Toys.forEach(properties => toyStore.addToy({ loc: "ToyBox", properties }));
 
-  $: toyBoxToys = $toys
+  $: toyBoxToys = $toyStore
     .filter(toy => toy.loc === "ToyBox")
     .sort((toyA, toyB) => toyA.position.x - toyB.position.x)
     .map((toy, i) => {
       const x = i * (TOY_SIZE + 15) + 15;
-      toys.updateToy(toy.id, toy.loc, x, toy.position.y);
+      toyStore.updateToy(toy.id, toy.loc, x, toy.position.y);
       return toy;
     });
 </script>

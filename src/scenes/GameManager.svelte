@@ -19,10 +19,21 @@
   $: console.log(state.activeScene)
 </script>
 
-{#if state.activeScene === Scene.MainMenu}
-  <MainMenu />
-{:else if state.activeScene === Scene.Playing}
-  <Game />
-{:else if state.activeScene === Scene.GameOver}
-  <GameOver />
-{/if}
+<div class="game">
+  {#if state.activeScene === Scene.MainMenu}
+    <MainMenu />
+  {:else if state.activeScene === Scene.Playing}
+    <Game />
+  {:else if state.activeScene === Scene.GameOver}
+    <GameOver />
+  {/if}
+</div>
+
+<style>
+  .game {
+    width: 995px;
+    height: 650px;
+    display: flex;
+    justify-content: center;
+  }
+</style>
