@@ -9,3 +9,12 @@ export const mapDynamicColors = (defaultColors: string[], dynamicColors: string[
       : color
   );
 }
+
+/**
+ * Calculates the time passed from the given timestamp to now
+ * @param timestamp value (in ms)
+ * @returns time (in ms) passed or 0 if the timestamp is in the future
+ */
+export const getTimeSinceTimestamp = (timestamp: number) => {
+  return Math.max(0, performance.now() - timestamp);
+}

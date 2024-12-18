@@ -6,6 +6,7 @@
   import type { ToyState } from "../types";
   import { onDestroy } from "svelte";
   import { babyStore } from "../stores/BabyStore";
+  import { getTimeSinceTimestamp } from "../helpers";
 
   let baby: HTMLImageElement;
 
@@ -28,6 +29,18 @@
       : toy, { toy: null, distance: Infinity })
     .toy || null;
 
+
+  // TODO: remove this placeholder for tracking the most recently interacted toy
+  $: mostRecentlyInteractedToy = $toyStore
+    .filter(toy => toy.loc === "PlayMat" && toy.lastMoveTime)
+    .map(toy => ({ name: toy.data.name, time: getTimeSinceTimestamp(toy.lastMoveTime!) }))
+    .reduce((mostRecentlyInteractedToy, toy) => 
+      mostRecentlyInteractedToy.time < toy.time
+      ? mostRecentlyInteractedToy
+      : toy, { name: "", time: Infinity }).name;
+
+  $: console.log(mostRecentlyInteractedToy);
+  
   const handleDrop = (id: string) => {
     if (currentToy && currentToy.id !== id) {
       toyStore.updateToy(currentToy.id, "ToyBox", Infinity, 0);
