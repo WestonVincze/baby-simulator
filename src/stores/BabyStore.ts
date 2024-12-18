@@ -1,11 +1,12 @@
 import { writable } from "svelte/store";
 import type { ToyAttributes, ToyState, ToyAttribute } from "../types";
+import { calculateNBA } from "../helpers";
 
 type BabyData = {
   currentToy: ToyState | null,
-  boredom: number,               // 0-100
-  aversions: ToyAttributes,      // 0-100
-  favorites: ToyAttributes,      // 0-100
+  boredom: number,               // 0-1
+  aversions: ToyAttributes,      // 0-1
+  favorites: ToyAttributes,      // 0-1
 }
 
 /**
@@ -17,9 +18,9 @@ type BabyData = {
  */
 const setOrIncrementAttribute = (map: Record<string, number>, property: string, value: number) => {
   if (map[property]) {
-    map[property] = Math.min(map[property] + value, 100); 
+    map[property] = Math.min(map[property] + value / 100, 1); 
   } else {
-    map[property] = value;
+    map[property] = value / 100;
   }
   return property;
 }
@@ -44,6 +45,8 @@ const createBabyStore = () => {
     updateStats: () => {
       update(data => {
         const updatedProperties: string[] = [];
+        const NBA: number[] = [];
+
         // update aversions and boredom based on data from currentToy
         if (data.currentToy !== null) {
           const { shapes, colors, patterns, sounds, attributes } = data.currentToy.data;
@@ -51,21 +54,25 @@ const createBabyStore = () => {
           shapes.forEach(shape => {
             setOrIncrementAttribute(data.aversions, shape, 1);
             updatedProperties.push(shape);
+            NBA.push(calculateNBA(data.aversions[shape] || 0, 1))
           })
 
           colors.forEach(color => {
             setOrIncrementAttribute(data.aversions, color, 1);
             updatedProperties.push(color);
+            NBA.push(calculateNBA(data.aversions[color] || 0, 1))
           })
 
           patterns.forEach(pattern => {
             setOrIncrementAttribute(data.aversions, pattern, 1);
             updatedProperties.push(pattern);
+            NBA.push(calculateNBA(data.aversions[pattern] || 0, 1))
           })
 
           sounds.forEach(sound => {
             setOrIncrementAttribute(data.aversions, sound, 1);
             updatedProperties.push(sound);
+            NBA.push(calculateNBA(data.aversions[sound] || 0, 1))
           })
 
           Object.keys(attributes).forEach(attribute => {
@@ -74,11 +81,13 @@ const createBabyStore = () => {
 
             setOrIncrementAttribute(data.aversions, attribute, value);
             updatedProperties.push(attribute);
+            NBA.push(calculateNBA(data.aversions[attribute as ToyAttribute] || 0, value))
           })
 
-          data.boredom = Math.max(data.boredom - 1, 0);
+          // remove this !!
+          data.boredom = Math.max(data.boredom - 0.01, 0);
         } else {
-          data.boredom = Math.min(data.boredom + 1, 100);
+          data.boredom = Math.min(data.boredom + 0.01, 1);
         }
 
         // depreciate aversion for properties that currentToy does not contain
@@ -86,9 +95,17 @@ const createBabyStore = () => {
           const property = key as ToyAttribute;
 
           if (updatedProperties.findIndex(updated => updated === property) === -1) {
-            data.aversions[property] = Math.max(data.aversions[property]! -= 0.5, 5);
+            data.aversions[property] = Math.max(data.aversions[property]! -= 0.005, 0);
           }
         })
+
+        // calculate boredom
+        // for each attribute, return a value from 0-1 where 0 
+        if (NBA.length > 0) {
+          console.log(NBA.reduce((prev, curr) => prev += curr) / NBA.length);
+        }
+
+        // we need 
 
         // console.table(data.boredomMap);
         return data;

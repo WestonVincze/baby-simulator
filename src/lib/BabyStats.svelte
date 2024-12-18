@@ -13,7 +13,7 @@
 <h2>Boredom <InfoTooltip text="Playing with toys reduces boredom but the meter fills to 100% the simulation ends." /></h2>
 <div class="boredom">
   <div class="bar">
-    <ProgressBar min={$babyStore.boredom} max={100} />
+    <ProgressBar min={$babyStore.boredom} max={1} />
   </div>
 </div>
 
@@ -26,7 +26,7 @@
   <div class="aversions">
     <span>{aversion}:</span>
     <div class="bar">
-      <ProgressBar min={value || 0} max={100} />
+      <ProgressBar min={value || 0} max={1} />
     </div>
   </div>
 {/each}
