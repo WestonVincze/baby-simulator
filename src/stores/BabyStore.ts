@@ -4,9 +4,9 @@ import { calculateNBA } from "../helpers";
 
 type BabyData = {
   currentToy: ToyState | null,
-  boredom: number,               // 0-1
+  boredom: number,                 // 0-1
   aversions: ToyAttributes,      // 0-1
-  favorites: ToyAttributes,      // 0-1
+  preferences: ToyAttributes,    // 0-1
 }
 
 /**
@@ -29,7 +29,7 @@ const initialState: BabyData = Object.freeze({
   boredom: 0,
   currentToy: null,
   aversions: {},
-  favorites: {}
+  preferences: {}
 });
 
 const createBabyStore = () => {
@@ -42,6 +42,17 @@ const createBabyStore = () => {
         return ({ ...data, currentToy: toy })
       })
     },
+    getCurrentToyAttributes: () => {
+      let currentAttributes: string[] = [];
+      update(data => {
+        if (data.currentToy !== null) {
+          const { shapes, colors, patterns, sounds, attributes } = data.currentToy.data;
+          currentAttributes = [...shapes, ...colors, ...patterns, ...sounds, ...Object.keys(attributes)];
+        }
+        return data;
+      });
+      return currentAttributes;
+    },
     updateStats: () => {
       update(data => {
         const updatedProperties: string[] = [];
@@ -52,25 +63,25 @@ const createBabyStore = () => {
           const { shapes, colors, patterns, sounds, attributes } = data.currentToy.data;
 
           shapes.forEach(shape => {
-            setOrIncrementAttribute(data.aversions, shape, 1);
+            setOrIncrementAttribute(data.aversions, shape, 1 / shapes.length);
             updatedProperties.push(shape);
             NbaValues.push(calculateNBA(data.aversions[shape] || 0, 1))
           })
 
           colors.forEach(color => {
-            setOrIncrementAttribute(data.aversions, color, 1);
+            setOrIncrementAttribute(data.aversions, color, 1 / colors.length);
             updatedProperties.push(color);
             NbaValues.push(calculateNBA(data.aversions[color] || 0, 1))
           })
 
           patterns.forEach(pattern => {
-            setOrIncrementAttribute(data.aversions, pattern, 1);
+            setOrIncrementAttribute(data.aversions, pattern, 1 / patterns.length);
             updatedProperties.push(pattern);
             NbaValues.push(calculateNBA(data.aversions[pattern] || 0, 1))
           })
 
           sounds.forEach(sound => {
-            setOrIncrementAttribute(data.aversions, sound, 1);
+            setOrIncrementAttribute(data.aversions, sound, 1 / sounds.length);
             updatedProperties.push(sound);
             NbaValues.push(calculateNBA(data.aversions[sound] || 0, 1))
           })
@@ -90,7 +101,7 @@ const createBabyStore = () => {
           const property = key as ToyAttribute;
 
           if (updatedProperties.findIndex(updated => updated === property) === -1) {
-            data.aversions[property] = Math.max(data.aversions[property]! -= 0.005, 0);
+            data.aversions[property] = Math.max(data.aversions[property]! -= 0.01, 0);
           }
         })
 
@@ -102,7 +113,7 @@ const createBabyStore = () => {
       })
     },
     resetBabyStore: () => {
-      update(data => ({ ...data, boredom: 0, aversions: {}, favorites: {} }))
+      update(data => ({ ...data, boredom: 0, aversions: {}, preferences: {} }))
     }
   }
 }

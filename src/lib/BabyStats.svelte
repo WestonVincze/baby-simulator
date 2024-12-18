@@ -4,6 +4,7 @@
   import type { ToyAttribute } from "../types";
   import InfoTooltip from "./InfoTooltip.svelte";
 
+  $: currentToyAttributes = $babyStore.currentToy ? babyStore.getCurrentToyAttributes() : [];
   $: aversions = Object.keys($babyStore.aversions).map(
     aversion => ({ aversion, value: $babyStore.aversions[aversion as ToyAttribute]})
   );
@@ -26,7 +27,7 @@
   <div class="aversions">
     <span>{aversion}:</span>
     <div class="bar">
-      <ProgressBar min={value || 0} max={1} />
+      <ProgressBar min={value || 0} max={1} color={currentToyAttributes.includes(aversion) ? "tomato" : "slateblue"} />
     </div>
   </div>
 {/each}

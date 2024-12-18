@@ -15,7 +15,7 @@
 
   const update = setInterval(() => {
     babyStore.updateStats();
-  }, 200);
+  }, 100);
 
   $: desiredToy = currentToy || $toyStore
     .filter(toy => toy.loc === "PlayMat")
@@ -39,7 +39,7 @@
       ? mostRecentlyInteractedToy
       : toy, { name: "", time: Infinity }).name;
 
-  $: console.log(mostRecentlyInteractedToy);
+  $: console.log(`most recently interacted toy: ${mostRecentlyInteractedToy || "N/A"}`);
   
   const handleDrop = (id: string) => {
     if (currentToy && currentToy.id !== id) {

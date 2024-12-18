@@ -1,12 +1,13 @@
 <script lang="ts">
   export let min: number;
   export let max: number;
+  export let color: string = "slateblue";
 
   $: percentage = min / max * 100;
 </script>
 
 <div class="progress-bar">
-  <div class="slider" style="--width: {percentage}%" />
+  <div class="slider" style="--width: {percentage}%; --color: {color};" />
 </div>
 
 <style>
@@ -27,7 +28,7 @@
     left: 0;
     width: var(--width);
     height: 100%;
-    background-color: slateblue;
+    background-color: var(--color);
     box-shadow: inset 0 0 4px 3px #0002;
   }
 </style>

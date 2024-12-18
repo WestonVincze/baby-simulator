@@ -26,7 +26,6 @@ export const Toys: ToyData[] = [
       interactivity: .6,
       symmetry: .1,
       smoothness: .2,
-      luster: 0,
     }
   },
   {
