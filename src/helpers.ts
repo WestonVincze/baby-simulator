@@ -30,7 +30,7 @@ const isZeroToOne = (value: number): boolean => {
 
 /**
  * Calculates the Net Boredom Adjustment (NBA) using an attribute's value (V) and its current aversion (A).
- * NBA = V * (1 - A) - V * A
+ * NBA = -1 * (V * (1 - A) - V * A)
  * @param attributeAversion attribute's aversion (must be between 0 and 1)
  * @param attributeValue attribute's value (must be between 0 and 1)
  * @returns Net Boredom Adjustment (NBA) as a range of -1 to 1
@@ -40,5 +40,5 @@ export const calculateNBA = (attributeAversion: number, attributeValue: number) 
     throw new Error(`Out of range. 'attributeAversion' and 'attributeValue' must be between 0 and 1. Provided values attributeAversion: ${attributeAversion} and attributeValue: ${attributeValue}`);
   }
 
-  return attributeValue * (1 - attributeAversion) - attributeValue * attributeAversion;
+  return -1 * (attributeValue * (1 - attributeAversion) - attributeValue * attributeAversion);
 }
