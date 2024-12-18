@@ -18,3 +18,27 @@ export const mapDynamicColors = (defaultColors: string[], dynamicColors: string[
 export const getTimeSinceTimestamp = (timestamp: number) => {
   return Math.max(0, performance.now() - timestamp);
 }
+
+/**
+ * Checks if a numeric value is between 0 and 1
+ * @param value 
+ * @returns `true` if `value` is between 0 and 1, `false` otherwise
+ */
+const isZeroToOne = (value: number): boolean => {
+  return value >= 0 && value <= 1;
+}
+
+/**
+ * Calculates the Net Boredom Adjustment (NBA) using an attribute's value (V) and its current aversion (A).
+ * NBA = V * (1 - A) - V * A
+ * @param attributeAversion attribute's aversion (must be between 0 and 1)
+ * @param attributeValue attribute's value (must be between 0 and 1)
+ * @returns Net Boredom Adjustment (NBA) as a range of -1 to 1
+ */
+export const calculateNBA = (attributeAversion: number, attributeValue: number) => {
+  if (!isZeroToOne(attributeAversion) || !isZeroToOne(attributeValue)) {
+    throw new Error(`Out of range. 'attributeAversion' and 'attributeValue' must be between 0 and 1. Provided values attributeAversion: ${attributeAversion} and attributeValue: ${attributeValue}`);
+  }
+
+  return attributeValue * (1 - attributeAversion) - attributeValue * attributeAversion;
+}
