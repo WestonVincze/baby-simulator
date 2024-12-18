@@ -31,6 +31,8 @@
   </div>
 {/each}
 
+<button on:click={() => babyStore.resetBabyStore()}>Reset</button>
+
 <style>
   h2 {
     display: flex;
@@ -65,5 +67,8 @@
   }
   .aversions .bar {
     width: 60px;
+  }
+  button {
+    margin-top: 15px;
   }
 </style>

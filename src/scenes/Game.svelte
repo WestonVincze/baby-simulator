@@ -26,6 +26,7 @@
     gap: 15px;
   }
   aside {
+    width: 225px;
     background-color: #49243E;
     padding: 15px;
     border-radius: 15px;

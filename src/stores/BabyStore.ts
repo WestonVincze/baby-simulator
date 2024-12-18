@@ -25,15 +25,15 @@ const setOrIncrementAttribute = (map: Record<string, number>, property: string, 
   return property;
 }
 
-const initialState: BabyData = {
+const initialState: BabyData = Object.freeze({
   boredom: 0,
   currentToy: null,
   aversions: {},
   favorites: {}
-}
+});
 
 const createBabyStore = () => {
-  const { subscribe, update } = writable<BabyData>(initialState);
+  const { subscribe, update } = writable<BabyData>({ ...initialState });
 
   return {
     subscribe,
@@ -112,7 +112,7 @@ const createBabyStore = () => {
       })
     },
     resetBabyStore: () => {
-      update(data => data = initialState)
+      update(data => ({ ...data, boredom: 0, aversions: {}, favorites: {} }))
     }
   }
 }

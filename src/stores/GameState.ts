@@ -52,7 +52,7 @@ export const startGame = () => {
  * End the simulation if the baby's boredom reaches capacity (100%)
  */
 babyStore.subscribe(babyData => {
-  if (babyData.boredom >= 100) {
+  if (babyData.boredom >= 1) {
     gameState.update(state => {
       state.activeScene = Scene.GameOver;
       state.isPaused = true;
