@@ -45,7 +45,7 @@ const createBabyStore = () => {
     updateStats: () => {
       update(data => {
         const updatedProperties: string[] = [];
-        const NBA: number[] = [];
+        const NbaValues: number[] = [];
 
         // update aversions and boredom based on data from currentToy
         if (data.currentToy !== null) {
@@ -54,25 +54,25 @@ const createBabyStore = () => {
           shapes.forEach(shape => {
             setOrIncrementAttribute(data.aversions, shape, 1);
             updatedProperties.push(shape);
-            NBA.push(calculateNBA(data.aversions[shape] || 0, 1))
+            NbaValues.push(calculateNBA(data.aversions[shape] || 0, 1))
           })
 
           colors.forEach(color => {
             setOrIncrementAttribute(data.aversions, color, 1);
             updatedProperties.push(color);
-            NBA.push(calculateNBA(data.aversions[color] || 0, 1))
+            NbaValues.push(calculateNBA(data.aversions[color] || 0, 1))
           })
 
           patterns.forEach(pattern => {
             setOrIncrementAttribute(data.aversions, pattern, 1);
             updatedProperties.push(pattern);
-            NBA.push(calculateNBA(data.aversions[pattern] || 0, 1))
+            NbaValues.push(calculateNBA(data.aversions[pattern] || 0, 1))
           })
 
           sounds.forEach(sound => {
             setOrIncrementAttribute(data.aversions, sound, 1);
             updatedProperties.push(sound);
-            NBA.push(calculateNBA(data.aversions[sound] || 0, 1))
+            NbaValues.push(calculateNBA(data.aversions[sound] || 0, 1))
           })
 
           Object.keys(attributes).forEach(attribute => {
@@ -81,14 +81,9 @@ const createBabyStore = () => {
 
             setOrIncrementAttribute(data.aversions, attribute, value);
             updatedProperties.push(attribute);
-            NBA.push(calculateNBA(data.aversions[attribute as ToyAttribute] || 0, value))
+            NbaValues.push(calculateNBA(data.aversions[attribute as ToyAttribute] || 0, value))
           })
-
-          // remove this !!
-          data.boredom = Math.max(data.boredom - 0.01, 0);
-        } else {
-          data.boredom = Math.min(data.boredom + 0.01, 1);
-        }
+        } 
 
         // depreciate aversion for properties that currentToy does not contain
         Object.keys(data.aversions).forEach(key => {
@@ -99,15 +94,10 @@ const createBabyStore = () => {
           }
         })
 
-        // calculate boredom
-        // for each attribute, return a value from 0-1 where 0 
-        if (NBA.length > 0) {
-          console.log(NBA.reduce((prev, curr) => prev += curr) / NBA.length);
-        }
+        const NbaTotal = NbaValues.length > 0 ? NbaValues.reduce((prev, curr) => prev += curr) / NbaValues.length : 1;
 
-        // we need 
+        data.boredom = Math.min(Math.max(data.boredom + NbaTotal / 100, 0), 1);
 
-        // console.table(data.boredomMap);
         return data;
       })
     },
