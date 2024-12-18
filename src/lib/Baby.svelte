@@ -3,7 +3,7 @@
   import Toy from "./Toy.svelte";
   import { dragDrop } from "../actions/dragDropAction";
   import { toyStore } from "../stores/ToyStore";
-  import type { ToyData } from "../types";
+  import type { ToyState } from "../types";
   import { onDestroy } from "svelte";
   import { babyStore } from "../stores/BabyStore";
 
@@ -21,7 +21,7 @@
     .map(toy => ({ toy, distance: Math.sqrt(
       Math.pow(toy.position.x - 400, 2) +
       Math.pow(toy.position.y - 250, 2))
-    } as { toy: ToyData | null, distance: number }))
+    } as { toy: ToyState | null, distance: number }))
     .reduce((closestToy, toy) =>
       closestToy.distance < toy.distance
       ? closestToy
@@ -56,7 +56,7 @@
           src="thought-bubbles.svg"
           alt="thought bubble graphic"
         />
-        <BasicShape name={desiredToy.properties.name} colors={desiredToy.properties.colors} />
+        <BasicShape name={desiredToy.data.name} colors={desiredToy.data.colors} />
       </div>
     </div>
   {/if}

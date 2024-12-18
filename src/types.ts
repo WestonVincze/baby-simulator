@@ -49,7 +49,7 @@ export type Sound =
   | "beep"
   | "pop";
 
-export type ToyProperty =
+export type ToyAttribute =
   | Shape
   | Color
   | Pattern
@@ -64,10 +64,10 @@ export type ToyProperty =
   | "luster";
 
 export type ToyAttributes = {
-  [key in ToyProperty]?: number
+  [key in ToyAttribute]?: number
 }
 
-export type ToyProperties = {
+export type ToyData = {
   name: ToyName,
   shapes: Shape[],           // primary shape
   colors: Color[],           // ordered from highest to lowest %
@@ -76,10 +76,10 @@ export type ToyProperties = {
   attributes: ToyAttributes, // 0-1
 }
 
-export type ToyData = {
+export type ToyState = {
   id: string,
   loc: DropZone,
   position: { x: number, y: number },
   lastMoveTime?: number,
-  properties: ToyProperties
+  data: ToyData
 }

@@ -1,11 +1,11 @@
 <script lang="ts">
   import ProgressBar from "./ProgressBar.svelte";
   import { babyStore } from "../stores/BabyStore";
-  import type { ToyProperty } from "../types";
+  import type { ToyAttribute } from "../types";
   import InfoTooltip from "./InfoTooltip.svelte";
 
   $: aversions = Object.keys($babyStore.aversions).map(
-    aversion => ({ aversion, value: $babyStore.aversions[aversion as ToyProperty]})
+    aversion => ({ aversion, value: $babyStore.aversions[aversion as ToyAttribute]})
   );
 </script>
 

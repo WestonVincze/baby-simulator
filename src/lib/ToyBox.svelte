@@ -6,7 +6,7 @@
   import { Toys } from "../data/Toys";
   import InfoTooltip from "./InfoTooltip.svelte";
 
-  Toys.forEach(properties => toyStore.addToy({ loc: "ToyBox", properties }));
+  Toys.forEach(properties => toyStore.addToy({ loc: "ToyBox", data: properties }));
 
   $: toyBoxToys = $toyStore
     .filter(toy => toy.loc === "ToyBox")

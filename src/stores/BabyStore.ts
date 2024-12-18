@@ -1,14 +1,21 @@
 import { writable } from "svelte/store";
-import type { ToyAttributes, ToyData, ToyProperty } from "../types";
+import type { ToyAttributes, ToyState, ToyAttribute } from "../types";
 
 type BabyData = {
-  currentToy: ToyData | null,
+  currentToy: ToyState | null,
   boredom: number,               // 0-100
   aversions: ToyAttributes,      // 0-100
   favorites: ToyAttributes,      // 0-100
 }
 
-const setOrIncrementProperty = (map: Record<string, number>, property: string, value: number) => {
+/**
+ * 
+ * @param map 
+ * @param property 
+ * @param value 
+ * @returns 
+ */
+const setOrIncrementAttribute = (map: Record<string, number>, property: string, value: number) => {
   if (map[property]) {
     map[property] = Math.min(map[property] + value, 100); 
   } else {
@@ -29,7 +36,7 @@ const createBabyStore = () => {
 
   return {
     subscribe,
-    setCurrentToy: (toy: ToyData | null) => {
+    setCurrentToy: (toy: ToyState | null) => {
       update(data => {
         return ({ ...data, currentToy: toy })
       })
@@ -39,33 +46,33 @@ const createBabyStore = () => {
         const updatedProperties: string[] = [];
         // update aversions and boredom based on data from currentToy
         if (data.currentToy !== null) {
-          const { shapes, colors, patterns, sounds, attributes } = data.currentToy.properties;
+          const { shapes, colors, patterns, sounds, attributes } = data.currentToy.data;
 
           shapes.forEach(shape => {
-            setOrIncrementProperty(data.aversions, shape, 1);
+            setOrIncrementAttribute(data.aversions, shape, 1);
             updatedProperties.push(shape);
           })
 
           colors.forEach(color => {
-            setOrIncrementProperty(data.aversions, color, 1);
+            setOrIncrementAttribute(data.aversions, color, 1);
             updatedProperties.push(color);
           })
 
           patterns.forEach(pattern => {
-            setOrIncrementProperty(data.aversions, pattern, 1);
+            setOrIncrementAttribute(data.aversions, pattern, 1);
             updatedProperties.push(pattern);
           })
 
           sounds.forEach(sound => {
-            setOrIncrementProperty(data.aversions, sound, 1);
+            setOrIncrementAttribute(data.aversions, sound, 1);
             updatedProperties.push(sound);
           })
 
           Object.keys(attributes).forEach(attribute => {
-            const value = attributes[attribute as ToyProperty] || 0;
+            const value = attributes[attribute as ToyAttribute] || 0;
             if (value === 0) return;
 
-            setOrIncrementProperty(data.aversions, attribute, value);
+            setOrIncrementAttribute(data.aversions, attribute, value);
             updatedProperties.push(attribute);
           })
 
@@ -76,7 +83,7 @@ const createBabyStore = () => {
 
         // depreciate aversion for properties that currentToy does not contain
         Object.keys(data.aversions).forEach(key => {
-          const property = key as ToyProperty;
+          const property = key as ToyAttribute;
 
           if (updatedProperties.findIndex(updated => updated === property) === -1) {
             data.aversions[property] = Math.max(data.aversions[property]! -= 0.5, 5);

@@ -15,7 +15,9 @@
     background-color: #49243E;
     border-radius: 15px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 15px;
   }
 </style>

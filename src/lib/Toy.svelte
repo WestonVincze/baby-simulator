@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { DragData, ToyData } from "../types";
+  import type { DragData, ToyState } from "../types";
   import ToyIcon from "../icons/ToyIcon.svelte";
 
-  export let toy: ToyData
+  export let toy: ToyState
   export let absolutePosition = false;
 
   const handleDragStart = (event: DragEvent) => {
@@ -35,11 +35,11 @@
     /* debug: print toy data */
     console.log(`toy ${toy.id}`);
     console.log(`lastMoveTime: ${toy.lastMoveTime}`);
-    console.log(`shape: ${toy.properties.shapes}`);
-    console.log(`colors: ${toy.properties.colors.join(", ")}`);
-    console.log(`patterns: ${toy.properties.patterns.join(", ")}`);
-    console.log(`sounds: ${toy.properties.sounds.join(", ")}`);
-    console.table(toy.properties.attributes);
+    console.log(`shape: ${toy.data.shapes}`);
+    console.log(`colors: ${toy.data.colors.join(", ")}`);
+    console.log(`patterns: ${toy.data.patterns.join(", ")}`);
+    console.log(`sounds: ${toy.data.sounds.join(", ")}`);
+    console.table(toy.data.attributes);
   }
 </script>
 
@@ -57,7 +57,7 @@
        top: ${toy.position?.y}px;`
     : ""}"
   >
-  <ToyIcon name={toy.properties.name} colors={toy.properties.colors} />
+  <ToyIcon name={toy.data.name} colors={toy.data.colors} />
 </div>
 
 <style>

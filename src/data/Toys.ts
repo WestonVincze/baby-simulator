@@ -1,6 +1,6 @@
-import type { ToyProperties } from "../types";
+import type { ToyData } from "../types";
 
-export const Toys: ToyProperties[] = [
+export const Toys: ToyData[] = [
   {
     name: "abcBlocks",
     shapes: ["square"],
