@@ -24,12 +24,14 @@
 {/if}
 
 {#each aversions as { aversion, value }}
-  <div class="aversions">
-    <span>{aversion}:</span>
-    <div class="bar">
-      <ProgressBar min={value || 0} max={1} color={currentToyAttributes.includes(aversion) ? "tomato" : "slateblue"} />
+  {#if value && value > 0}
+    <div class="aversions">
+      <span>{aversion}:</span>
+      <div class="bar">
+        <ProgressBar min={value || 0} max={1} color={currentToyAttributes.includes(aversion) ? "tomato" : "slateblue"} />
+      </div>
     </div>
-  </div>
+  {/if}
 {/each}
 
 <button on:click={() => babyStore.resetBabyStore()}>Reset</button>

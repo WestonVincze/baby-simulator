@@ -15,12 +15,15 @@ export type ToyName =
   | "pyramidStack"
   | "rattle"
   | "teddy"
-  | "train"
+  | "train";
 
 export type Shape = 
   | "triangle"
   | "circle"
-  | "square";
+  | "square"
+  | "oval"
+  | "rectangle"
+  | "wire";
 
 export type Color =
   | "white"
@@ -45,6 +48,7 @@ export type Sound =
   | "squeak"
   | "rattle"
   | "clank"
+  | "clink"
   | "ding"
   | "beep"
   | "pop";

@@ -4,7 +4,7 @@ export const Toys: ToyData[] = [
   {
     name: "abcBlocks",
     shapes: ["square"],
-    colors: [],
+    colors: ["yellow", "red", "blue"],
     patterns: ["letters"],
     sounds: ["clank"],
     attributes: {
@@ -17,10 +17,10 @@ export const Toys: ToyData[] = [
   },
   {
     name: "abacus",
-    shapes: ["square", "circle"],
-    colors: [],
+    shapes: ["rectangle", "circle", "wire"],
+    colors: ["yellow", "blue", "red", "peach"],
     patterns: [],
-    sounds: [],
+    sounds: ["clink"],
     attributes: {
       complexity: .8,
       interactivity: .6,
@@ -31,9 +31,9 @@ export const Toys: ToyData[] = [
   {
     name: "ball",
     shapes: ["circle"],
-    colors: [],
+    colors: ["white", "red"],
     patterns: ["stripes"],
-    sounds: [],
+    sounds: ["squeak"],
     attributes: {
       complexity: 0.1,
       interactivity: 0.5,
@@ -44,26 +44,24 @@ export const Toys: ToyData[] = [
   },
   {
     name: "castle",
-    shapes: ["square"],
-    colors: [],
+    shapes: ["rectangle"],
+    colors: ["brown", "green", "peach", "white"],
     patterns: [],
     sounds: [],
     attributes: {
       complexity: 0.3,
       interactivity: 0.2,
       symmetry: 0.9,
-      smoothness: 0.1,
       luster: 0.2
     }
   },
   {
     name: "ducky",
-    shapes: ["circle"],
-    colors: [],
+    shapes: ["circle", "oval"],
+    colors: ["yellow", "red"],
     patterns: [],
     sounds: ["squeak"],
     attributes: {
-      complexity: 0.1,
       interactivity: 0.3,
       symmetry: 0.3,
       smoothness: 0.8,
@@ -73,7 +71,7 @@ export const Toys: ToyData[] = [
   {
     name: "pyramidStack",
     shapes: ["circle", "triangle"],
-    colors: [],
+    colors: ["white", "red", "green", "yellow", "blue"],
     patterns: [],
     sounds: [],
     attributes: {
@@ -86,8 +84,8 @@ export const Toys: ToyData[] = [
   },
   {
     name: "rattle",
-    shapes: ["circle"],
-    colors: [],
+    shapes: ["circle", "wire"],
+    colors: ["blue", "green", "red"],
     patterns: ["stripes"],
     sounds: ["rattle"],
     attributes: {
@@ -101,27 +99,23 @@ export const Toys: ToyData[] = [
   {
     name: "teddy",
     shapes: ["circle"],
-    colors: [],
+    colors: ["brown", "peach"],
     patterns: [],
     sounds: [],
     attributes: {
-      complexity: 0.2,
-      interactivity: 0.1,
       symmetry: 0.7,
       smoothness: 0.2,
-      luster: 0.1
     }
   },
   {
     name: "train",
-    shapes: ["square", "circle"],
-    colors: [],
+    shapes: ["square", "circle", "rectangle"],
+    colors: ["white", "red", "green", "blue"],
     patterns: ["stripes"],
     sounds: [],
     attributes: {
       complexity: 0.4,
       interactivity: 0.6,
-      symmetry: 0.1,
       smoothness: 0.5,
       luster: 0.6
     }
