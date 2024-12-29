@@ -4,7 +4,7 @@ import { calculateNBA } from "../helpers";
 
 type BabyData = {
   currentToy: ToyState | null,
-  boredom: number,                 // 0-1
+  boredom: number,               // 0-1
   aversions: ToyAttributes,      // 0-1
   preferences: ToyAttributes,    // 0-1
 }

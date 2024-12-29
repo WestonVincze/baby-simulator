@@ -2,6 +2,9 @@
  * Calculates the overall appeal of a Toy
  */
 
+import { calculateNBA } from "../../helpers";
+import type { ToyAttribute, ToyAttributes } from "../../types";
+
 /** CONTEXT
  * baby data
  * * attribute aversions
@@ -10,7 +13,22 @@
  * * condensed attribute data
  */
 
-const AppealConsideration = (aversions: any, preferences: any, attributes: any) => {
+export const AppealConsideration = (aversions: ToyAttributes, preferences: ToyAttributes, attributes: ToyAttributes) => {
+  /**
+   * iterate through toy properties
+   * check for aversion match
+   * if match, modify value
+   * check for preference match
+   * if match, modifty value
+   * if no matches, value should be 0
+   * iterate through map of properties to calculate total desire
+   */
+  Object.keys(attributes).map(attribute => {
+    console.log(attributes[attribute as ToyAttribute]);
+  })
+
+
+
   /** calculate Aversion */
   // create empty array 
   // iterate through aversions
