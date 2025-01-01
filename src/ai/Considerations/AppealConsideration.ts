@@ -1,47 +1,56 @@
 /**
- * Calculates the overall appeal of a Toy
+ * Appeal Consideration must be the inverse of the NBA
+ * * NBA is positive when a Toy **increases** boredom
+ * * total Appeal should be higher when a Toy reduces boredom
  */
 
 import { calculateNBA } from "../../helpers";
 import type { ToyAttribute, ToyAttributes } from "../../types";
 
-/** CONTEXT
- * baby data
- * * attribute aversions
- * * attribute preferences
- * toy data
- * * condensed attribute data
+/**
+ * Calculates the overall appeal of a Toy
+ * @param aversions Baby's current ToyAttribute aversions
+ * @param preferences Baby's current ToyAttribute preferences
+ * @param attributes ToyAttributes for the Toy being considered
+ * @returns 
  */
+export const AppealConsideration = (
+  aversions: ToyAttributes,
+  preferences: ToyAttributes,
+  attributes: ToyAttributes
+) => {
+  const attributeNbaScores = Object.keys(attributes).map(key => {
+    const attributeName = key as ToyAttribute;
+    const attributeValue = attributes[attributeName];
 
-export const AppealConsideration = (aversions: ToyAttributes, preferences: ToyAttributes, attributes: ToyAttributes) => {
-  /**
-   * iterate through toy properties
-   * check for aversion match
-   * if match, modify value
-   * check for preference match
-   * if match, modifty value
-   * if no matches, value should be 0
-   * iterate through map of properties to calculate total desire
-   */
-  Object.keys(attributes).map(attribute => {
-    console.log(attributes[attribute as ToyAttribute]);
+    // no value for ToyAttribute
+    if (attributeValue === undefined) return 0;
+
+    // defaults
+    let aversionNba = 0;
+    let preferenceNba = 0;
+
+    // attribute match in aversions
+    if (attributeName in aversions && aversions[attributeName]) {
+      console.log("aversion key match: ", aversions[attributeName]);
+      console.log(calculateNBA(aversions[attributeName], attributeValue));
+
+      aversionNba = calculateNBA(aversions[attributeName], attributeValue);
+    }
+
+    // attribute match in preferences
+    if (attributeName in preferences && preferences[attributeName]) {
+      console.log("prefernce key match: ", aversions[attributeName]);
+      console.log(calculateNBA(preferences[attributeName], attributeValue));
+      preferenceNba = 0;
+    }
+
+    // attribute's final NBA score
+    return aversionNba + preferenceNba;
   })
 
-
-
-  /** calculate Aversion */
-  // create empty array 
-  // iterate through aversions
-  // calculate the NBA for matching attributes
-
-  /** calculate Preferences */
-  // create empty array 
-  // iterate through preferences
-  // calculate the NBA for matching attributes
-
-  /** calculate total */
-  // combine aversions and preferences, merging any duplicate attributes
-  // return the average of each value in the array
-  // final value should be 0-1 where 0 is no appeal and 1 is maximum appeal
-  return 0;
+  // average of attribute NBA scores
+  return attributeNbaScores.length > 0
+    ? attributeNbaScores.reduce((prev, curr) => prev += curr) / attributeNbaScores.length
+    : 1;
 }
