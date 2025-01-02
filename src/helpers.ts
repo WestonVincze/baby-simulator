@@ -46,3 +46,37 @@ export const calculateNBA = (attributeAversion: number, attributeValue: number) 
 
   return -1 * (attributeValue * (1 - attributeAversion) - attributeValue * attributeAversion);
 }
+
+/**
+ * Calculates the distance between two points
+ * @returns distance between pos1 and pos2
+ */
+export const calculateDistance = (pos1: { x: number, y: number }, pos2: { x: number, y: number }): number => {
+  const dx = pos2.x - pos1.x;
+  const dy = pos2.y - pos1.y;
+
+  return Math.sqrt(dx**2 + dy**2);
+}
+
+/**
+ * forces a value to be within a 0 to 1 range
+ */
+export const clamp = (value: number) => {
+  return Math.min(Math.max(value, 0), 1);
+}
+
+/**
+ * Rescales data too a range of 0-1
+ * * result is not restricted, use `clamp` to force result to a range of 0-1 (or any other specification) *
+ * @param value original value
+ * @param min minimum value
+ * @param max maxiumum value
+ * @returns a rescaled value where the min is represented as "0" and the the max is respresented as "1"
+ */
+export const rescale = (
+  value: number,
+  min: number,
+  max: number,
+) => {
+  return (value - min) / (max - min);
+}
