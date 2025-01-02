@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { mainMenu, startGame } from "../stores/GameState";
+  import { mainMenu, startGame } from "$stores";
 </script>
 
 <div class="game-over">

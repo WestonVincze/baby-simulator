@@ -1,8 +1,8 @@
 <script lang="ts">
   import Baby from "./Baby.svelte";
   import Toy from "./Toy.svelte";
-  import { toyStore } from "../stores/ToyStore";
-  import { dragDrop } from "../actions/dragDropAction";
+  import { toyStore } from "$stores";
+  import { dragDrop } from "$actions/dragDropAction";
   import InfoTooltip from "./InfoTooltip.svelte";
 
   $: playMatToys = $toyStore.filter(toy => toy.loc === "PlayMat");

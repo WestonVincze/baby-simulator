@@ -8,13 +8,13 @@ export enum Scene {
   GameOver
 }
 
-export type GameState = {
+export type GameStore = {
   activeScene: Scene;
   score: number;
   isPaused: boolean;
 }
 
-export const gameState = writable<GameState>({
+export const gameStore = writable<GameStore>({
   activeScene: Scene.MainMenu,
   score: 0,
   isPaused: false,
@@ -24,7 +24,7 @@ export const gameState = writable<GameState>({
  * Helper function for navigating to Main Menu
  */
 export const mainMenu = () => {
-  gameState.update(state => {
+  gameStore.update(state => {
     state.activeScene = Scene.MainMenu;
     state.isPaused = true;
     return state;
@@ -36,7 +36,7 @@ export const mainMenu = () => {
  */
 export const startGame = () => {
   // initialize / reset game state
-  gameState.update(state => {
+  gameStore.update(state => {
     state.activeScene = Scene.Playing;
     state.isPaused = false;
     state.score = 0;
@@ -53,7 +53,7 @@ export const startGame = () => {
  */
 babyStore.subscribe(babyData => {
   if (babyData.boredom >= 1) {
-    gameState.update(state => {
+    gameStore.update(state => {
       state.activeScene = Scene.GameOver;
       state.isPaused = true;
       return state;

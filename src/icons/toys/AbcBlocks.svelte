@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { HexColors } from "../../data/HexColors";
-  import { mapDynamicColors } from "../../helpers";
+  import { HexColors } from "$data/HexColors";
+  import { mapDynamicColors } from "$helpers";
+  
   export let colors: string[] = [];
   export let size: number;
 

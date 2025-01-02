@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { babyStore } from "$stores";
+  import type { ToyAttribute } from "$types";
   import ProgressBar from "./ProgressBar.svelte";
-  import { babyStore } from "../stores/BabyStore";
-  import type { ToyAttribute } from "../types";
   import InfoTooltip from "./InfoTooltip.svelte";
 
   $: currentToyAttributes = $babyStore.currentToy ? babyStore.getCurrentToyAttributes() : [];
@@ -9,7 +9,6 @@
     aversion => ({ aversion, value: $babyStore.aversions[aversion as ToyAttribute]})
   );
 </script>
-
 
 <h2>Boredom <InfoTooltip text="Playing with toys reduces boredom but the meter fills to 100% the simulation ends." /></h2>
 <div class="boredom">

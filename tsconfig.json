@@ -14,7 +14,17 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+    "baseUrl": "src",
+    "paths": {
+      "$actions/*": ["actions/*"],
+      "$data/*": ["data/*"],
+      "$stores": ["stores"],
+      "$icons/*": ["icons/*"],
+      "$lib/*": ["lib/*"],
+      "$helpers": ["helpers"],
+      "$types": ["types"],
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "src/icons/toys/Ball.svg"],
 }

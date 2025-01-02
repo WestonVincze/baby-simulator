@@ -1,4 +1,4 @@
-import type { ToyData } from "../types";
+import type { ToyData } from "$types";
 
 export const Toys: ToyData[] = [
   {

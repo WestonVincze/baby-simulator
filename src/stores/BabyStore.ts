@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
-import type { ToyAttributes, ToyState, ToyAttribute } from "../types";
-import { calculateNBA } from "../helpers";
+import type { ToyAttributes, ToyState, ToyAttribute } from "$types";
+import { calculateNBA } from "$helpers";
 
 type BabyData = {
   currentToy: ToyState | null,

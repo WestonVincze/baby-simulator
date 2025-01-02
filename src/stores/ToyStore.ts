@@ -1,5 +1,5 @@
 import { writable } from "svelte/store"
-import type { DropZone, ToyState } from "../types";
+import type { DropZone, ToyState } from "$types";
 
 const createToyStore = () => {
   const { subscribe, update } = writable<ToyState[]>([]);

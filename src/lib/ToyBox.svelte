@@ -1,10 +1,10 @@
 <script lang="ts">
   import Toy from "./Toy.svelte";
-  import { toyStore } from "../stores/ToyStore";
-  import { dragDrop } from "../actions/dragDropAction";
-  import { TOY_SIZE } from "../constants";
-  import { Toys } from "../data/Toys";
+  import { toyStore } from "$stores";
+  import { dragDrop } from "$actions/dragDropAction";
+  import { Toys } from "$data/Toys";
   import InfoTooltip from "./InfoTooltip.svelte";
+  import { TOY_SIZE } from "../constants";
 
   Toys.forEach(properties => toyStore.addToy({ loc: "ToyBox", data: properties }));
 

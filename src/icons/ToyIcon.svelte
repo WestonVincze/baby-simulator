@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { SvelteComponent } from "svelte";
+
   import { TOY_SIZE } from "../constants";
-  import type { Color, ToyName } from "../types";
+  import type { Color, ToyName } from "$types";
 
   export let name: ToyName;
   export let colors: Color[];

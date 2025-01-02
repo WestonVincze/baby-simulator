@@ -1,4 +1,4 @@
-import type { Color } from "../types"
+import type { Color } from "$types"
 
 /**
  * A map of colors and to hex values

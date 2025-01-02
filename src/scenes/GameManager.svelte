@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { type GameState, gameState, Scene } from "../stores/GameState";
+
+  import { type GameStore, gameStore, Scene } from "$stores";
   import MainMenu from "./MainMenu.svelte";
   import Game from "./Game.svelte";
   import GameOver from "./GameOver.svelte";
 
-  let state: GameState;
+  let state: GameStore;
 
-  const unsubscribe = gameState.subscribe(value => {
+  const unsubscribe = gameStore.subscribe(value => {
     state = value;
   });
 

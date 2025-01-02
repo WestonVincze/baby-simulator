@@ -1,12 +1,12 @@
 <script lang="ts">
-  import BasicShape from "../icons/ToyIcon.svelte";
-  import Toy from "./Toy.svelte";
-  import { dragDrop } from "../actions/dragDropAction";
-  import { toyStore } from "../stores/ToyStore";
-  import type { ToyState } from "../types";
   import { onDestroy } from "svelte";
-  import { babyStore } from "../stores/BabyStore";
-  import { getTimeSinceTimestamp } from "../helpers";
+
+  import ToyIcon from "$icons/ToyIcon.svelte";
+  import { dragDrop } from "$actions/dragDropAction";
+  import type { ToyState } from "$types";
+  import { babyStore, toyStore } from "$stores";
+  import { getTimeSinceTimestamp } from "$helpers";
+  import Toy from "./Toy.svelte";
 
   let baby: HTMLImageElement;
 
@@ -69,7 +69,7 @@
           src="thought-bubbles.svg"
           alt="thought bubble graphic"
         />
-        <BasicShape name={desiredToy.data.name} colors={desiredToy.data.colors} />
+        <ToyIcon name={desiredToy.data.name} colors={desiredToy.data.colors} />
       </div>
     </div>
   {/if}

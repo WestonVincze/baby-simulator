@@ -4,8 +4,8 @@
  * * total Appeal should be higher when a Toy reduces boredom
  */
 
-import { calculateNBA } from "../../../helpers";
-import type { ToyAttribute, ToyAttributes } from "../../../types";
+import { calculateNBA } from "$helpers";
+import type { ToyAttribute, ToyAttributes } from "$types";
 
 /**
  * Calculates the overall appeal of a Toy

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import BabyStats from "../lib/BabyStats.svelte";
-  import PlayMat from "../lib/PlayMat.svelte";
-  import ToyBox from "../lib/ToyBox.svelte";
+  import BabyStats from "$lib/BabyStats.svelte";
+  import PlayMat from "$lib/PlayMat.svelte";
+  import ToyBox from "$lib/ToyBox.svelte";
 </script>
 
 <div class="game">

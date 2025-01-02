@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { DragData, ToyState } from "../types";
-  import ToyIcon from "../icons/ToyIcon.svelte";
+  import type { DragData, ToyState } from "$types";
+  import ToyIcon from "$icons/ToyIcon.svelte";
 
   export let toy: ToyState
   export let absolutePosition = false;
@@ -64,7 +64,9 @@
   .toy {
     cursor: pointer;
   }
+  /*
   .custom-drag-image {
     opacity: 0;
   }
+  */
 </style>
