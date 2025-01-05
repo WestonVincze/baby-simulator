@@ -1,13 +1,7 @@
 import { writable } from "svelte/store";
-import type { ToyAttributes, ToyState, ToyAttribute } from "$types";
+import type { ToyAttributes, ToyState, ToyAttribute, BabyData } from "$types";
 import { calculateNBA } from "$helpers";
 
-type BabyData = {
-  currentToy: ToyState | null,
-  boredom: number,               // 0-1
-  aversions: ToyAttributes,      // 0-1
-  preferences: ToyAttributes,    // 0-1
-}
 
 /**
  * 
@@ -26,6 +20,7 @@ const setOrIncrementAttribute = (map: Record<string, number>, property: string, 
 }
 
 const initialState: BabyData = Object.freeze({
+  position: { x: 400, y: 250 },
   boredom: 0,
   currentToy: null,
   aversions: {},
