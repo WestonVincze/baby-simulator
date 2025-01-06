@@ -1,7 +1,6 @@
 import { writable } from "svelte/store";
-import type { ToyAttributes, ToyState, ToyAttribute, BabyData } from "$types";
+import type { ToyState, ToyAttribute, BabyData } from "$types";
 import { calculateNBA } from "$helpers";
-
 
 /**
  * 
@@ -41,8 +40,8 @@ const createBabyStore = () => {
       let currentAttributes: string[] = [];
       update(data => {
         if (data.currentToy !== null) {
-          const { shapes, colors, patterns, sounds, attributes } = data.currentToy.data;
-          currentAttributes = [...shapes, ...colors, ...patterns, ...sounds, ...Object.keys(attributes)];
+          const { attributes } = data.currentToy.data;
+          currentAttributes = [...Object.keys(attributes)];
         }
         return data;
       });
@@ -55,8 +54,9 @@ const createBabyStore = () => {
 
         // update aversions and boredom based on data from currentToy
         if (data.currentToy !== null) {
-          const { shapes, colors, patterns, sounds, attributes } = data.currentToy.data;
+          const { attributes } = data.currentToy.data;
 
+          /*
           shapes.forEach(shape => {
             setOrIncrementAttribute(data.aversions, shape, 1 / shapes.length);
             updatedProperties.push(shape);
@@ -80,6 +80,7 @@ const createBabyStore = () => {
             updatedProperties.push(sound);
             NbaValues.push(calculateNBA(data.aversions[sound] || 0, 1))
           })
+          */
 
           Object.keys(attributes).forEach(attribute => {
             const value = attributes[attribute as ToyAttribute] || 0;

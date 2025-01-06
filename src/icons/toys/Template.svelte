@@ -1,5 +1,6 @@
 <script lang="ts">
   import { mapDynamicColors } from "$helpers";
+
   export let colors: string[] = [];
   export let size: number;
 

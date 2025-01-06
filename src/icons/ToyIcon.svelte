@@ -5,7 +5,7 @@
   import type { Color, ToyName } from "$types";
 
   export let name: ToyName;
-  export let colors: Color[];
+  // export let colors: Color[];
   export let size: number = TOY_SIZE;
 
   let ToyComponent: typeof SvelteComponent | null = null;
@@ -23,4 +23,4 @@
   $: loadToyComponent(name);
 </script>
 
-<svelte:component this={ToyComponent} {size} {colors} />
+<svelte:component this={ToyComponent} {size} />

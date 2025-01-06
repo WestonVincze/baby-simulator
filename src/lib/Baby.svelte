@@ -1,34 +1,31 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
 
+  import Toy from "./Toy.svelte";
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { dragDrop } from "$actions/dragDropAction";
-  import type { ToyState } from "$types";
   import { babyStore, toyStore } from "$stores";
   import { getTimeSinceTimestamp } from "$helpers";
-  import Toy from "./Toy.svelte";
+  import { ToyAppraisal } from "$ai/Appraisals";
+  import type { BabyData, ToyState } from "$types";
 
   let baby: HTMLImageElement;
+  let babyData: BabyData;
+  let toys: ToyState[];
+
+  const unsubscribeBaby = babyStore.subscribe(data => {
+    babyData = data;
+  })
+
+  const unsubscribeToys = toyStore.subscribe(data => {
+    toys = data
+    // toys = data.filter(toy => toy.loc === "PlayMat");
+  })
 
   $: currentToy = $toyStore.filter(toy => toy.loc === "Baby")[0] ?? null;
   $: babyStore.setCurrentToy(currentToy);
-
-  const update = setInterval(() => {
-    babyStore.updateStats();
-  }, 100);
-
-  $: desiredToy = currentToy || $toyStore
-    .filter(toy => toy.loc === "PlayMat")
-    .map(toy => ({ toy, distance: Math.sqrt(
-      Math.pow(toy.position.x - 400, 2) +
-      Math.pow(toy.position.y - 250, 2))
-    } as { toy: ToyState | null, distance: number }))
-    .reduce((closestToy, toy) =>
-      closestToy.distance < toy.distance
-      ? closestToy
-      : toy, { toy: null, distance: Infinity })
-    .toy || null;
-
+  $: activeToys = toys.filter(toy => toy.loc === "PlayMat" || toy.loc === "Baby");
+  $: desiredToy = ToyAppraisal(babyData, activeToys);
 
   // TODO: remove this placeholder for tracking the most recently interacted toy
   $: mostRecentlyInteractedToy = $toyStore
@@ -47,8 +44,14 @@
     }
   }
 
+  const update = setInterval(() => {
+    babyStore.updateStats();
+  }, 250);
+
   onDestroy(() => {
     clearInterval(update);
+    unsubscribeBaby();
+    unsubscribeToys();
   })
 </script>
 
@@ -69,7 +72,7 @@
           src="thought-bubbles.svg"
           alt="thought bubble graphic"
         />
-        <ToyIcon name={desiredToy.data.name} colors={desiredToy.data.colors} />
+        <ToyIcon name={desiredToy.data.name}  />
       </div>
     </div>
   {/if}

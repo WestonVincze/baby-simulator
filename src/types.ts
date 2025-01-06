@@ -59,7 +59,6 @@ export type ToyAttribute =
   | Pattern
   | Sound
 //| Texture ?
-//| "singularity" (something to indicate whether a toy has multiple)
 //| "softness"
   | "complexity"
   | "interactivity"
@@ -73,10 +72,6 @@ export type ToyAttributes = {
 
 export type ToyData = {
   name: ToyName,
-  shapes: Shape[],           // primary shape
-  colors: Color[],           // ordered from highest to lowest %
-  patterns: Pattern[],       // list of patterns on the toy
-  sounds: Sound[],           // list of sounds the toy can make
   attributes: ToyAttributes, // 0-1
 }
 
