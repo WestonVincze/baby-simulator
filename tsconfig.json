@@ -18,6 +18,7 @@
     "baseUrl": "src",
     "paths": {
       "$actions/*": ["actions/*"],
+      "$ai/*": ["ai/*"],
       "$data/*": ["data/*"],
       "$stores": ["stores"],
       "$icons/*": ["icons/*"],

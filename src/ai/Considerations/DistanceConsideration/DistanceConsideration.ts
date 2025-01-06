@@ -1,4 +1,4 @@
-import { calculateDistance, rescale } from "$helpers"
+import { calculateDistance, clamp, rescale } from "$helpers"
 
 /**
  * Calculates utility value for distance
@@ -11,10 +11,11 @@ export const DistanceConsideration = (
   babyPosition: { x: number, y: number },
   toyPosition: {x: number, y: number},
   minRange: number = 0,
-  maxRange: number = 5,
+  maxRange: number = 50,
 ) => {
   const distance = calculateDistance(babyPosition, toyPosition);
   console.log(distance);
 
-  return rescale(distance, minRange, maxRange);
+  console.log(rescale(distance, minRange, maxRange));
+  return clamp(1 - rescale(distance, minRange, maxRange));
 }
