@@ -2,13 +2,6 @@ import { writable } from "svelte/store";
 import type { ToyState, ToyAttribute, BabyData } from "$types";
 import { calculateNBA } from "$helpers";
 
-/**
- * 
- * @param map 
- * @param property 
- * @param value 
- * @returns 
- */
 const setOrIncrementAttribute = (map: Record<string, number>, property: string, value: number) => {
   if (map[property]) {
     map[property] = Math.min(map[property] + value / 100, 1); 
@@ -55,32 +48,6 @@ const createBabyStore = () => {
         // update aversions and boredom based on data from currentToy
         if (data.currentToy !== null) {
           const { attributes } = data.currentToy.data;
-
-          /*
-          shapes.forEach(shape => {
-            setOrIncrementAttribute(data.aversions, shape, 1 / shapes.length);
-            updatedProperties.push(shape);
-            NbaValues.push(calculateNBA(data.aversions[shape] || 0, 1))
-          })
-
-          colors.forEach(color => {
-            setOrIncrementAttribute(data.aversions, color, 1 / colors.length);
-            updatedProperties.push(color);
-            NbaValues.push(calculateNBA(data.aversions[color] || 0, 1))
-          })
-
-          patterns.forEach(pattern => {
-            setOrIncrementAttribute(data.aversions, pattern, 1 / patterns.length);
-            updatedProperties.push(pattern);
-            NbaValues.push(calculateNBA(data.aversions[pattern] || 0, 1))
-          })
-
-          sounds.forEach(sound => {
-            setOrIncrementAttribute(data.aversions, sound, 1 / sounds.length);
-            updatedProperties.push(sound);
-            NbaValues.push(calculateNBA(data.aversions[sound] || 0, 1))
-          })
-          */
 
           Object.keys(attributes).forEach(attribute => {
             const value = attributes[attribute as ToyAttribute] || 0;
