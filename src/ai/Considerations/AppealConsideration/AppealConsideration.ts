@@ -32,18 +32,20 @@ export const AppealConsideration = (
 
     // attribute match in aversions
     if (attributeName in aversions && aversions[attributeName]) {
-      console.log("aversion key match: ", aversions[attributeName]);
-      console.log(calculateNBA(aversions[attributeName], attributeValue));
+      // console.log("aversion key match: ", aversions[attributeName]);
+      // console.log(calculateNBA(aversions[attributeName], attributeValue));
 
       aversionNba = calculateNBA(aversions[attributeName], attributeValue);
     }
 
     // attribute match in preferences
     if (attributeName in preferences && preferences[attributeName]) {
-      console.log("prefernce key match: ", aversions[attributeName]);
-      console.log(calculateNBA(preferences[attributeName], attributeValue));
+      // console.log("prefernce key match: ", aversions[attributeName]);
+      // console.log(calculateNBA(preferences[attributeName], attributeValue));
       preferenceNba = 0;
     }
+
+    // should there be a final calculation based on the last interacted prop:
 
     // attribute's final NBA score
     return aversionNba + preferenceNba;

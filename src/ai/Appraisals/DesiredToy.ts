@@ -12,27 +12,26 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
   let bestToy: ToyState | null = null;
 
   for (const toy of toys) {
-    console.log(toy.data.name);
+    // console.log(toy.data.name);
     const scores: number[] = [];
 
     // distance score (only 10% effect on total score for now)
     const distanceScore = DistanceConsideration(baby.position, toy.position, 0, 500);
     scores.push(distanceScore * 0.1);
-    console.log(`distance score: ${distanceScore}`);
+    // console.log(`distance score: ${distanceScore}`);
 
     // appeal score
     const appealScore = AppealConsideration(baby.aversions, baby.preferences, toy.data.attributes);
     scores.push(appealScore);
-    console.log(`appeal score: ${appealScore}`);
+    // console.log(`appeal score: ${appealScore}`);
 
     // last moved score
     const lastMoveScore = toy.lastMoveTime ? LastMovedConsideration(performance.now() - toy.lastMoveTime, 5000) : 0;
     scores.push(lastMoveScore * .2);
-    console.log(`last move score: ${lastMoveScore}`);
+    // console.log(`last move score: ${lastMoveScore}`);
 
     // final score
     const score = scores.reduce((sum, score) => sum + score, 0) / scores.length;
-    console.log(score)
 
     if (score > bestScore) {
       bestScore = score;

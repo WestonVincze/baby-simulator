@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 import type { ToyState, ToyAttribute, BabyData } from "$types";
 import { calculateNBA } from "$helpers";
+import { ToyAppraisal } from "$ai/Appraisals";
 
 const setOrIncrementAttribute = (map: Record<string, number>, property: string, value: number) => {
   if (map[property]) {
@@ -15,6 +16,7 @@ const initialState: BabyData = Object.freeze({
   position: { x: 400, y: 250 },
   boredom: 0,
   currentToy: null,
+  desiredToy: null,
   aversions: {},
   preferences: {}
 });
@@ -27,6 +29,12 @@ const createBabyStore = () => {
     setCurrentToy: (toy: ToyState | null) => {
       update(data => {
         return ({ ...data, currentToy: toy })
+      })
+    },
+    setDesiredToy: (toys: ToyState[]) => {
+      update(data => {
+        const desiredToy = ToyAppraisal(data, toys);
+        return { ...data, desiredToy }
       })
     },
     getCurrentToyAttributes: () => {
@@ -68,9 +76,12 @@ const createBabyStore = () => {
           }
         })
 
-        const NbaTotal = NbaValues.length > 0 ? NbaValues.reduce((prev, curr) => prev += curr) / NbaValues.length : 1;
+        // reduce NBA factor if the current toy is the desired toy
+        const desiredToyBonus = data.currentToy && data.desiredToy && data.currentToy.id === data.desiredToy.id ? 0.1 : 0;
 
-        data.boredom = Math.min(Math.max(data.boredom + NbaTotal / 100, 0), 1);
+        const nbaTotal = NbaValues.length > 0 ? (NbaValues.reduce((prev, curr) => prev += curr) / NbaValues.length) - desiredToyBonus : 1;
+
+        data.boredom = Math.min(Math.max(data.boredom + nbaTotal / 100, 0), 1);
 
         return data;
       })

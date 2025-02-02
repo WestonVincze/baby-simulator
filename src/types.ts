@@ -86,6 +86,7 @@ export type ToyState = {
 export type BabyData = {
   position: { x: number, y: number },
   currentToy: ToyState | null,
+  desiredToy: ToyState | null,
   boredom: number,               // 0-1
   aversions: ToyAttributes,      // 0-1
   preferences: ToyAttributes,    // 0-1
