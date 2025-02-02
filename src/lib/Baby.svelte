@@ -6,7 +6,6 @@
   import { dragDrop } from "$actions/dragDropAction";
   import { babyStore, toyStore } from "$stores";
   import { getTimeSinceTimestamp } from "$helpers";
-  import { ToyAppraisal } from "$ai/Appraisals";
   import type { BabyData, ToyState } from "$types";
 
   let baby: HTMLImageElement;
@@ -19,13 +18,11 @@
 
   const unsubscribeToys = toyStore.subscribe(data => {
     toys = data
-    // toys = data.filter(toy => toy.loc === "PlayMat");
   })
 
   $: currentToy = $toyStore.filter(toy => toy.loc === "Baby")[0] ?? null;
   $: babyStore.setCurrentToy(currentToy);
   $: activeToys = toys.filter(toy => toy.loc === "PlayMat" || toy.loc === "Baby");
-  $: desiredToy = ToyAppraisal(babyData, activeToys);
 
   // TODO: remove this placeholder for tracking the most recently interacted toy
   $: mostRecentlyInteractedToy = $toyStore
@@ -46,7 +43,8 @@
 
   const update = setInterval(() => {
     babyStore.updateStats();
-  }, 250);
+    babyStore.setDesiredToy(activeToys);
+  }, 100);
 
   onDestroy(() => {
     clearInterval(update);
@@ -63,7 +61,7 @@
   class="baby-container"
   use:dragDrop={{ dropZone: "Baby", onDrop:  handleDrop }}
 >
-  {#if desiredToy}
+  {#if $babyStore.desiredToy}
     <div class="desired-toy">
       <div class="desired-toy-container">
         <img
@@ -72,7 +70,7 @@
           src="thought-bubbles.svg"
           alt="thought bubble graphic"
         />
-        <ToyIcon name={desiredToy.data.name}  />
+        <ToyIcon name={$babyStore.desiredToy.data.name}  />
       </div>
     </div>
   {/if}
