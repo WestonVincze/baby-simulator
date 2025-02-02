@@ -3,16 +3,5 @@
 </script>
 
 <main>
-  <header>
-    <h1>Baby Simulator</h1>
-  </header>
-  <section>
-    <GameManager />
-  </section>
+  <GameManager />
 </main>
-
-<style>
-  header {
-    margin-bottom: 25px;
-  }
-</style>
