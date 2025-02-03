@@ -1,7 +1,25 @@
 <script lang="ts">
   import BabyStats from "$lib/BabyStats.svelte";
+  import DebugScreen from "$lib/DebugScreen.svelte";
   import PlayMat from "$lib/PlayMat.svelte";
   import ToyBox from "$lib/ToyBox.svelte";
+  import { onDestroy, onMount } from "svelte";
+
+  let showDebugScreen = false;
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === '`') {
+      showDebugScreen = !showDebugScreen;
+    }
+  };
+
+  onMount(() => {
+    window.addEventListener('keydown', handleKeyDown);
+  });
+
+  onDestroy(() => {
+    window.removeEventListener('keydown', handleKeyDown);
+  });
 </script>
 
 <div class="game">
@@ -13,6 +31,10 @@
     <PlayMat />
     <ToyBox />
   </section>
+
+  {#if showDebugScreen}
+    <DebugScreen />
+  {/if}
 </div>
 
 <style>

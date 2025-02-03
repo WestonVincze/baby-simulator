@@ -1,5 +1,6 @@
 import { AppealConsideration, DistanceConsideration, LastMovedConsideration } from "../Considerations";
-import type { BabyData, ToyState } from "$types";
+import type { BabyData, ToyState, DebugData } from "$types";
+import { debugStore } from "$stores";
 
 /**
  * Should appraisals have a shared context containing all necessary state data for all considerations
@@ -10,6 +11,7 @@ import type { BabyData, ToyState } from "$types";
 export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
   let bestScore: number = -Infinity;
   let bestToy: ToyState | null = null;
+  const debugInfo: DebugData[] = []
 
   for (const toy of toys) {
     // console.log(toy.data.name);
@@ -33,11 +35,22 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
     // final score
     const score = scores.reduce((sum, score) => sum + score, 0) / scores.length;
 
+    debugInfo.push({
+      name: toy.data.name,
+      scores: {
+        distance: distanceScore,
+        appeal: appealScore,
+        lastMove: lastMoveScore,
+      }
+    });
+
     if (score > bestScore) {
       bestScore = score;
       bestToy = toy;
     }
   }
+
+  debugStore.set(debugInfo);
 
   // return ToyID of most desired Toy
   return bestToy;
