@@ -34,6 +34,9 @@ const createBabyStore = () => {
     setDesiredToy: (toys: ToyState[]) => {
       update(data => {
         const desiredToy = ToyAppraisal(data, toys);
+        if (data.desiredToy?.id === desiredToy?.id) {
+          return data;
+        }
         return { ...data, desiredToy }
       })
     },
