@@ -8,25 +8,37 @@ export enum Scene {
   GameOver
 }
 
-export type GameStore = {
+export type GameState = {
   activeScene: Scene;
-  score: number;
   isPaused: boolean;
+  score: number;
 }
 
-export const gameStore = writable<GameStore>({
+const initialState: GameState = {
   activeScene: Scene.MainMenu,
-  score: 0,
   isPaused: false,
-});
+  score: 0
+}
+
+const { subscribe, update } = writable<GameState>({ ...initialState });
 
 /**
  * Helper function for navigating to Main Menu
  */
 export const mainMenu = () => {
-  gameStore.update(state => {
+  update(state => {
     state.activeScene = Scene.MainMenu;
     state.isPaused = true;
+    return state;
+  })
+}
+
+/**
+ * Pause or resume game
+ */
+export const togglePause = () => {
+  update(state => {
+    state.isPaused = !state.isPaused;
     return state;
   })
 }
@@ -36,7 +48,7 @@ export const mainMenu = () => {
  */
 export const startGame = () => {
   // initialize / reset game state
-  gameStore.update(state => {
+  update(state => {
     state.activeScene = Scene.Playing;
     state.isPaused = false;
     state.score = 0;
@@ -53,10 +65,16 @@ export const startGame = () => {
  */
 babyStore.subscribe(babyData => {
   if (babyData.boredom >= 1) {
-    gameStore.update(state => {
+    update(state => {
       state.activeScene = Scene.GameOver;
       state.isPaused = true;
       return state;
     })
   }
 });
+
+export const gameStore = {
+  subscribe,
+  startGame,
+  togglePause,
+}

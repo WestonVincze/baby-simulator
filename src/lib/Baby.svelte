@@ -4,15 +4,20 @@
   import Toy from "./Toy.svelte";
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { dragDrop } from "$actions/dragDropAction";
-  import { babyStore, toyStore } from "$stores";
+  import { gameStore, babyStore, toyStore } from "$stores";
   import { getTimeSinceTimestamp } from "$helpers";
   import type { BabyData, ToyState } from "$types";
 
   let baby: HTMLImageElement;
   let toys: ToyState[];
+  let isPaused = false;
 
   const unsubscribeToys = toyStore.subscribe(data => {
     toys = data
+  })
+
+  const unsubscribeGame = gameStore.subscribe(data => {
+    isPaused = data.isPaused;
   })
 
   $: currentToy = $toyStore.filter(toy => toy.loc === "Baby")[0] ?? null;
@@ -36,7 +41,7 @@
     const toy = toyStore.getToyById(id);
 
     if (!toy) {
-      console.error(`Unexpected error; toy not for for id ${id}`);
+      console.error(`Unexpected error; toy not found for for id ${id}`);
       return;
     }
 
@@ -49,6 +54,7 @@
   }
 
   const update = setInterval(() => {
+    if (isPaused) return;
     babyStore.updateStats();
     babyStore.setDesiredToy(activeToys);
   }, 100);
@@ -56,6 +62,7 @@
   onDestroy(() => {
     clearInterval(update);
     unsubscribeToys();
+    unsubscribeGame();
   })
 </script>
 

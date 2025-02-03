@@ -4,12 +4,16 @@
   import PlayMat from "$lib/PlayMat.svelte";
   import ToyBox from "$lib/ToyBox.svelte";
   import { onDestroy, onMount } from "svelte";
+  import { gameStore } from "$stores";
 
   let showDebugScreen = false;
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === '`') {
       showDebugScreen = !showDebugScreen;
+    }
+    if (event.key === 'Escape') {
+      gameStore.togglePause();
     }
   };
 
