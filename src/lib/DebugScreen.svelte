@@ -37,12 +37,13 @@
     position: fixed;
     top: 0;
     right: 0;
+    min-width: 150px;
     max-height: 100svh;
     background: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 10px;
-    overflow-y: scroll;
-    font-size: 12px;
+    overflow-y: auto;
+    font-size: 14px;
   }
   li {
     text-align: right;

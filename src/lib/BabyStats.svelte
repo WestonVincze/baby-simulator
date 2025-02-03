@@ -10,32 +10,37 @@
   );
 </script>
 
-<h2>Boredom <InfoTooltip text="Playing with toys reduces boredom but the meter fills to 100% the simulation ends." /></h2>
-<div class="boredom">
-  <div class="bar">
-    <ProgressBar min={$babyStore.boredom} max={1} />
+<div class="babyStats">
+  <h2>Boredom <InfoTooltip text="Playing with toys reduces boredom but the meter fills to 100% the simulation ends." /></h2>
+  <div class="boredom">
+    <div class="bar">
+      <ProgressBar min={$babyStore.boredom} max={1} />
+    </div>
   </div>
+
+  <h2>Aversions <InfoTooltip text="When a toy is played with by baby its properties become less appealing to baby and satisfy less boredom." /></h2>
+  {#if Object.keys($babyStore.aversions).length === 0}
+    <span class="italic">no aversions</span>
+  {/if}
+
+  {#each aversions as { aversion, value }}
+    {#if value && value > 0}
+      <div class="aversions">
+        <span>{aversion}:</span>
+        <div class="bar">
+          <ProgressBar min={value || 0} max={1} color={currentToyAttributes.includes(aversion) ? "tomato" : "slateblue"} />
+        </div>
+      </div>
+    {/if}
+  {/each}
+
+  <button on:click={() => babyStore.resetBabyStore()}>Reset</button>
 </div>
 
-<h2>Aversions <InfoTooltip text="When a toy is played with by baby its properties become less appealing to baby and satisfy less boredom." /></h2>
-{#if Object.keys($babyStore.aversions).length === 0}
-  <span class="italic">no aversions</span>
-{/if}
-
-{#each aversions as { aversion, value }}
-  {#if value && value > 0}
-    <div class="aversions">
-      <span>{aversion}:</span>
-      <div class="bar">
-        <ProgressBar min={value || 0} max={1} color={currentToyAttributes.includes(aversion) ? "tomato" : "slateblue"} />
-      </div>
-    </div>
-  {/if}
-{/each}
-
-<button on:click={() => babyStore.resetBabyStore()}>Reset</button>
-
 <style>
+  .babyStats {
+    text-align: right;
+  }
   h2 {
     display: flex;
     justify-content: right;
