@@ -48,6 +48,19 @@ export const calculateNBA = (attributeAversion: number, attributeValue: number) 
 }
 
 /**
+ * Converts a value from the range [-1, 1] to the range [1, 0]
+ * @param value value in the range [-1, 1]
+ * @returns value in the range [1, 0]
+ */
+export const convertNBAtoUtility = (value: number): number => {
+  if (value < -1 || value > 1) {
+    throw new Error(`Out of range. 'value' must be between -1 and 1. Provided value: ${value}`);
+  }
+
+  return 1 - (value + 1) / 2;
+}
+
+/**
  * Calculates the distance between two points
  * @returns distance between pos1 and pos2
  */

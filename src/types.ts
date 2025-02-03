@@ -95,8 +95,8 @@ export type BabyData = {
 export type DebugData = {
   name: string,
   scores: {
+    aversion: number,
     distance: number,
-    appeal: number,
     lastMove: number
   }
 }
