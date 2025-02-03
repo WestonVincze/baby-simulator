@@ -9,12 +9,7 @@
   import type { BabyData, ToyState } from "$types";
 
   let baby: HTMLImageElement;
-  let babyData: BabyData;
   let toys: ToyState[];
-
-  const unsubscribeBaby = babyStore.subscribe(data => {
-    babyData = data;
-  })
 
   const unsubscribeToys = toyStore.subscribe(data => {
     toys = data
@@ -48,7 +43,6 @@
 
   onDestroy(() => {
     clearInterval(update);
-    unsubscribeBaby();
     unsubscribeToys();
   })
 </script>

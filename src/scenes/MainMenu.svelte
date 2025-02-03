@@ -11,6 +11,7 @@
 
 <style>
   .main-menu {
+    font-family: 'Mountains of Christmas', Inter, Helvetica;
     width: 100%;
     background-color: #704264;
     border-radius: 15px;
