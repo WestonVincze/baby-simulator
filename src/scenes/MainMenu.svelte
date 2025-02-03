@@ -1,35 +1,65 @@
 <script lang="ts">
   import { startGame } from "$stores";
   import HowToPlay from "./HowToPlay.svelte";
+
+  let showHowToPlay = false;
 </script>
 
 <div class="main-menu">
   <header>
-    <h1>Baby Simulator</h1>
+    <h1>
+      <span class="xl">Baby</span>
+      <span class="md">Simulator</span>
+    </h1>
+    <img
+      draggable="false"
+      src="sitting-baby.png"
+      alt="Sitting baby"
+    />
   </header>
 
   <div class="button-group">
     <button on:click={startGame}>Start</button>
+    <button on:click={() => showHowToPlay = true}>How To Play</button>
   </div>
 
-  <HowToPlay />
+  {#if showHowToPlay}
+    <HowToPlay onClose={() => showHowToPlay = false} />
+  {/if}
 </div>
 
 <style>
   .main-menu {
+    position: relative;
     font-family: 'Mountains of Christmas', Inter, Helvetica;
     width: 100%;
-    padding: 85px 15px;
+    padding: 35px 15px;
     background-color: #704264;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 50px;
+    gap: 20px;
   }
   header {
-    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  img {
+    height: 200px;
+    width: 200px; 
+  }
+  h1 {
+    display: flex;
+    flex-direction: column;
+  }
+  h1 .xl {
+    font-size: 8rem;
+  }
+  h1 .md {
+    font-size: 3.2rem;
   }
   .button-group {
     display: flex;
