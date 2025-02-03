@@ -6,14 +6,21 @@
 <div class="backdrop" />
 
 <div class="how-to-play">
-  <h3>How to Play</h3>
+  <h2>How to Play</h2>
   <button class="close" on:click={onClose}>X</button>
 
   <p>
     Don't let baby cry of boredom! Keep baby entertained by dragging toys onto baby. Baby will lose interest in toys over time, so bring new toys that look and feel different.
   </p>
 
-  <span class="keybind">`</span> - toggle debug info
+  <div class="keybinds">
+    <div>
+      <span class="keybind">`</span> - toggle debug info
+    </div>
+    <div>
+      <span class="keybind">esc</span> - pause / resume
+    </div>
+  </div>
 </div>
 
 <style>
@@ -26,6 +33,7 @@
     font-family: Inter, Helvetica;
     margin: 0 auto;
     padding: 50px;
+    padding-top: 15px;
     background-color: #49243E;
     transform: translateY(-50%);
   }
@@ -44,9 +52,14 @@
     right: 5%;
     top: 5%;
     min-width: 30px;
-    padding: 3px 8px;
+    padding: 2px 10px;
     margin: 0;
     border-radius: 50%;
+  }
+  .keybinds {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
   .keybind {
     background-color: #101010;
@@ -55,6 +68,9 @@
     padding: 0.2rem 0.5rem;
     margin: 0 0.2rem;
     font-family: monospace;
+  }
+  h2 {
+    margin-bottom: 2rem;
   }
   p {
     margin-bottom: 1rem;

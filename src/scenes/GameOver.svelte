@@ -3,10 +3,12 @@
 </script>
 
 <div class="game-over">
-  <h2>For crying out loud...</h2>
+  <h1>For crying out loud...</h1>
 
-  <button on:click={startGame}>Try Again?</button>
-  <button on:click={mainMenu}>Main Menu</button>
+  <div class="button-group">
+    <button on:click={startGame}>Try Again?</button>
+    <button on:click={mainMenu}>Main Menu</button>
+  </div>
 </div>
 
 <style>
@@ -18,6 +20,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 35px;
   }
 </style>

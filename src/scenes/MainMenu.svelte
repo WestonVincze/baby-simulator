@@ -11,11 +11,13 @@
       <span class="xl">Baby</span>
       <span class="md">Simulator</span>
     </h1>
-    <img
-      draggable="false"
-      src="sitting-baby.png"
-      alt="Sitting baby"
-    />
+    <div class="img-container">
+      <img
+        draggable="false"
+        src="sitting-baby.png"
+        alt="Sitting baby"
+      />
+    </div>
   </header>
 
   <div class="button-group">
@@ -30,8 +32,8 @@
 
 <style>
   .main-menu {
-    position: relative;
     font-family: 'Mountains of Christmas', Inter, Helvetica;
+    position: relative;
     width: 100%;
     padding: 35px 15px;
     background-color: #704264;
@@ -47,9 +49,24 @@
     flex-direction: column;
     align-items: center;
   }
+  .img-container {
+    position: relative;
+  }
+  .img-container::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    border-radius: 50%;
+    background-color: rgba(50, 50, 50, 0.3);
+    filter: blur(7px);
+  }
   img {
     height: 200px;
     width: 200px; 
+    position: relative;
   }
   h1 {
     display: flex;
@@ -60,11 +77,5 @@
   }
   h1 .md {
     font-size: 3.2rem;
-  }
-  .button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-self: center;
   }
 </style>
