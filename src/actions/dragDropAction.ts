@@ -40,8 +40,8 @@ export const dragDrop: Action<HTMLElement, DragDropOptions> = (node, options) =>
     const x = Math.max(0, Math.min(rect.width - width, offsetX));
     const y = Math.max(0, Math.min(rect.height - height, offsetY));
 
-    toyStore.updateToy(id, dropZone, x, y);
     options.onDrop?.(id);
+    toyStore.updateToy(id, dropZone, x, y);
   }
 
   node.addEventListener("dragover", handleDragOver);

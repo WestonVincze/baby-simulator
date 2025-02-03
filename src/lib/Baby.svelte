@@ -31,9 +31,21 @@
   $: console.log(`most recently interacted toy: ${mostRecentlyInteractedToy || "N/A"}`);
   
   const handleDrop = (id: string) => {
-    if (currentToy && currentToy.id !== id) {
-      toyStore.updateToy(currentToy.id, "ToyBox", Infinity, 0);
+    if (!currentToy || currentToy.id === id) return;
+
+    const toy = toyStore.getToyById(id);
+
+    if (!toy) {
+      console.error(`Unexpected error; toy not for for id ${id}`);
+      return;
     }
+
+    toyStore.updateToy(
+      currentToy.id,
+      toy.loc,
+      toy.position.x,
+      toy.position.y
+    );
   }
 
   const update = setInterval(() => {
@@ -53,7 +65,7 @@
 
 <div
   class="baby-container"
-  use:dragDrop={{ dropZone: "Baby", onDrop:  handleDrop }}
+  use:dragDrop={{ dropZone: "Baby", onDrop: handleDrop }}
 >
   {#if $babyStore.desiredToy}
     <div class="desired-toy">

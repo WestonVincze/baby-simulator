@@ -1,4 +1,4 @@
-import { writable } from "svelte/store"
+import { get, writable } from "svelte/store"
 import type { DropZone, ToyState } from "$types";
 
 const createToyStore = () => {
@@ -7,7 +7,7 @@ const createToyStore = () => {
   return {
     subscribe,
     resetToys: () => {
-      update(state => []);
+      update(() => []);
     },
     addToy: (toy: Pick<Partial<ToyState>, "position"> & Omit<ToyState, "id" | "position">) => update(toys => [
       ...toys,
@@ -22,6 +22,10 @@ const createToyStore = () => {
         toy.lastMoveTime = performance.now();
         return toys;
       });
+    },
+    getToyById: (id: string) => {
+      const toys = get(toyStore);
+      return toys.find(toy => toy.id === id);
     }
   }
 }

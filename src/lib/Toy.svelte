@@ -35,6 +35,7 @@
     /* debug: print toy data */
     console.log(`toy ${toy.id}`);
     console.log(`lastMoveTime: ${toy.lastMoveTime}`);
+    console.log(`position: ${toy.position.x}, ${toy.position.y}`)
     console.table(toy.data.attributes);
   }
 </script>
