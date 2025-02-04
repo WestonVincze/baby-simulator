@@ -37,7 +37,7 @@
 
     {#each Object.entries(groupedAversions) as [category, aversions]}
       {#if aversions.length > 0}
-        <h3>{category}s</h3>
+        <h4>{category}</h4>
       {/if}
       {#each aversions as { aversion, value }}
         {#if value && value > 0}

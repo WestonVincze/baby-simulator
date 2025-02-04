@@ -33,8 +33,11 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
     const lastMoveScore = toy.lastMoveTime ? LastMovedConsideration(performance.now() - toy.lastMoveTime, 5000) : 0;
     scores.push(lastMoveScore * .2);
 
+    // add 10% bonus if the toy is already being played with
+    const bonusWeight = baby.currentToy?.id === toy.id ? 1.1 : 1;
+
     // final score
-    const score = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+    const score = bonusWeight * (scores.reduce((sum, score) => sum + score, 0) / scores.length);
 
     debugInfo.push({
       name: toy.data.name,
@@ -42,6 +45,7 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
         distance: distanceScore,
         aversion: aversionScore,
         lastMove: lastMoveScore,
+        bonusWeight
       }
     });
 

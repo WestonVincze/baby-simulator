@@ -106,6 +106,7 @@ export type DebugData = {
   scores: {
     aversion: number,
     distance: number,
-    lastMove: number
+    lastMove: number,
+    bonusWeight: number,
   }
 }
