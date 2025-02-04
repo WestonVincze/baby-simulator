@@ -1,13 +1,24 @@
 <script lang="ts">
   import { babyStore, mainMenu } from "$stores";
-  import type { ToyAttribute } from "$types";
+  import type { AttributeCategory, ToyAttribute } from "$types";
   import ProgressBar from "./ProgressBar.svelte";
   import InfoTooltip from "./InfoTooltip.svelte";
 
   $: currentToyAttributes = $babyStore.currentToy ? babyStore.getCurrentToyAttributes() : [];
-  $: aversions = Object.keys($babyStore.aversions).map(
-    aversion => ({ aversion, value: $babyStore.aversions[aversion as ToyAttribute]})
+  $: aversions = Object.entries($babyStore.aversions).map(
+    ([aversion, { value, category }]) => ({ aversion, value, category }) // $babyStore.aversions[aversion as ToyAttribute]})
   );
+
+  $: groupedAversions = aversions.reduce((acc, { aversion, value, category }) => {
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+
+    if (value > 0) {
+      acc[category].push({ aversion, value });
+    }
+    return acc;
+  }, {} as Record<AttributeCategory, { aversion: string, value: number }[]>);
 </script>
 
 <div class="container">
@@ -24,15 +35,20 @@
       <span class="italic">no aversions</span>
     {/if}
 
-    {#each aversions as { aversion, value }}
-      {#if value && value > 0}
-        <div class="aversions">
-          <span>{aversion}:</span>
-          <div class="bar">
-            <ProgressBar min={value || 0} max={1} color={currentToyAttributes.includes(aversion) ? "tomato" : "slateblue"} />
-          </div>
-        </div>
+    {#each Object.entries(groupedAversions) as [category, aversions]}
+      {#if aversions.length > 0}
+        <h3>{category}s</h3>
       {/if}
+      {#each aversions as { aversion, value }}
+        {#if value && value > 0}
+          <div class="aversions">
+            <span>{aversion}:</span>
+            <div class="bar">
+              <ProgressBar min={value || 0} max={1} color={currentToyAttributes.includes(aversion) ? "tomato" : "slateblue"} />
+            </div>
+          </div>
+        {/if}
+      {/each}
     {/each}
   </div>
   <div class="button-group">

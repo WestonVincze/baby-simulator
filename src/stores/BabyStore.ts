@@ -1,13 +1,13 @@
 import { writable } from "svelte/store";
-import type { ToyState, ToyAttribute, BabyData } from "$types";
+import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory } from "$types";
 import { calculateNBA } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
 
-const setOrIncrementAttribute = (map: Record<string, number>, property: string, value: number) => {
-  if (map[property]) {
-    map[property] = Math.min(map[property] + value / 100, 1); 
+const setOrIncrementAttribute = (attributeMap: ToyAttributes, property: ToyAttribute, value: number, category: AttributeCategory) => {
+  if (attributeMap[property]) {
+    attributeMap[property].value = Math.min(attributeMap[property].value + value / 100, 1); 
   } else {
-    map[property] = value / 100;
+    attributeMap[property] = { value: value / 100, category };
   }
   return property;
 }
@@ -61,12 +61,12 @@ const createBabyStore = () => {
           const { attributes } = data.currentToy.data;
 
           Object.keys(attributes).forEach(attribute => {
-            const value = attributes[attribute as ToyAttribute] || 0;
+            const { value, category } = attributes[attribute as ToyAttribute]!;
             if (value === 0) return;
 
-            setOrIncrementAttribute(data.aversions, attribute, value);
+            setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, value, category);
             updatedProperties.push(attribute);
-            NbaValues.push(calculateNBA(data.aversions[attribute as ToyAttribute] || 0, value))
+            NbaValues.push(calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, value))
           })
         } 
 
@@ -74,8 +74,8 @@ const createBabyStore = () => {
         Object.keys(data.aversions).forEach(key => {
           const property = key as ToyAttribute;
 
-          if (updatedProperties.findIndex(updated => updated === property) === -1) {
-            data.aversions[property] = Math.max(data.aversions[property]! -= 0.01, 0);
+          if (data.aversions[property] && updatedProperties.findIndex(updated => updated === property) === -1) {
+            data.aversions[property].value = Math.max(data.aversions[property].value -= 0.01, 0);
           }
         })
 

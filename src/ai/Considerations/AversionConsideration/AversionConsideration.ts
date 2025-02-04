@@ -13,7 +13,7 @@ export const AversionConsideration = (
 ) => {
   const attributeNbaScores = Object.keys(attributes).map(key => {
     const attributeName = key as ToyAttribute;
-    const attributeValue = attributes[attributeName];
+    const attributeValue = attributes[attributeName]?.value;
 
     // no value for ToyAttribute
     if (attributeValue === undefined) return 0;
@@ -23,7 +23,7 @@ export const AversionConsideration = (
 
     // attribute match in aversions
     if (attributeName in aversions && aversions[attributeName]) {
-      const aversionNba = calculateNBA(aversions[attributeName], attributeValue);
+      const aversionNba = calculateNBA(aversions[attributeName].value, attributeValue);
       aversion = convertNBAtoUtility(aversionNba);
     }
 

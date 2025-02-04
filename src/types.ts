@@ -53,13 +53,19 @@ export type Sound =
   | "beep"
   | "pop";
 
+
+export type AttributeCategory =
+  | "Shape"
+  | "Color"
+  | "Pattern"
+  | "Sound"
+  | "Other";
+
 export type ToyAttribute =
   | Shape
   | Color
   | Pattern
   | Sound
-//| Texture ?
-//| "softness"
   | "complexity"
   | "interactivity"
   | "symmetry"
@@ -67,7 +73,10 @@ export type ToyAttribute =
   | "luster";
 
 export type ToyAttributes = {
-  [key in ToyAttribute]?: number
+  [key in ToyAttribute]?: {
+    value: number,
+    category: AttributeCategory
+  }
 }
 
 export type ToyData = {
