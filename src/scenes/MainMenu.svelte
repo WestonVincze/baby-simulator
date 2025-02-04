@@ -1,7 +1,8 @@
 <script lang="ts">
   import { startGame } from "$stores";
-  import HowToPlay from "./HowToPlay.svelte";
+  import Modal from "$lib/Modal.svelte";
 
+  let showHowItWorks = false;
   let showHowToPlay = false;
 </script>
 
@@ -23,10 +24,36 @@
   <div class="button-group">
     <button on:click={startGame}>Start</button>
     <button on:click={() => showHowToPlay = true}>How To Play</button>
+    <button on:click={() => showHowItWorks = true}>How It Works</button>
   </div>
 
   {#if showHowToPlay}
-    <HowToPlay onClose={() => showHowToPlay = false} />
+    <Modal title="How to Play" onClose={() => showHowToPlay = false }>
+      <p>
+        Don't let baby cry of boredom! Keep baby entertained by dragging toys onto baby. Baby will lose interest in toys over time, so bring new toys that look and feel different.
+      </p>
+
+      <div class="keybinds">
+        <div>
+          <span class="keybind">`</span> - toggle debug info
+        </div>
+        <div>
+          <span class="keybind">esc</span> - pause / resume
+        </div>
+      </div>
+    </Modal>
+  {/if}
+
+  {#if showHowItWorks}
+    <Modal title="How it Works" onClose={() => showHowItWorks = false }>
+      <p>
+        Each toy has unique properties that baby builds 'aversion' to while playing. As baby becomes more averse to a property, the boredom it satisfies lessens.
+      </p>
+
+      <p>
+        The 'preferred toy' (displayed in the thought bubble) indicates the best option for a toy based on the utility AI decision making system. The parameters of the decision are based on its distance to the baby, how recently it was moved, and how averse baby is to its various properties. A slight bonus to boredom satisfaction is provided for while baby is playing with the preferred toy.
+      </p>
+    </Modal>
   {/if}
 </div>
 
@@ -64,8 +91,8 @@
     filter: blur(7px);
   }
   img {
-    height: 200px;
-    width: 200px; 
+    height: 150px;
+    width: 150px; 
     position: relative;
   }
   h1 {
@@ -77,5 +104,21 @@
   }
   h1 .md {
     font-size: 3.2rem;
+  }
+  .keybinds {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .keybind {
+    background-color: #101010;
+    border: 1px solid #222;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    margin: 0 0.2rem;
+    font-family: monospace;
+  }
+  p {
+    margin-bottom: 1rem;
   }
 </style>
