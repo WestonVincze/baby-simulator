@@ -102,6 +102,11 @@ export type BabyData = {
 }
 
 export type DebugData = {
+  babyData: BabyData,
+  considerations: ConsiderationScores[]
+}
+
+export type ConsiderationScores = {
   name: string,
   scores: {
     aversion: number,

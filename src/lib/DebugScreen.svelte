@@ -3,9 +3,9 @@
   import type { DebugData } from '$types';
   import { onDestroy } from 'svelte';
 
-  let debugInfo: DebugData[] = [];
+  let debugInfo: DebugData;
 
-  const unsubscribe = debugStore.subscribe((data: DebugData[]) => {
+  const unsubscribe = debugStore.subscribe((data: DebugData) => {
     debugInfo = data;
   });
 
@@ -16,9 +16,16 @@
 
 <div class="debug-screen">
   <h2>Debug Info</h2>
-  {#if debugInfo.length > 0}
+  <h3>Preferences</h3>
+  <ul>
+
+  {#each Object.keys(debugInfo.babyData.preferences) as preference}
+    <li>{preference}</li>
+  {/each}
+  </ul>
+  {#if debugInfo.considerations.length > 0}
     <ul>
-      {#each debugInfo as { name, scores }}
+      {#each debugInfo.considerations as { name, scores }}
         <li>
           <h3>{name}</h3>
           <p>Aversion: {scores.aversion.toFixed(2)}</p>
@@ -45,13 +52,13 @@
     padding: 10px;
     overflow-y: auto;
     font-size: 14px;
+    text-align: right;
   }
   li {
-    text-align: right;
     list-style: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
   }
   h3 {
     font-weight: 600;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
   }
 </style>

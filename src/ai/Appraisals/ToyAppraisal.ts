@@ -16,7 +16,7 @@ import { debugStore } from "$stores";
 export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
   let bestScore: number = -Infinity;
   let bestToy: ToyState | null = null;
-  const debugInfo: DebugData[] = []
+  const debugInfo: DebugData = { babyData: baby, considerations: []};
 
   for (const toy of toys) {
     const scores: number[] = [];
@@ -39,7 +39,7 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
     // final score
     const score = bonusWeight * (scores.reduce((sum, score) => sum + score, 0) / scores.length);
 
-    debugInfo.push({
+    debugInfo.considerations.push({
       name: toy.data.name,
       scores: {
         distance: distanceScore,
