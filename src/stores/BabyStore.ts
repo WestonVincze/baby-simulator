@@ -18,7 +18,12 @@ const initialState: BabyData = Object.freeze({
   currentToy: null,
   desiredToy: null,
   aversions: {},
-  preferences: {}
+  preferences: {
+    yellow: {
+      value: 1,
+      category: "Color" as AttributeCategory
+    }
+  }
 });
 
 const createBabyStore = () => {
@@ -53,6 +58,7 @@ const createBabyStore = () => {
     },
     updateStats: () => {
       update(data => {
+        console.log(data);
         const updatedProperties: string[] = [];
         const NbaValues: number[] = [];
 
@@ -61,12 +67,22 @@ const createBabyStore = () => {
           const { attributes } = data.currentToy.data;
 
           Object.keys(attributes).forEach(attribute => {
+            console.log(attribute);
             const { value, category } = attributes[attribute as ToyAttribute]!;
             if (value === 0) return;
 
-            setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, value, category);
+            let aversionIncrement = value;
+
+            if (data.preferences[attribute as ToyAttribute]) {
+              console.log(aversionIncrement);
+              console.log(`preferred attribute ${attribute}, reducing aversion`);
+              aversionIncrement /= 2;
+              console.log(aversionIncrement);
+            }
+
+            setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, aversionIncrement, category);
             updatedProperties.push(attribute);
-            NbaValues.push(calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, value))
+            NbaValues.push(calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, aversionIncrement))
           })
         } 
 
@@ -90,7 +106,7 @@ const createBabyStore = () => {
       })
     },
     resetBabyStore: () => {
-      update(data => ({ ...data, boredom: 0, aversions: {}, preferences: {} }))
+      update(data => ({ ...data, boredom: 0, aversions: {}, preferences: initialState.preferences }))
     }
   }
 }
