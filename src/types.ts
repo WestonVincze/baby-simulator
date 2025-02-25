@@ -110,8 +110,10 @@ export type ConsiderationScores = {
   name: string,
   scores: {
     aversion: number,
+    preference: number,
     distance: number,
     lastMove: number,
     bonusWeight: number,
+    total: number,
   }
 }

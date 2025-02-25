@@ -3,6 +3,8 @@ import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory
 import { calculateNBA } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
 
+const MAX_PREFERENCE_BOOST = 0.5;
+
 const setOrIncrementAttribute = (attributeMap: ToyAttributes, property: ToyAttribute, value: number, category: AttributeCategory) => {
   if (attributeMap[property]) {
     attributeMap[property].value = Math.min(attributeMap[property].value + value / 100, 1); 
@@ -58,7 +60,6 @@ const createBabyStore = () => {
     },
     updateStats: () => {
       update(data => {
-        console.log(data);
         const updatedProperties: string[] = [];
         const NbaValues: number[] = [];
 
@@ -67,17 +68,15 @@ const createBabyStore = () => {
           const { attributes } = data.currentToy.data;
 
           Object.keys(attributes).forEach(attribute => {
-            console.log(attribute);
             const { value, category } = attributes[attribute as ToyAttribute]!;
             if (value === 0) return;
 
             let aversionIncrement = value;
 
-            if (data.preferences[attribute as ToyAttribute]) {
-              console.log(aversionIncrement);
-              console.log(`preferred attribute ${attribute}, reducing aversion`);
-              aversionIncrement /= 2;
-              console.log(aversionIncrement);
+            // if attribute has a preference, dampen the aversion buildup
+            const preference = data.preferences[attribute as ToyAttribute];
+            if (preference && preference.value > 0) {
+              aversionIncrement *= (MAX_PREFERENCE_BOOST * preference.value);
             }
 
             setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, aversionIncrement, category);
