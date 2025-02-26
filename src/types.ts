@@ -102,11 +102,18 @@ export type BabyData = {
 }
 
 export type DebugData = {
+  babyData: BabyData,
+  considerations: ConsiderationScores[]
+}
+
+export type ConsiderationScores = {
   name: string,
   scores: {
     aversion: number,
+    preference: number,
     distance: number,
     lastMove: number,
     bonusWeight: number,
+    total: number,
   }
 }

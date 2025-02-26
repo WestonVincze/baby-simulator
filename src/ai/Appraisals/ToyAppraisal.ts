@@ -1,6 +1,7 @@
 import { AversionConsideration, DistanceConsideration, LastMovedConsideration } from "../Considerations";
 import type { BabyData, ToyState, DebugData } from "$types";
 import { debugStore } from "$stores";
+import { PreferenceConsideration } from "$ai/Considerations/PreferenceConsideration/PreferenceConsideration";
 
 /**
  * Should appraisals have a shared context containing all necessary state data for all considerations
@@ -16,7 +17,7 @@ import { debugStore } from "$stores";
 export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
   let bestScore: number = -Infinity;
   let bestToy: ToyState | null = null;
-  const debugInfo: DebugData[] = []
+  const debugInfo: DebugData = { babyData: baby, considerations: []};
 
   for (const toy of toys) {
     const scores: number[] = [];
@@ -29,6 +30,10 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
     const aversionScore = AversionConsideration(baby.aversions, toy.data.attributes);
     scores.push(aversionScore);
 
+    // preference score
+    const preferenceScore = PreferenceConsideration(baby.preferences, toy.data.attributes);
+    scores.push(preferenceScore);
+
     // last moved score (20% weight)
     const lastMoveScore = toy.lastMoveTime ? LastMovedConsideration(performance.now() - toy.lastMoveTime, 5000) : 0;
     scores.push(lastMoveScore * .2);
@@ -39,13 +44,15 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
     // final score
     const score = bonusWeight * (scores.reduce((sum, score) => sum + score, 0) / scores.length);
 
-    debugInfo.push({
+    debugInfo.considerations.push({
       name: toy.data.name,
       scores: {
         distance: distanceScore,
+        preference: preferenceScore,
         aversion: aversionScore,
         lastMove: lastMoveScore,
-        bonusWeight
+        bonusWeight,
+        total: score,
       }
     });
 

@@ -3,6 +3,8 @@ import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory
 import { calculateNBA } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
 
+const MAX_PREFERENCE_BOOST = 0.5;
+
 const setOrIncrementAttribute = (attributeMap: ToyAttributes, property: ToyAttribute, value: number, category: AttributeCategory) => {
   if (attributeMap[property]) {
     attributeMap[property].value = Math.min(attributeMap[property].value + value / 100, 1); 
@@ -18,7 +20,12 @@ const initialState: BabyData = Object.freeze({
   currentToy: null,
   desiredToy: null,
   aversions: {},
-  preferences: {}
+  preferences: {
+    yellow: {
+      value: 1,
+      category: "Color" as AttributeCategory
+    }
+  }
 });
 
 const createBabyStore = () => {
@@ -64,9 +71,17 @@ const createBabyStore = () => {
             const { value, category } = attributes[attribute as ToyAttribute]!;
             if (value === 0) return;
 
-            setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, value, category);
+            let aversionIncrement = value;
+
+            // if attribute has a preference, dampen the aversion buildup
+            const preference = data.preferences[attribute as ToyAttribute];
+            if (preference && preference.value > 0) {
+              aversionIncrement *= (MAX_PREFERENCE_BOOST * preference.value);
+            }
+
+            setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, aversionIncrement, category);
             updatedProperties.push(attribute);
-            NbaValues.push(calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, value))
+            NbaValues.push(calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, aversionIncrement))
           })
         } 
 
@@ -90,7 +105,7 @@ const createBabyStore = () => {
       })
     },
     resetBabyStore: () => {
-      update(data => ({ ...data, boredom: 0, aversions: {}, preferences: {} }))
+      update(data => ({ ...data, boredom: 0, aversions: {}, preferences: initialState.preferences }))
     }
   }
 }

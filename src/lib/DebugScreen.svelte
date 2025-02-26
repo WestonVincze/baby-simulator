@@ -1,13 +1,15 @@
 <script lang="ts">
   import { debugStore } from '$stores';
-  import type { DebugData } from '$types';
+  import type { DebugData, ToyAttribute } from '$types';
   import { onDestroy } from 'svelte';
 
-  let debugInfo: DebugData[] = [];
+  let debugInfo: DebugData;
 
-  const unsubscribe = debugStore.subscribe((data: DebugData[]) => {
+  const unsubscribe = debugStore.subscribe((data: DebugData) => {
     debugInfo = data;
   });
+
+  $: preferences = Object.keys(debugInfo.babyData.preferences).map(k => ({ name: k, value: debugInfo.babyData.preferences[k as ToyAttribute]?.value}));
 
   onDestroy(() => {
     unsubscribe();
@@ -16,15 +18,24 @@
 
 <div class="debug-screen">
   <h2>Debug Info</h2>
-  {#if debugInfo.length > 0}
+  <h3>Preferences</h3>
+  <ul>
+
+  {#each preferences as preference}
+    <li>{preference.name}: {preference.value}</li>
+  {/each}
+  </ul>
+  {#if debugInfo.considerations.length > 0}
     <ul>
-      {#each debugInfo as { name, scores }}
+      {#each debugInfo.considerations as { name, scores }}
         <li>
           <h3>{name}</h3>
           <p>Aversion: {scores.aversion.toFixed(2)}</p>
+          <p>Preference: {scores.preference.toFixed(2)}</p>
           <p>Distance: {scores.distance.toFixed(2)}</p>
           <p>Last Move: {scores.lastMove.toFixed(2)}</p>
           <p>Bonus: {scores.bonusWeight.toFixed(2)}</p>
+          <p class="total">Total: {scores.total.toFixed(2)}</p>
         </li>
       {/each}
     </ul>
@@ -45,13 +56,16 @@
     padding: 10px;
     overflow-y: auto;
     font-size: 14px;
+    text-align: right;
   }
   li {
-    text-align: right;
     list-style: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
   }
   h3 {
     font-weight: 600;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .total {
+    font-weight: bold;
   }
 </style>
