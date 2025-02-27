@@ -1,3 +1,5 @@
+import type { AllAttributes } from "toyAttributes";
+
 export type DropZone = "PlayMat" | "ToyBox" | "Baby";
 
 export interface DragData {
@@ -17,43 +19,6 @@ export type ToyName =
   | "teddy"
   | "train";
 
-export type Shape = 
-  | "triangle"
-  | "circle"
-  | "square"
-  | "oval"
-  | "rectangle"
-  | "wire";
-
-export type Color =
-  | "white"
-  | "red"
-  | "orange"
-  | "yellow"
-  | "brown"
-  | "green"
-  | "blue"
-  | "indigo"
-  | "peach"
-  | "violet"
-  | "black";
-
-export type Pattern =
-  | "dots"
-  | "letters"
-  | "stars"
-  | "stripes";
-
-export type Sound = 
-  | "squeak"
-  | "rattle"
-  | "clank"
-  | "clink"
-  | "ding"
-  | "beep"
-  | "pop";
-
-
 export type AttributeCategory =
   | "Shape"
   | "Color"
@@ -61,16 +26,7 @@ export type AttributeCategory =
   | "Sound"
   | "Other";
 
-export type ToyAttribute =
-  | Shape
-  | Color
-  | Pattern
-  | Sound
-  | "complexity"
-  | "interactivity"
-  | "symmetry"
-  | "smoothness"
-  | "luster";
+export type ToyAttribute = typeof AllAttributes[number];
 
 export type ToyAttributes = {
   [key in ToyAttribute]?: {
