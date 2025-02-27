@@ -19,6 +19,8 @@
     }
     return acc;
   }, {} as Record<AttributeCategory, { aversion: string, value: number }[]>);
+
+  let collapsedCategories: Record<string, boolean> = {};
 </script>
 
 <div class="container">
@@ -30,26 +32,37 @@
       </div>
     </div>
 
+    <h2>Preferences <InfoTooltip text="Preferred attributes accumulate aversion at a slower rate." /></h2>
+    {#each Object.entries($babyStore.preferences) as [preference, value]}
+      <p>{preference}: {value.value}</p>
+    {/each}
+
     <h2>Aversions <InfoTooltip text="When a toy is played with by baby its properties become less appealing to baby and satisfy less boredom." /></h2>
     {#if Object.keys($babyStore.aversions).length === 0}
       <span class="italic">no aversions</span>
     {/if}
 
-    {#each Object.entries(groupedAversions) as [category, aversions]}
-      {#if aversions.length > 0}
-        <h4>{category}</h4>
-      {/if}
-      {#each aversions as { aversion, value }}
-        {#if value && value > 0}
-          <div class="aversions">
-            <span>{aversion}:</span>
-            <div class="bar">
-              <ProgressBar min={value || 0} max={1} color={currentToyAttributes.includes(aversion) ? "tomato" : "slateblue"} />
-            </div>
-          </div>
+    <div class="aversions-container">
+      {#each Object.entries(groupedAversions) as [category, aversions]}
+        {#if aversions.length > 0}
+          <button class="accordion" on:click={() => collapsedCategories[category] = !collapsedCategories[category]}>
+            {category}s {collapsedCategories[category] ? '▲' : '▼'}
+          </button>
+        {/if}
+        {#if !collapsedCategories[category]}
+          {#each aversions as { aversion, value }}
+            {#if value && value > 0}
+              <div class="aversions">
+                <span>{aversion}:</span>
+                <div class="bar">
+                  <ProgressBar min={value || 0} max={1} color={currentToyAttributes.includes(aversion) ? "tomato" : "slateblue"} />
+                </div>
+              </div>
+            {/if}
+          {/each}
         {/if}
       {/each}
-    {/each}
+    </div>
   </div>
   <div class="button-group">
     <button on:click={() => mainMenu()}>Quit</button>
@@ -63,6 +76,20 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  }
+  .accordion {
+    width: 100%;
+    text-align: right;
+    border: none;
+    padding: 0;
+  }
+   .aversions-container {
+    max-height: 325px;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+  }
+  .aversions-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
   }
   .babyStats {
     text-align: right;

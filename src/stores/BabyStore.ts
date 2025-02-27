@@ -122,7 +122,7 @@ const createBabyStore = () => {
       })
     },
     resetBabyStore: () => {
-      update(data => ({ ...data, boredom: 0, aversions: initialState.aversions, preferences: initialState.preferences }))
+      update(data => ({ ...data, boredom: 0, aversions: {}, preferences: {} }))
     }
   }
 }
