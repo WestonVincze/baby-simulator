@@ -1,4 +1,6 @@
+import { AllAttributes } from "./toyAttributes";
 import { HexColors } from "./data/HexColors";
+import type { ToyAttribute } from "$types";
 
 /**
  * @param defaultColors default colors for SVG
@@ -92,4 +94,13 @@ export const rescale = (
   max: number,
 ) => {
   return (value - min) / (max - min);
+}
+
+/**
+ * Helper to get a random toy attribute
+ * @returns a random toy attribute
+ */
+export const getRandomAttribute = (): ToyAttribute => {
+  const randomIndex = Math.floor(Math.random() * AllAttributes.length);
+  return AllAttributes[randomIndex];
 }

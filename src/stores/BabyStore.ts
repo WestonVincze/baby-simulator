@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory } from "$types";
-import { calculateNBA } from "$helpers";
+import { calculateNBA, getRandomAttribute } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
 
 const MAX_PREFERENCE_BOOST = 0.5;
@@ -20,12 +20,7 @@ const initialState: BabyData = Object.freeze({
   currentToy: null,
   desiredToy: null,
   aversions: {},
-  preferences: {
-    yellow: {
-      value: 1,
-      category: "Color" as AttributeCategory
-    }
-  }
+  preferences: {}
 });
 
 const createBabyStore = () => {
@@ -57,6 +52,28 @@ const createBabyStore = () => {
         return data;
       });
       return currentAttributes;
+    },
+    initializePreferences: (amount: number = 3) => {
+      update(data => {
+        const attributes = new Set<ToyAttribute>();
+
+        while (attributes.size < amount) {
+          attributes.add(getRandomAttribute());
+        }
+
+        let value = 1;
+
+        attributes.forEach(attribute => {
+          data.preferences[attribute] = {
+            value: parseFloat(value.toFixed(1)),
+            category: "Other", // TODO: add a helper to get the category for a given attribute
+          }
+
+          value = Math.max(value - 0.2, 0.1);
+        })
+
+        return data;
+      })
     },
     updateStats: () => {
       update(data => {
@@ -105,7 +122,7 @@ const createBabyStore = () => {
       })
     },
     resetBabyStore: () => {
-      update(data => ({ ...data, boredom: 0, aversions: {}, preferences: initialState.preferences }))
+      update(data => ({ ...data, boredom: 0, aversions: initialState.aversions, preferences: initialState.preferences }))
     }
   }
 }

@@ -58,6 +58,8 @@ export const startGame = () => {
   // reset stores
   babyStore.resetBabyStore();
   toyStore.resetToys();
+
+  babyStore.initializePreferences(3);
 };
 
 /** 
