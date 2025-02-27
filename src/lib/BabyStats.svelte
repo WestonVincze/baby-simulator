@@ -1,6 +1,6 @@
 <script lang="ts">
   import { babyStore, mainMenu } from "$stores";
-  import type { AttributeCategory, ToyAttribute } from "$types";
+  import type { AttributeCategory } from "$types";
   import ProgressBar from "./ProgressBar.svelte";
   import InfoTooltip from "./InfoTooltip.svelte";
 

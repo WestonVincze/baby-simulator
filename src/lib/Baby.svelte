@@ -6,7 +6,7 @@
   import { dragDrop } from "$actions/dragDropAction";
   import { gameStore, babyStore, toyStore } from "$stores";
   import { getTimeSinceTimestamp } from "$helpers";
-  import type { BabyData, ToyState } from "$types";
+  import type { ToyState } from "$types";
 
   let baby: HTMLImageElement;
   let toys: ToyState[];
