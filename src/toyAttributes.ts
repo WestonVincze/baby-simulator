@@ -7,7 +7,7 @@ const Shapes = [
   "wire",
 ] as const;
 
-const Colors = [
+export const Colors = [
   "white",
   "red",
   "orange",

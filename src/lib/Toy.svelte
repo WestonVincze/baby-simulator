@@ -1,9 +1,12 @@
 <script lang="ts">
   import type { DragData, ToyState } from "$types";
   import ToyIcon from "$icons/ToyIcon.svelte";
+  import { toyStore } from "$stores";
 
   export let toy: ToyState
   export let absolutePosition = false;
+
+  let currentAudio: HTMLAudioElement | null = null;
 
   const handleDragStart = (event: DragEvent) => {
     /* we can set a custom image:
@@ -31,10 +34,27 @@
 
   const handleDragEnd = (event: DragEvent) => {}
 
+  const playSound = (soundName: string) => {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+    currentAudio = new Audio(`src/sfx/${soundName}.mp3`);
+    currentAudio.play();
+  }
+
   const handleClick = (event: Event) => {
+    const sounds = Object.entries(toy.data.attributes).filter(([key, attribute]) => attribute.category === "Sound");
+
+    console.log(sounds);
+    if (sounds.length > 0){
+      toyStore.interactWithToy(toy.id);
+      playSound(sounds[0][0]);
+    }
+    
     /* debug: print toy data */
     console.log(`toy ${toy.id}`);
-    console.log(`lastMoveTime: ${toy.lastMoveTime}`);
+    console.log(`latest interactions:\n${toy.interactions?.map(x => `${x.type}: ${x.timestamp}ms`).join('\n')}`);
     console.log(`position: ${toy.position.x}, ${toy.position.y}`)
     console.table(toy.data.attributes);
   }

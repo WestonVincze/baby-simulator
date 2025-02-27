@@ -1,8 +1,20 @@
 import { get, writable } from "svelte/store"
-import type { DropZone, ToyState } from "$types";
+import type { DropZone, InteractionType, ToyState } from "$types";
+
+const MAX_INTERACTIONS = 10;
 
 const createToyStore = () => {
   const { subscribe, update } = writable<ToyState[]>([]);
+
+  const addInteraction = (toy: ToyState, type: InteractionType) => {
+    const timestamp = Date.now();
+    if (!toy.interactions) toy.interactions = [];
+    toy.interactions.push({ type, timestamp });
+
+    if (toy.interactions.length > MAX_INTERACTIONS) {
+      toy.interactions.shift(); // only keep the last x interactions
+    }
+  };
 
   return {
     subscribe,
@@ -13,15 +25,26 @@ const createToyStore = () => {
       ...toys,
       { ...toy, id: (toys.length + 1).toString(), position: toy.position || { x: 0, y: 0 }},
     ]),
-    updateToy: (id: string, loc: DropZone, x: number, y: number) => {
+    moveToy: (id: string, loc: DropZone, x: number, y: number) => {
       update(toys => {
         const toy = toys.find(toy => toy.id === id);
         if (!toy) return toys;
         toy.loc = loc;
         toy.position = { x, y };
-        toy.lastMoveTime = performance.now();
+        addInteraction(toy, "move");
         return toys;
       });
+    },
+    interactWithToy: (id: string) => {
+      update(toys => {
+        const toy = toys.find(toy => toy.id === id);
+        if (!toy) return toys;
+
+        addInteraction(toy, "sound");
+
+        return toys;
+      })
+
     },
     getToyById: (id: string) => {
       const toys = get(toyStore);

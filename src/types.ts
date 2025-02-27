@@ -1,4 +1,4 @@
-import type { AllAttributes } from "toyAttributes";
+import type { AllAttributes, Colors } from "toyAttributes";
 
 export type DropZone = "PlayMat" | "ToyBox" | "Baby";
 
@@ -26,6 +26,8 @@ export type AttributeCategory =
   | "Sound"
   | "Other";
 
+export type Color = typeof Colors[number];
+
 export type ToyAttribute = typeof AllAttributes[number];
 
 export type ToyAttributes = {
@@ -40,11 +42,18 @@ export type ToyData = {
   attributes: ToyAttributes, // 0-1
 }
 
+export type InteractionType = "move" | "sound";
+
+export type Interaction = {
+  type: InteractionType,
+  timestamp: number
+}
+
 export type ToyState = {
   id: string,
   loc: DropZone,
   position: { x: number, y: number },
-  lastMoveTime?: number,
+  interactions?: Interaction[],
   data: ToyData
 }
 

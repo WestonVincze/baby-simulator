@@ -5,7 +5,6 @@
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { dragDrop } from "$actions/dragDropAction";
   import { gameStore, babyStore, toyStore } from "$stores";
-  import { getTimeSinceTimestamp } from "$helpers";
   import type { ToyState } from "$types";
 
   let baby: HTMLImageElement;
@@ -24,17 +23,6 @@
   $: babyStore.setCurrentToy(currentToy);
   $: activeToys = toys.filter(toy => toy.loc === "PlayMat" || toy.loc === "Baby");
 
-  // TODO: remove this placeholder for tracking the most recently interacted toy
-  $: mostRecentlyInteractedToy = $toyStore
-    .filter(toy => toy.loc === "PlayMat" && toy.lastMoveTime)
-    .map(toy => ({ name: toy.data.name, time: getTimeSinceTimestamp(toy.lastMoveTime!) }))
-    .reduce((mostRecentlyInteractedToy, toy) => 
-      mostRecentlyInteractedToy.time < toy.time
-      ? mostRecentlyInteractedToy
-      : toy, { name: "", time: Infinity }).name;
-
-  $: console.log(`most recently interacted toy: ${mostRecentlyInteractedToy || "N/A"}`);
-  
   const handleDrop = (id: string) => {
     if (!currentToy || currentToy.id === id) return;
 
@@ -45,7 +33,7 @@
       return;
     }
 
-    toyStore.updateToy(
+    toyStore.moveToy(
       currentToy.id,
       toy.loc,
       toy.position.x,

@@ -16,7 +16,7 @@
     .sort((toyA, toyB) => toyA.position.x - toyB.position.x)
     .map((toy, i) => {
       const x = i * (TOY_SIZE + 15) + 15;
-      toyStore.updateToy(toy.id, toy.loc, x, toy.position.y);
+      toyStore.moveToy(toy.id, toy.loc, x, toy.position.y);
       return toy;
     });
 </script>
