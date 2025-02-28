@@ -77,7 +77,7 @@ export type ConsiderationScores = {
     aversion: number,
     preference: number,
     distance: number,
-    lastMove: number,
+    recentInteractions: number,
     bonusWeight: number,
     total: number,
   }
