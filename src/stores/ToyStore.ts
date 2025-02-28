@@ -7,7 +7,7 @@ const createToyStore = () => {
   const { subscribe, update } = writable<ToyState[]>([]);
 
   const addInteraction = (toy: ToyState, type: InteractionType) => {
-    const timestamp = Date.now();
+    const timestamp = performance.now();
     if (!toy.interactions) toy.interactions = [];
     toy.interactions.push({ type, timestamp });
 

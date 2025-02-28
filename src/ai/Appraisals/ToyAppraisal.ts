@@ -1,7 +1,6 @@
-import { AversionConsideration, DistanceConsideration, LastMovedConsideration } from "../Considerations";
+import { AversionConsideration, DistanceConsideration, RecentInteractionsConsideration, PreferenceConsideration } from "../Considerations";
 import type { BabyData, ToyState, DebugData } from "$types";
 import { debugStore } from "$stores";
-import { PreferenceConsideration } from "$ai/Considerations/PreferenceConsideration/PreferenceConsideration";
 
 /**
  * Should appraisals have a shared context containing all necessary state data for all considerations
@@ -34,9 +33,8 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
     const preferenceScore = PreferenceConsideration(baby.preferences, toy.data.attributes);
     scores.push(preferenceScore);
 
-    // last moved score (20% weight)
-    const lastMoveScore = toy.lastMoveTime ? LastMovedConsideration(performance.now() - toy.lastMoveTime, 5000) : 0;
-    scores.push(lastMoveScore * .2);
+    const lastMoveScore = toy.interactions ? RecentInteractionsConsideration(toy.interactions, 5000) : 0;
+    scores.push(lastMoveScore);
 
     // add 10% bonus if the toy is already being played with
     const bonusWeight = baby.currentToy?.id === toy.id ? 1.1 : 1;
