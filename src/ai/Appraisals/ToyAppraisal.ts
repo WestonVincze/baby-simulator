@@ -33,8 +33,8 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
     const preferenceScore = PreferenceConsideration(baby.preferences, toy.data.attributes);
     scores.push(preferenceScore);
 
-    const lastMoveScore = toy.interactions ? RecentInteractionsConsideration(toy.interactions, 5000) : 0;
-    scores.push(lastMoveScore);
+    const recentInteractionsScore = toy.interactions ? RecentInteractionsConsideration(toy.interactions, 5000) : 0;
+    scores.push(recentInteractionsScore);
 
     // add 10% bonus if the toy is already being played with
     const bonusWeight = baby.currentToy?.id === toy.id ? 1.1 : 1;
@@ -48,7 +48,7 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
         distance: distanceScore,
         preference: preferenceScore,
         aversion: aversionScore,
-        lastMove: lastMoveScore,
+        recentInteractions: recentInteractionsScore,
         bonusWeight,
         total: score,
       }

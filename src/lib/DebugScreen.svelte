@@ -33,7 +33,7 @@
           <p>Aversion: {scores.aversion.toFixed(2)}</p>
           <p>Preference: {scores.preference.toFixed(2)}</p>
           <p>Distance: {scores.distance.toFixed(2)}</p>
-          <p>Last Move: {scores.lastMove.toFixed(2)}</p>
+          <p>Recent Interactions: {scores.recentInteractions.toFixed(2)}</p>
           <p>Bonus: {scores.bonusWeight.toFixed(2)}</p>
           <p class="total">Total: {scores.total.toFixed(2)}</p>
         </li>
