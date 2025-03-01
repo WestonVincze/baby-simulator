@@ -78,7 +78,7 @@ const createBabyStore = () => {
     updateStats: () => {
       update(data => {
         const updatedProperties: string[] = [];
-        const NbaValues: number[] = [];
+        const nbaValues: number[] = [];
 
         // update aversions and boredom based on data from currentToy
         if (data.currentToy !== null) {
@@ -98,7 +98,7 @@ const createBabyStore = () => {
 
             setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, aversionIncrement, category);
             updatedProperties.push(attribute);
-            NbaValues.push(calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, aversionIncrement))
+            nbaValues.push(calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, aversionIncrement))
           })
         } 
 
@@ -114,7 +114,7 @@ const createBabyStore = () => {
         // reduce NBA factor if the current toy is the desired toy
         const desiredToyBonus = data.currentToy && data.desiredToy && data.currentToy.id === data.desiredToy.id ? 0.1 : 0;
 
-        const nbaTotal = NbaValues.length > 0 ? (NbaValues.reduce((prev, curr) => prev += curr) / NbaValues.length) - desiredToyBonus : 1;
+        const nbaTotal = nbaValues.length > 0 ? (nbaValues.reduce((prev, curr) => prev += curr) / nbaValues.length) - desiredToyBonus : 1;
 
         data.boredom = Math.min(Math.max(data.boredom + nbaTotal / 100, 0), 1);
 

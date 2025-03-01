@@ -19,20 +19,20 @@ export const AversionConsideration = (
     if (attributeValue === undefined) return 0;
 
     // defaults
-    let aversion = 1;
+    let score = 1;
 
     // attribute match in aversions
     if (attributeName in aversions && aversions[attributeName]) {
-      const aversionNba = calculateNBA(aversions[attributeName].value, attributeValue);
-      aversion = convertNBAtoUtility(aversionNba);
+      const nba = calculateNBA(aversions[attributeName].value, attributeValue);
+      score = convertNBAtoUtility(nba);
     }
 
     // attribute's final NBA score
-    return aversion;
+    return score;
   })
 
   // average of attribute NBA scores
   return attributeNbaScores.length > 0
-    ? attributeNbaScores.reduce((prev, curr) => prev += curr) / attributeNbaScores.length
+    ? attributeNbaScores.reduce((prev, curr) => prev += curr, 0) / attributeNbaScores.length
     : 1;
 }

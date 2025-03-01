@@ -1,5 +1,5 @@
 // decimal point accuracy
-const ACCURACY = 4;
+const ACCURACY = 3;
 
 /**
  * example: https://www.desmos.com/calculator/yquxu4kfb1

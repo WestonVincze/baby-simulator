@@ -1,6 +1,7 @@
 import { AllAttributes } from "./toyAttributes";
 import { HexColors } from "./data/HexColors";
 import type { ToyAttribute } from "$types";
+import { calculateLogisticUtility } from "$ai/utilityCalculations";
 
 /**
  * @param defaultColors default colors for SVG
@@ -46,7 +47,14 @@ export const calculateNBA = (attributeAversion: number, attributeValue: number) 
     throw new Error(`Out of range. 'attributeAversion' and 'attributeValue' must be between 0 and 1. Provided values attributeAversion: ${attributeAversion} and attributeValue: ${attributeValue}`);
   }
 
-  return -1 * (attributeValue * (1 - attributeAversion) - attributeValue * attributeAversion);
+  const utility = calculateLogisticUtility(attributeAversion * attributeValue, 1, {
+    exponentMultiplier: 10,
+    exponentAdditive: 5,
+    eulerMultiplier: 2,
+    direction: "decrease"
+  })
+
+  return 1 - utility * 2;
 }
 
 /**
