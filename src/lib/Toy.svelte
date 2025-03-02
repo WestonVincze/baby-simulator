@@ -39,7 +39,7 @@
       currentAudio.pause();
       currentAudio.currentTime = 0;
     }
-    currentAudio = new Audio(`src/sfx/${soundName}.mp3`);
+    currentAudio = new Audio(`sfx/${soundName}.mp3`);
     currentAudio.play();
   }
 
