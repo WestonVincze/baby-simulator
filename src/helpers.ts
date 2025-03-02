@@ -49,14 +49,15 @@ export const calculateNBA = (attributeAversion: number, attributeValue: number) 
 
   const baseNba = calculateLogisticUtility(attributeAversion, 1, {
     offset: -1,
+    offsetOperator: "+",
     numerator: 2,
     exponentMultiplier: 10,
     exponentAdditive: 5,
     eulerMultiplier: 2,
-    direction: "increase"
   })
 
-  return baseNba * attributeValue;
+  // TODO: consider only returning baseNba
+  return baseNba > 0 ? baseNba * attributeValue : baseNba;
 }
 
 /**

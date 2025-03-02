@@ -3,7 +3,8 @@ import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory
 import { calculateNBA, getRandomAttribute } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
 
-const MAX_PREFERENCE_BOOST = 0.5;
+const MAX_AVERSION_NEGATION = 0.2;
+const MAX_BOREDOM_BOOST = 2;
 
 const setOrIncrementAttribute = (attributeMap: ToyAttributes, property: ToyAttribute, value: number, category: AttributeCategory) => {
   if (attributeMap[property]) {
@@ -89,16 +90,21 @@ const createBabyStore = () => {
             if (value === 0) return;
 
             let aversionIncrement = value;
+            let nbaMultiplier = 1;
 
             // if attribute has a preference, dampen the aversion buildup
             const preference = data.preferences[attribute as ToyAttribute];
             if (preference && preference.value > 0) {
-              aversionIncrement *= (MAX_PREFERENCE_BOOST * preference.value);
+              aversionIncrement *= (MAX_AVERSION_NEGATION * preference.value);
+              nbaMultiplier = MAX_BOREDOM_BOOST * preference.value;
             }
 
-            setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, aversionIncrement, category);
+            setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, aversionIncrement * 2, category);
             updatedProperties.push(attribute);
-            nbaValues.push(calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, aversionIncrement))
+            let nba = calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, aversionIncrement) 
+
+            if (nba < 0) nba *= nbaMultiplier;
+            nbaValues.push(nba)
           })
         } 
 
@@ -107,7 +113,7 @@ const createBabyStore = () => {
           const property = key as ToyAttribute;
 
           if (data.aversions[property] && updatedProperties.findIndex(updated => updated === property) === -1) {
-            data.aversions[property].value = Math.max(data.aversions[property].value -= 0.01, 0);
+            data.aversions[property].value = Math.max(data.aversions[property].value -= 0.005, 0);
           }
         })
 
