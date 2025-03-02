@@ -36,7 +36,6 @@ export const calculateLogisticUtility = (
     eulerMultiplier: 2,
   }
 ) => {
-  console.log('calculating ' + value)
   const w = Math.max(0, Math.min(value / maxValue, 1))
   const exponent = -(w * options.exponentMultiplier) + options.exponentAdditive;
   const denominator = 1 + (Math.E * options.eulerMultiplier) ** exponent;
