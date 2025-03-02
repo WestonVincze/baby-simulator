@@ -13,10 +13,12 @@ describe("Logistic Function", () => {
 
   test("increasing", () => {
     const options: LogisticOptions = {
+      offset: 0,
+      offsetOperator: "+",
+      numerator: 1,
       exponentMultiplier: 12,
       exponentAdditive: 6,
       eulerMultiplier: 2,
-      direction: "increase"
     }
     expect(calculateLogisticUtility(0, 1, options)).toBe(0);
     expect(calculateLogisticUtility(0.4, 1, options)).toBe(0.116); // 0.1159...
