@@ -12,6 +12,8 @@ const ACCURACY = 3;
  */
 
 export type LogisticOptions = {
+  offset: number,
+  numerator: number,
   exponentMultiplier: number,
   exponentAdditive: number,
   eulerMultiplier: number,
@@ -22,6 +24,8 @@ export const calculateLogisticUtility = (
   value: number,
   maxValue: number,
   options: LogisticOptions = {
+    offset: 0,
+    numerator: 1,
     exponentMultiplier: 12,
     exponentAdditive: 6,
     eulerMultiplier: 2,
@@ -33,9 +37,9 @@ export const calculateLogisticUtility = (
   const exponent = -(w * options.exponentMultiplier) + options.exponentAdditive;
   const denominator = 1 + (Math.E * options.eulerMultiplier) ** exponent;
 
-  const result = 1 / denominator
+  const result = options.numerator / denominator
 
   return options.direction === "increase"
-    ? parseFloat(result.toFixed(ACCURACY))
-    : parseFloat((1 - result).toFixed(ACCURACY));
+    ? parseFloat((options.offset + result).toFixed(ACCURACY))
+    : parseFloat((options.offset - result).toFixed(ACCURACY));
 }

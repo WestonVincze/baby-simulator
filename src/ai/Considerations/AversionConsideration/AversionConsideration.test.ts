@@ -12,15 +12,11 @@ describe("NBA Calculation tests", () => {
   })
 
   test("with half aversion and half value", () => {
-    expect(calculateNBA(0.5, 0.5)).toBe(-0.972);
+    expect(calculateNBA(0.5, 0.5)).toBe(0);
   })
   
-  test("with max aversion and slightly less than half value", () => {
-    expect(calculateNBA(1, 0.45)).toBeLessThan(0);
-  })
-
   test("with max aversion and half value", () => {
-    expect(calculateNBA(1, 0.5)).toBe(0);
+    expect(calculateNBA(1, 0.5)).toBe(0.5);
   })
 
   test("with max aversion and slightly more than half value", () => {

@@ -47,14 +47,16 @@ export const calculateNBA = (attributeAversion: number, attributeValue: number) 
     throw new Error(`Out of range. 'attributeAversion' and 'attributeValue' must be between 0 and 1. Provided values attributeAversion: ${attributeAversion} and attributeValue: ${attributeValue}`);
   }
 
-  const utility = calculateLogisticUtility(attributeAversion * attributeValue, 1, {
+  const baseNba = calculateLogisticUtility(attributeAversion, 1, {
+    offset: -1,
+    numerator: 2,
     exponentMultiplier: 10,
     exponentAdditive: 5,
     eulerMultiplier: 2,
-    direction: "decrease"
+    direction: "increase"
   })
 
-  return 1 - utility * 2;
+  return baseNba * attributeValue;
 }
 
 /**
