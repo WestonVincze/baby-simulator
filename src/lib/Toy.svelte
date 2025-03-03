@@ -46,7 +46,6 @@
   const handleClick = (event: Event) => {
     const sounds = Object.entries(toy.data.attributes).filter(([key, attribute]) => attribute.category === "Sound");
 
-    console.log(sounds);
     if (sounds.length > 0){
       toyStore.interactWithToy(toy.id);
       playSound(sounds[0][0]);

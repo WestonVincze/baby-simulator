@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { babyStore, mainMenu } from "$stores";
+  import { babyStore } from "$stores";
   import type { AttributeCategory } from "$types";
   import ProgressBar from "./ProgressBar.svelte";
   import InfoTooltip from "./InfoTooltip.svelte";
@@ -64,10 +64,6 @@
       {/each}
     </div>
   </div>
-  <div class="button-group">
-    <button on:click={() => mainMenu()}>Quit</button>
-    <button on:click={() => babyStore.resetBabyStore()}>Reset</button>
-  </div>
 </div>
 
 <style>
@@ -84,7 +80,7 @@
     padding: 0;
   }
    .aversions-container {
-    max-height: 325px;
+    max-height: 410px;
     overflow-y: auto;
     scrollbar-width: none; /* Firefox */
   }
@@ -127,8 +123,5 @@
   }
   .aversions .bar {
     width: 60px;
-  }
-  .button-group {
-    flex-direction: row;
   }
 </style>

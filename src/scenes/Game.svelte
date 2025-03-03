@@ -4,9 +4,11 @@
   import PlayMat from "$lib/PlayMat.svelte";
   import ToyBox from "$lib/ToyBox.svelte";
   import { onDestroy, onMount } from "svelte";
-  import { gameStore } from "$stores";
+  import { babyStore, gameStore, mainMenu } from "$stores";
+  import Modal from "$lib/Modal.svelte";
 
   let showDebugScreen = false;
+  let showPauseMenu = false;
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === '`') {
@@ -14,6 +16,7 @@
     }
     if (event.key === 'Escape') {
       gameStore.togglePause();
+      showPauseMenu = !showPauseMenu;
     }
   };
 
@@ -41,6 +44,15 @@
   {/if}
 </div>
 
+{#if showPauseMenu}
+  <Modal title="Paused" onClose={() => showPauseMenu = false }>
+    <div class="button-group">
+      <button on:click={() => babyStore.resetBabyStore()}>Reset</button>
+      <button on:click={() => mainMenu()}>Quit</button>
+    </div>
+  </Modal>
+{/if}
+
 <style>
   .game { 
     display: flex;
@@ -56,5 +68,11 @@
     background-color: #49243E;
     padding: 15px;
     border-radius: 15px;
+  }
+  .button-group {
+    flex-direction: row;
+  }
+  .button-group > button {
+    flex-grow: 1;
   }
 </style>

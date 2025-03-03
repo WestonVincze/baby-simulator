@@ -33,6 +33,7 @@
 
 <style>
   .game {
+    position: relative;
     width: 995px;
     height: 650px;
     display: flex;
