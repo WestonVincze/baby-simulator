@@ -9,6 +9,13 @@
 
   let showDebugScreen = false;
   let showPauseMenu = false;
+  let sfxVolume = 1;
+
+  const handleVolumeChange = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    sfxVolume = parseFloat(target.value);
+    sfxStore.setVolume('sfx', sfxVolume);
+  };
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === '`') {
@@ -50,7 +57,18 @@
       <button on:click={() => babyStore.resetBabyStore()}>Reset</button>
       <button on:click={() => mainMenu()}>Quit</button>
     </div>
-    <button on:click={() => sfxStore.setVolume("sfx", 0)}>Mute</button>
+    <div class="slider">
+      <label for="volume-slider">Volume:</label>
+      <input
+        id="volume-slider"
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        bind:value={sfxVolume}
+        on:input={handleVolumeChange}
+      />
+    </div>
   </Modal>
 {/if}
 
@@ -75,5 +93,12 @@
   }
   .button-group > button {
     flex-grow: 1;
+  }
+  .slider {
+    display: flex;
+    margin-top: 15px;
+    align-content: center;
+    justify-content: center;
+    gap: 15px;
   }
 </style>

@@ -17,8 +17,6 @@
       unsubscribe();
     }
   });
-
-  $: console.log(`current scene: ${Scene[state.activeScene]}`);
 </script>
 
 <div class="game">
