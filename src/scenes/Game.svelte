@@ -4,7 +4,7 @@
   import PlayMat from "$lib/PlayMat.svelte";
   import ToyBox from "$lib/ToyBox.svelte";
   import { onDestroy, onMount } from "svelte";
-  import { babyStore, gameStore, mainMenu } from "$stores";
+  import { babyStore, gameStore, mainMenu, sfxStore } from "$stores";
   import Modal from "$lib/Modal.svelte";
 
   let showDebugScreen = false;
@@ -50,6 +50,7 @@
       <button on:click={() => babyStore.resetBabyStore()}>Reset</button>
       <button on:click={() => mainMenu()}>Quit</button>
     </div>
+    <button on:click={() => sfxStore.setVolume("sfx", 0)}>Mute</button>
   </Modal>
 {/if}
 
