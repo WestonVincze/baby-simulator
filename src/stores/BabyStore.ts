@@ -2,6 +2,8 @@ import { writable } from "svelte/store";
 import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory } from "$types";
 import { calculateNBA, getRandomAttribute } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
+import { PLAY_MAT_HEIGHT } from "$constants";
+import { PLAY_MAT_WIDTH } from "$constants";
 
 const MAX_AVERSION_NEGATION = 0.2;
 const MAX_BOREDOM_BOOST = 2;
@@ -24,11 +26,39 @@ const initialState: BabyData = Object.freeze({
   preferences: {}
 });
 
+const constrainPosition = (position: { x: number, y: number }, xMin: number, yMin: number, xMax: number, yMax: number) => {
+  return ({
+    x: Math.min(Math.max(xMin, position.x), xMax),
+    y: Math.min(Math.max(yMin, position.y), yMax),
+  })
+}
+
 const createBabyStore = () => {
   const { subscribe, update } = writable<BabyData>({ ...initialState });
 
   return {
     subscribe,
+    updatePosition: (position: { x?: number, y?: number }) => {
+      const { x, y } = position;
+      if (x === 0 && y === 0) return;
+
+      update(state => {
+        const constrainedPosition = constrainPosition(
+          {
+            x: state.position.x + (x || 0),
+            y: state.position.y + (y || 0)
+          },
+          75,
+          100,
+          PLAY_MAT_WIDTH - 75,
+          PLAY_MAT_HEIGHT - 100 
+        );
+        return ({
+          ...state,
+          position: constrainedPosition
+        });
+      });
+    },
     setCurrentToy: (toy: ToyState | null) => {
       update(data => {
         return ({ ...data, currentToy: toy })

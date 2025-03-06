@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
 
   import Toy from "./Toy.svelte";
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { dragDrop } from "$actions/dragDropAction";
   import { gameStore, babyStore, toyStore, Scene } from "$stores";
   import type { ToyState } from "$types";
+  import { cleanupMovement, initializeMovement } from "$utils";
 
-  let baby: HTMLImageElement;
   let toys: ToyState[];
   let isPaused = false;
   let showThoughtBubble = true;
@@ -49,11 +49,17 @@
     babyStore.setDesiredToy(activeToys);
   }, 100);
 
+  onMount(() => {
+    initializeMovement();
+  })
+
   onDestroy(() => {
     clearInterval(update);
     unsubscribeToys();
     unsubscribeGame();
+    cleanupMovement();
   })
+
 </script>
 
 <svelte:head>
@@ -64,6 +70,7 @@
 
 <div
   class="baby-container"
+    style="left: {$babyStore.position.x - 100}px; top: {$babyStore.position.y - 100}px"
   use:dragDrop={{ dropZone: "Baby", onDrop: handleDrop }}
 >
   {#if showThoughtBubble && $babyStore.desiredToy}
@@ -79,13 +86,14 @@
       </div>
     </div>
   {/if}
+
   <img
     class="baby"
     draggable="false"
     src="sitting-baby.png"
     alt="Sitting baby"
-    bind:this={baby}
   />
+
   {#if currentToy}
     <div class="current-toy">
       <Toy toy={currentToy} />
@@ -95,12 +103,10 @@
 
 <style>
   .baby-container {
-    width: 200px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    margin: 0 auto;
+    position: absolute;
+    height: 200px;
+    width: 200px;
   }
   .desired-toy {
     position: absolute;

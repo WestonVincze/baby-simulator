@@ -25,13 +25,13 @@
   }
   .playMat {
     background-color: #704264;
+    /* height / width should match values in `constants.ts` */
     height: 500px;
     width: 800px;
     border-radius: 15px;
     position: relative;
     display: flex;
     flex-direction: column;
-    place-items: center;
     gap: 25%;
   }
 </style>

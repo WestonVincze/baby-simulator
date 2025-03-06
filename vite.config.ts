@@ -14,8 +14,10 @@ export default defineConfig({
       $lib: path.resolve(__dirname, 'src/lib'),
       $scenes: path.resolve(__dirname, 'src/scenes'),
       $stores: path.resolve(__dirname, 'src/stores'),
+      $utils: path.resolve(__dirname, 'src/utils'),
       $types: path.resolve(__dirname, 'src/types'),
       $helpers: path.resolve(__dirname, 'src/helpers'),
+      $constants: path.resolve(__dirname, 'src/constants'),
     }
   }
 })

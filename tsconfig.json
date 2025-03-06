@@ -23,7 +23,9 @@
       "$stores": ["stores"],
       "$icons/*": ["icons/*"],
       "$lib/*": ["lib/*"],
+      "$utils": ["utils"],
       "$helpers": ["helpers"],
+      "$constants": ["constants"],
       "$types": ["types"],
     }
   },
