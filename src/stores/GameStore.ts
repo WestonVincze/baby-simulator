@@ -4,6 +4,7 @@ import { toyStore } from "./ToyStore";
 
 export enum Scene {
   MainMenu,
+  Simulation,
   Playing,
   GameOver
 }
@@ -46,10 +47,10 @@ export const togglePause = () => {
 /**
  * Helper function for starting game or resetting game state
  */
-export const startGame = () => {
+export const startGame = (detailedMode: boolean = false) => {
   // initialize / reset game state
   update(state => {
-    state.activeScene = Scene.Playing;
+    state.activeScene = detailedMode ? Scene.Playing : Scene.Simulation;
     state.isPaused = false;
     state.score = 0;
     return state

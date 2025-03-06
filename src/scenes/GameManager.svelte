@@ -5,6 +5,7 @@
   import MainMenu from "./MainMenu.svelte";
   import Game from "./Game.svelte";
   import GameOver from "./GameOver.svelte";
+  import Simulation from "./Simulation.svelte";
 
   let state: GameState;
 
@@ -24,6 +25,8 @@
     <MainMenu />
   {:else if state.activeScene === Scene.Playing}
     <Game />
+  {:else if state.activeScene === Scene.Simulation}
+    <Simulation />
   {:else if state.activeScene === Scene.GameOver}
     <GameOver />
   {/if}

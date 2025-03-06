@@ -6,7 +6,7 @@
   <h1>For crying out loud...</h1>
 
   <div class="button-group">
-    <button on:click={startGame}>Try Again?</button>
+    <button on:click={() => startGame(true)}>Try Again?</button>
     <button on:click={mainMenu}>Main Menu</button>
   </div>
 </div>

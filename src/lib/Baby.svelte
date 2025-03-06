@@ -4,18 +4,20 @@
   import Toy from "./Toy.svelte";
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { dragDrop } from "$actions/dragDropAction";
-  import { gameStore, babyStore, toyStore } from "$stores";
+  import { gameStore, babyStore, toyStore, Scene } from "$stores";
   import type { ToyState } from "$types";
 
   let baby: HTMLImageElement;
   let toys: ToyState[];
   let isPaused = false;
+  let showThoughtBubble = true;
 
   const unsubscribeToys = toyStore.subscribe(data => {
     toys = data
   })
 
   const unsubscribeGame = gameStore.subscribe(data => {
+    showThoughtBubble = data.activeScene === Scene.Playing;
     isPaused = data.isPaused;
   })
 
@@ -55,14 +57,16 @@
 </script>
 
 <svelte:head>
-  <link rel="preload" as="image" href="/thought-bubbles.svg" />
+  {#if showThoughtBubble}
+    <link rel="preload" as="image" href="/thought-bubbles.svg" />
+  {/if}
 </svelte:head>
 
 <div
   class="baby-container"
   use:dragDrop={{ dropZone: "Baby", onDrop: handleDrop }}
 >
-  {#if $babyStore.desiredToy}
+  {#if showThoughtBubble && $babyStore.desiredToy}
     <div class="desired-toy">
       <div class="desired-toy-container">
         <img

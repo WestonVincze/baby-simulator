@@ -22,7 +22,8 @@
   </header>
 
   <div class="button-group">
-    <button on:click={startGame}>Start</button>
+    <button on:click={() => startGame(false)}>Simulation Mode</button>
+    <button on:click={() => startGame(true)}>Detailed Mode</button>
     <button on:click={() => showHowToPlay = true}>How To Play</button>
     <button on:click={() => showHowItWorks = true}>How It Works</button>
   </div>
@@ -120,5 +121,15 @@
   }
   p {
     margin-bottom: 1rem;
+  }
+  .button-group {
+    justify-content: center;
+    width: 550px;
+    margin: 0 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  button {
+    min-width: 200px;
   }
 </style>
