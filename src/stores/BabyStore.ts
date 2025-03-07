@@ -17,14 +17,14 @@ const setOrIncrementAttribute = (attributeMap: ToyAttributes, property: ToyAttri
   return property;
 }
 
-const initialState: BabyData = Object.freeze({
+const setInitialState = () => ({
   position: { x: 400, y: 250 },
   boredom: 0,
   currentToy: null,
   desiredToy: null,
   aversions: {},
   preferences: {}
-});
+})
 
 const constrainPosition = (position: { x: number, y: number }, xMin: number, yMin: number, xMax: number, yMax: number) => {
   return ({
@@ -34,7 +34,7 @@ const constrainPosition = (position: { x: number, y: number }, xMin: number, yMi
 }
 
 const createBabyStore = () => {
-  const { subscribe, update } = writable<BabyData>({ ...initialState });
+  const { subscribe, update } = writable<BabyData>(setInitialState());
 
   return {
     subscribe,
@@ -158,7 +158,7 @@ const createBabyStore = () => {
       })
     },
     resetBabyStore: () => {
-      update(data => ({ ...data, boredom: 0, aversions: {}, preferences: {} }))
+      update(_data => (setInitialState()))
     }
   }
 }
