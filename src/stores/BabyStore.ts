@@ -1,9 +1,10 @@
 import { writable } from "svelte/store";
 import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory } from "$types";
-import { calculateDistance, calculateNBA, getRandomAttribute } from "$helpers";
+import { calculateDistance, calculateNBA, getRandomAttribute, randomizePosition } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
 import { BABY_HEIGHT, BABY_WIDTH, PLAY_MAT_HEIGHT } from "$constants";
 import { PLAY_MAT_WIDTH } from "$constants";
+import { toyStore } from "./ToyStore";
 
 const MAX_AVERSION_NEGATION = 0.2;
 const MAX_BOREDOM_BOOST = 2;
@@ -164,6 +165,12 @@ const createBabyStore = () => {
         const nbaTotal = nbaValues.length > 0 ? (nbaValues.reduce((prev, curr) => prev += curr) / nbaValues.length) - desiredToyBonus : 1;
 
         data.boredom = Math.min(Math.max(data.boredom + nbaTotal / 100, 0), 1);
+
+        if (data.currentToy && nbaTotal >= 0.5) {
+          const { x, y } = randomizePosition(data.position);
+          toyStore.moveToy(data.currentToy.id, "PlayMat", x, y);
+          data.currentToy = null;
+        }
 
         return data;
       })

@@ -57,7 +57,7 @@ export const calculateNBA = (attributeAversion: number, attributeValue: number) 
   })
 
   // TODO: consider only returning baseNba
-  return baseNba > 0 ? baseNba * attributeValue : baseNba;
+  return baseNba; // > 0 ? baseNba * attributeValue : baseNba;
 }
 
 /**
@@ -114,4 +114,17 @@ export const rescale = (
 export const getRandomAttribute = (): ToyAttribute => {
   const randomIndex = Math.floor(Math.random() * AllAttributes.length);
   return AllAttributes[randomIndex];
+}
+
+/**
+ * Randomizes a position within -150 and +150 units on the x and y axes given a starting position
+ * @param position The starting position { x, y }
+ * @returns The new randomized position { x, y }
+ */
+export const randomizePosition = (position: { x: number, y: number }): { x: number, y: number } => {
+  const randomOffset = () => Math.floor(Math.random() * 301) - 150; // Generates a random number between -150 and +150
+  return {
+    x: position.x + randomOffset(),
+    y: position.y + randomOffset()
+  };
 }
