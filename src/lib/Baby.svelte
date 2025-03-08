@@ -6,7 +6,8 @@
   import { dragDrop } from "$actions/dragDropAction";
   import { gameStore, babyStore, toyStore, Scene } from "$stores";
   import type { ToyState } from "$types";
-  import { cleanupMovement, initializeMovement } from "$utils";
+  import { moveTo, cleanupMovement, initializeMovement } from "$utils";
+  import { calculateDistance } from "$helpers";
 
   let toys: ToyState[];
   let isPaused = false;
@@ -47,6 +48,24 @@
     if (isPaused) return;
     babyStore.updateStats();
     babyStore.setDesiredToy(activeToys);
+
+    if ($babyStore.desiredToy && $babyStore.currentToy === null) {
+      babyStore.updatePosition(moveTo($babyStore.position, $babyStore.desiredToy.position));
+    }
+
+    activeToys.forEach(toy => {
+
+      const distance = calculateDistance($babyStore.position, toy.position);
+
+      if (distance > 75) return;
+
+      toyStore.moveToy(
+        toy.id,
+        "Baby",
+        $babyStore.position.x,
+        $babyStore.position.y,
+      )
+    });
   }, 100);
 
   onMount(() => {

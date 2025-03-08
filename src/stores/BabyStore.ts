@@ -1,8 +1,8 @@
 import { writable } from "svelte/store";
 import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory } from "$types";
-import { calculateNBA, getRandomAttribute } from "$helpers";
+import { calculateDistance, calculateNBA, getRandomAttribute } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
-import { PLAY_MAT_HEIGHT } from "$constants";
+import { BABY_HEIGHT, BABY_WIDTH, PLAY_MAT_HEIGHT } from "$constants";
 import { PLAY_MAT_WIDTH } from "$constants";
 
 const MAX_AVERSION_NEGATION = 0.2;
@@ -48,16 +48,27 @@ const createBabyStore = () => {
             x: state.position.x + (x || 0),
             y: state.position.y + (y || 0)
           },
-          75,
-          100,
-          PLAY_MAT_WIDTH - 75,
-          PLAY_MAT_HEIGHT - 100 
+          BABY_WIDTH / 2,
+          BABY_HEIGHT / 2,
+          PLAY_MAT_WIDTH - BABY_WIDTH / 2,
+          PLAY_MAT_HEIGHT - BABY_HEIGHT / 2
         );
         return ({
           ...state,
           position: constrainedPosition
         });
       });
+    },
+    // TODO: use this function
+    pickupToy: (toy: ToyState) => {
+      update(data => {
+        if (data.currentToy !== null) return data;
+
+        const distance = calculateDistance(data.position, toy.position);
+
+        if (distance > 100) return data;
+        return ({ ...data, currentToy: toy })
+      })
     },
     setCurrentToy: (toy: ToyState | null) => {
       update(data => {

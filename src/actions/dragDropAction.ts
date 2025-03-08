@@ -1,6 +1,7 @@
 import { toyStore } from "$stores";
 import type { Action } from "svelte/action"
 import type { DragData, DropZone } from "$types";
+import { PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH, TOY_SIZE } from "$constants";
 
 interface DragDropOptions {
   dropZone: DropZone;
@@ -34,11 +35,11 @@ export const dragDrop: Action<HTMLElement, DragDropOptions> = (node, options) =>
     const { id, height, width } = dragData;
 
     const rect = node.getBoundingClientRect();
-    const offsetX = event.clientX - rect.left - width / 2;
-    const offsetY = event.clientY - rect.top - height / 2;
+    const offsetX = event.clientX - rect.left;
+    const offsetY = event.clientY - rect.top;
 
-    const x = Math.max(0, Math.min(rect.width - width, offsetX));
-    const y = Math.max(0, Math.min(rect.height - height, offsetY));
+    const x = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_WIDTH - TOY_SIZE / 2, offsetX));
+    const y = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_HEIGHT - TOY_SIZE / 2, offsetY));
 
     options.onDrop?.(id);
     toyStore.moveToy(id, dropZone, x, y);

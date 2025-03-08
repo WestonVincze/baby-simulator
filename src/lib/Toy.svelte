@@ -2,6 +2,7 @@
   import type { DragData, ToyState } from "$types";
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { toyStore, sfxStore } from "$stores";
+    import { TOY_SIZE } from "$constants";
 
   export let toy: ToyState
   export let absolutePosition = false;
@@ -58,8 +59,8 @@
   role="presentation"
   style="{absolutePosition
     ? `position: absolute;
-       left: ${toy.position?.x}px;
-       top: ${toy.position?.y}px;`
+       left: ${toy.position?.x - TOY_SIZE / 2}px;
+       top: ${toy.position?.y - TOY_SIZE / 2}px;`
     : ""}"
   >
   <ToyIcon name={toy.data.name} />

@@ -31,7 +31,9 @@ const createToyStore = () => {
         if (!toy) return toys;
         toy.loc = loc;
         toy.position = { x, y };
+
         addInteraction(toy, "move");
+
         return toys;
       });
     },

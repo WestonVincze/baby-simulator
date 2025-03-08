@@ -40,3 +40,34 @@ export const cleanupMovement = () => {
   window.removeEventListener("keydown", handleKeydown);
   window.removeEventListener("keyup", handleKeyup);
 };
+
+/**
+ * Moves from the current position toward the destination by 10 units.
+ * @param position The current position { x, y }
+ * @param destination The target position { x, y }
+ * @returns The new position { x, y }
+ */
+export const moveTo = (position: { x: number, y: number }, destination: { x: number, y: number }, amount: number = 5): { x: number, y: number } => {
+  const dx = destination.x - position.x;
+  const dy = destination.y - position.y;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+
+  // If the distance is less than or equal to 10 units, move directly to the destination
+  if (distance <= amount) {
+    return { x: destination.x, y: destination.y };
+  }
+
+  // Normalize the direction vector and scale by 10 units
+  const unitX = dx / distance;
+  const unitY = dy / distance;
+  const moveX = unitX * amount;
+  const moveY = unitY * amount;
+
+  // Calculate the new position
+  const newPosition = {
+    x: moveX,// position.x + moveX,
+    y: moveY, //position.y + moveY
+  };
+
+  return newPosition;
+};
