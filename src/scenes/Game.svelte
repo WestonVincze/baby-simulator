@@ -22,10 +22,15 @@
       showDebugScreen = !showDebugScreen;
     }
     if (event.key === 'Escape') {
-      gameStore.togglePause();
-      showPauseMenu = !showPauseMenu;
+      togglePause();
     }
   };
+
+  const togglePause = () => {
+      gameStore.togglePause();
+      showPauseMenu = !showPauseMenu;
+
+  }
 
   onMount(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -52,7 +57,7 @@
 </div>
 
 {#if showPauseMenu}
-  <Modal title="Paused" onClose={() => showPauseMenu = false }>
+  <Modal title="Paused" onClose={() => togglePause()}>
     <div class="button-group">
       <button on:click={() => babyStore.resetBabyStore()}>Reset</button>
       <button on:click={() => mainMenu()}>Quit</button>
