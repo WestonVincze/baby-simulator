@@ -27,8 +27,8 @@
   };
 
   const togglePause = () => {
-      gameStore.togglePause();
-      showPauseMenu = !showPauseMenu;
+    gameStore.togglePause();
+    showPauseMenu = !showPauseMenu;
 
   }
 
