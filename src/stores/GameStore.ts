@@ -67,7 +67,11 @@ export const startGame = (detailedMode: boolean = false) => {
  * End the simulation if the baby's boredom reaches capacity (100%)
  */
 babyStore.subscribe(babyData => {
-  if (babyData.boredom >= 1) {
+  // check for endless mode and prevent the game over scene (testing purposes)
+  const urlParams = new URLSearchParams(window.location.search);
+  const isEndlessMode = urlParams.get("endless") === "true";
+
+  if (!isEndlessMode && babyData.boredom >= 1) {
     update(state => {
       state.activeScene = Scene.GameOver;
       state.isPaused = true;
