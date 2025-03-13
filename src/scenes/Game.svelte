@@ -9,7 +9,7 @@
 
   let showDebugScreen = false;
   let showPauseMenu = false;
-  let sfxVolume = 1;
+  let sfxVolume = 0.3;
 
   const handleVolumeChange = (event: Event) => {
     const target = event.target as HTMLInputElement;

@@ -33,7 +33,7 @@ const createSfxStore = () => {
           state[layer].audio.pause();
           state[layer].audio.currentTime = 0;
         }
-        state[layer] = { audio, volume: state[layer]?.volume ?? 1};
+        state[layer] = { audio, volume: state[layer]?.volume ?? .3};
         audio.volume = state[layer].volume;
         audio.play()
         return state;
