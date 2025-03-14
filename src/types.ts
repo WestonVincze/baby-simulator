@@ -82,3 +82,11 @@ export type ConsiderationScores = {
     total: number,
   }
 }
+
+export type GridItem = {
+  id: string;
+  x: number;
+  y: number;
+}
+
+export type Grid = GridItem[][][];
