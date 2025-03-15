@@ -83,10 +83,22 @@ export type ConsiderationScores = {
   }
 }
 
-export type GridItem = {
-  id: string;
-  x: number;
-  y: number;
+export type Position = {
+  x: number,
+  y: number
 }
 
-export type Grid = GridItem[][][];
+export type GridItem = {
+  id: string,
+  x: number,
+  y: number,
+}
+
+export type Tile = {
+  id: string,
+  position: Position,
+  walkable: boolean,
+  items: GridItem[],
+}
+
+export type Grid = Tile[][];

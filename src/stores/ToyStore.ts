@@ -1,5 +1,6 @@
 import { get, writable } from "svelte/store"
 import type { DropZone, InteractionType, ToyState } from "$types";
+import { gridStore } from "./GridStore";
 
 const MAX_INTERACTIONS = 10;
 
@@ -21,10 +22,12 @@ const createToyStore = () => {
     resetToys: () => {
       update(() => []);
     },
-    addToy: (toy: Pick<Partial<ToyState>, "position"> & Omit<ToyState, "id" | "position">) => update(toys => [
-      ...toys,
-      { ...toy, id: (toys.length + 1).toString(), position: toy.position || { x: 0, y: 0 }},
-    ]),
+    addToy: (toy: Pick<Partial<ToyState>, "position"> & Omit<ToyState, "id" | "position">) => {
+      update(toys => [
+        ...toys,
+        { ...toy, id: (toys.length + 1).toString(), position: toy.position || { x: 0, y: 0 }},
+      ]);
+    },
     moveToy: (id: string, loc: DropZone, x: number, y: number) => {
       update(toys => {
         const toy = toys.find(toy => toy.id === id);
@@ -33,6 +36,10 @@ const createToyStore = () => {
         toy.position = { x, y };
 
         addInteraction(toy, "move");
+
+        if (toy.loc === "PlayMat") {
+          gridStore.addItem({ id: toy.id, x, y });
+        }
 
         return toys;
       });

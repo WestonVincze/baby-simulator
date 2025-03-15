@@ -1,21 +1,37 @@
 import { CELL_SIZE, PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants";
-import type { Grid, GridItem } from "$types";
+import type { Grid, GridItem, Tile } from "$types";
 import { writable, get } from "svelte/store";
+
+function initializeGrid(cols: number, rows: number): Grid {
+  const grid: Grid = [];
+  for (let i = 0; i < rows; i++) {
+    const row: Tile[] = [];
+    for (let j = 0; j < cols; j++) {
+      row.push({
+        id: `tile-${i}-${j}`,
+        position: { x: i, y: j },
+        walkable: true,
+        items: []
+      });
+    }
+    grid.push(row);
+  }
+  return grid;
+}
 
 const createGridStore = () => {
   const cols = Math.floor(PLAY_MAT_WIDTH / CELL_SIZE);
   const rows = Math.floor(PLAY_MAT_HEIGHT / CELL_SIZE);
 
-  const initialGrid: Grid = Array.from({ length: rows }, () =>
-    Array.from({ length: cols }, () => [])
-  )
+  const initialGrid = initializeGrid(cols, rows);
 
   const { subscribe, update } = writable<Grid>(initialGrid);
 
   const addItem = (item: GridItem) => {
     update(grid => {
       const { x, y } = getGridCoordinates(item.x, item.y);
-      grid[y][x].push(item);
+      grid[y][x].items.push(item);
+      console.log(`GRID LOC: ${x} ${y}`)
       return grid;
     })
   }
@@ -24,9 +40,9 @@ const createGridStore = () => {
     update(grid => {
       for (let row of grid) {
         for (let cell of row) {
-          const index = cell.findIndex(item => item.id === itemId);
+          const index = cell.items.findIndex(item => item.id === itemId);
           if (index !== -1) {
-            cell.splice(index, 1);
+            cell.items.splice(index, 1);
             return grid;
           }
         }
@@ -53,7 +69,7 @@ const createGridStore = () => {
         const newX = gridX + i;
         const newY = gridY + j;
         if (newX >= 0 && newX < cols && newY >= 0 && newY < rows) {
-          adjacentItems.push(...grid[newY][newX]);
+          adjacentItems.push(...grid[newY][newX].items);
         }
       }
     }
