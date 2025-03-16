@@ -3,3 +3,4 @@ export * from "./ToyStore";
 export * from "./GameStore";
 export * from "./DebugStore";
 export * from "./SfxStore";
+export * from "./GridStore";

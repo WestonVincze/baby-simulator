@@ -19,7 +19,7 @@
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === '`') {
-      showDebugScreen = !showDebugScreen;
+      toggleDebug();
     }
     if (event.key === 'Escape') {
       togglePause();
@@ -29,7 +29,11 @@
   const togglePause = () => {
     gameStore.togglePause();
     showPauseMenu = !showPauseMenu;
+  }
 
+  const toggleDebug = () => {
+    gameStore.toggleDebug();
+    showDebugScreen = !showDebugScreen;
   }
 
   onMount(() => {

@@ -32,14 +32,19 @@ const createToyStore = () => {
       update(toys => {
         const toy = toys.find(toy => toy.id === id);
         if (!toy) return toys;
-        toy.loc = loc;
         toy.position = { x, y };
 
         addInteraction(toy, "move");
 
         if (toy.loc === "PlayMat") {
+          gridStore.removeItem(id);
+        }
+
+        if (loc === "PlayMat") {
           gridStore.addItem({ id: toy.id, x, y });
         }
+
+        toy.loc = loc;
 
         return toys;
       });

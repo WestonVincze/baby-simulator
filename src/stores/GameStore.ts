@@ -10,15 +10,17 @@ export enum Scene {
 }
 
 export type GameState = {
-  activeScene: Scene;
-  isPaused: boolean;
-  score: number;
+  activeScene: Scene,
+  isPaused: boolean,
+  score: number,
+  isDebugMode: boolean
 }
 
 const initialState: GameState = {
   activeScene: Scene.MainMenu,
   isPaused: false,
-  score: 0
+  score: 0,
+  isDebugMode: false
 }
 
 const { subscribe, update } = writable<GameState>({ ...initialState });
@@ -40,6 +42,16 @@ export const mainMenu = () => {
 export const togglePause = () => {
   update(state => {
     state.isPaused = !state.isPaused;
+    return state;
+  })
+}
+
+/**
+ * Enable or disable debug features
+ */
+export const toggleDebug = () => {
+  update(state => {
+    state.isDebugMode = !state.isDebugMode;
     return state;
   })
 }
@@ -84,4 +96,5 @@ export const gameStore = {
   subscribe,
   startGame,
   togglePause,
+  toggleDebug,
 }

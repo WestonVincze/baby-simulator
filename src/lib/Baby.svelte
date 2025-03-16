@@ -4,14 +4,15 @@
   import Toy from "./Toy.svelte";
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { dragDrop } from "$actions/dragDropAction";
-  import { gameStore, babyStore, toyStore, Scene } from "$stores";
-  import type { ToyState } from "$types";
+  import { gameStore, babyStore, toyStore, gridStore, Scene } from "$stores";
+  import type { Grid, ToyState } from "$types";
   import { moveTo, cleanupMovement, initializeMovement } from "$utils";
   import { calculateDistance } from "$helpers";
 
   let toys: ToyState[];
   let isPaused = false;
   let showThoughtBubble = true;
+  let grid: Grid;
 
   const unsubscribeToys = toyStore.subscribe(data => {
     toys = data
@@ -21,6 +22,10 @@
     showThoughtBubble = data.activeScene === Scene.Playing;
     isPaused = data.isPaused;
   })
+
+  const unsubscribeGrid = gridStore.subscribe(data => {
+    grid = data;
+  });
 
   $: currentToy = $toyStore.filter(toy => toy.loc === "Baby")[0] ?? null;
   $: babyStore.setCurrentToy(currentToy);
@@ -48,13 +53,14 @@
     if (isPaused) return;
     babyStore.updateStats();
     babyStore.setDesiredToy(activeToys);
+    babyStore.getDecision(activeToys, grid);
 
     if ($babyStore.desiredToy && $babyStore.currentToy === null) {
       babyStore.updatePosition(moveTo($babyStore.position, $babyStore.desiredToy.position));
     }
 
+    // attempt to pickup toy in range (TEMP)
     activeToys.forEach(toy => {
-
       const distance = calculateDistance($babyStore.position, toy.position);
 
       if (distance > 75) return;
@@ -76,6 +82,7 @@
     clearInterval(update);
     unsubscribeToys();
     unsubscribeGame();
+    unsubscribeGrid();
     cleanupMovement();
   })
 

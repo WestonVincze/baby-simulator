@@ -2,14 +2,14 @@ import { CELL_SIZE, PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants";
 import type { Grid, GridItem, Tile } from "$types";
 import { writable, get } from "svelte/store";
 
-function initializeGrid(cols: number, rows: number): Grid {
+function initializeGrid(rows: number, cols: number): Grid {
   const grid: Grid = [];
   for (let i = 0; i < rows; i++) {
     const row: Tile[] = [];
     for (let j = 0; j < cols; j++) {
       row.push({
         id: `tile-${i}-${j}`,
-        position: { x: i, y: j },
+        position: { x: j, y: i },
         walkable: true,
         items: []
       });
@@ -23,7 +23,7 @@ const createGridStore = () => {
   const cols = Math.floor(PLAY_MAT_WIDTH / CELL_SIZE);
   const rows = Math.floor(PLAY_MAT_HEIGHT / CELL_SIZE);
 
-  const initialGrid = initializeGrid(cols, rows);
+  const initialGrid = initializeGrid(rows, cols);
 
   const { subscribe, update } = writable<Grid>(initialGrid);
 
@@ -31,7 +31,6 @@ const createGridStore = () => {
     update(grid => {
       const { x, y } = getGridCoordinates(item.x, item.y);
       grid[y][x].items.push(item);
-      console.log(`GRID LOC: ${x} ${y}`)
       return grid;
     })
   }
