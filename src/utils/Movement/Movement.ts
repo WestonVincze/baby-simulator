@@ -51,9 +51,13 @@ export const moveTo = (position: { x: number, y: number }, destination: { x: num
   const dy = destination.y - position.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
 
-  // If the distance is less than or equal to 10 units, move directly to the destination
+  // If the distance is less than or equal to 5 units
+  if (distance === 0) {
+    return { x: 0, y: 0 };
+  }
+
   if (distance <= amount) {
-    return { x: destination.x, y: destination.y };
+    return { x: dx, y: dy };
   }
 
   // Normalize the direction vector and scale by 10 units

@@ -18,10 +18,7 @@ const MAX_VALUE = 1;
 export const MoveAppraisal = (context: Context, targetPosition: Position) => {
   const { x, y } = targetPosition;
   // TODO: increase value of tiles that have items to interact with... OR have an "objectInRange" variant of moveAppraisal that has a higher base value to force baby to move toward objects
-  const itemsInRange = [
-    ...context.grid[y][x].items,
-    ...gridStore.getAdjacentItems(x, y)
-  ]
+  const itemsInRange = gridStore.getItemsWithinOneTile(x, y);
 
   if (itemsInRange.length === 0) return 0;
 
@@ -48,7 +45,7 @@ export const MoveAppraisal = (context: Context, targetPosition: Position) => {
       CELL_SIZE * 2 
     );
 
-    scores.push(value * distance);
+    scores.push(value * (distance * 0.2));
   }
 
   return baseValue * (scores.reduce((prev, curr) => prev += curr, 0) / MAX_VALUE); // context.toys.length;// scores.length;

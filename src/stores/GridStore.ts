@@ -62,23 +62,22 @@ const createGridStore = () => {
     }
   }
 
-  const getAdjacentItems = (x: number, y: number) => {
-    const { x: gridX, y: gridY } = {x, y } //getGridCoordinates(x, y);
+  const getItemsWithinOneTile = (x: number, y: number) => {
     const adjacentItems: GridItem[] = [];
     const grid = get(gridStore);
 
     for (let i = -1; i <= 1; i++) {
       for (let j = -1; j <= 1; j++) {
         if (i === 0 && j === 0) continue;
-        const newX = gridX + i;
-        const newY = gridY + j;
+        const newX = x + i;
+        const newY = y + j;
         if (newX >= 0 && newX < cols && newY >= 0 && newY < rows) {
           adjacentItems.push(...grid[newY][newX].items);
         }
       }
     }
 
-    return adjacentItems;
+    return [...grid[y][x].items, ...adjacentItems];
   }
 
   const setTileValue = (x: number, y: number, value: number) => {
@@ -100,7 +99,7 @@ const createGridStore = () => {
     addItem,
     removeItem,
     getGridCoordinates,
-    getAdjacentItems,
+    getItemsWithinOneTile,
     setTileValue,
     resetGrid,
   }

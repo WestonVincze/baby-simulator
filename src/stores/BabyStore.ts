@@ -71,7 +71,6 @@ const createBabyStore = () => {
     subscribe,
     updatePosition: (position: { x?: number, y?: number }) => {
       const { x, y } = position;
-      if (x === 0 && y === 0) return;
 
       update(state => {
         const targetPosition = constrainPosition(

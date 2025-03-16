@@ -73,6 +73,8 @@ export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
   for (let i = 0; i < grid.length; i++) {
     const rowScores: number[] = []
     for (let j = 0; j < grid[i].length; j++) {
+      if (grid[i][j].items.length > 0) continue;
+
       const score = MoveAppraisal(context, { x: j,  y: i });
       if (score > bestScore) {
         bestScore = score;
