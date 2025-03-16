@@ -2,13 +2,15 @@
  * 
  */
 
+import { MoveAppraisal } from "$ai/Appraisals/MoveAppraisal"
 import { calculateDistance } from "$helpers"
 import type { BabyData, Grid, ToyState } from "$types"
 
-type Context = {
+export type Context = {
   baby: BabyData
   toys: ToyState[]
   toyValue: Record<string, number>
+  grid: Grid
 }
 
 export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
@@ -19,18 +21,20 @@ export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
    */
   const toyValue: Record<string, number> = {}
 
-  toys.forEach(toy => toyValue[toy.id] = 0);
+  toys.forEach(toy => toyValue[toy.id] = 1);
 
   const context: Context = {
     baby,
     toys,
-    toyValue
+    toyValue,
+    grid
   }
 
   /**
    * PICKUP TOY
    * * add for each toy within range of being picked up
    */
+  /*
   const toysInRange = toys.filter(toy =>
     calculateDistance(toy.position, baby.position) < 150
   );
@@ -39,18 +43,22 @@ export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
   for (const toy of toysInRange) {
     console.log(toy.id);
   }
+  */
 
   /**
    * MOVE
-   * * add for each tile
+   * * assess value for each tile
    */
+  const gridScores: number[][] = []
   for (let i = 0; i < grid.length; i++) {
+    const rowScores: number[] = []
     for (let j = 0; j < grid[i].length; j++) {
-      for (let k = 0; k < grid[i][j].items.length; k++) {
-        console.log(grid[i][j].items[k].id);
-      }
+      const score = MoveAppraisal(context, { x: j,  y: i });
+      rowScores.push(parseFloat(score.toFixed(2)))
     }
+    gridScores.push(rowScores);
   }
+  // console.table(gridScores);
 
   /**
    * DROP

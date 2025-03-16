@@ -1,10 +1,11 @@
 import { writable } from "svelte/store";
-import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory } from "$types";
+import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory, Grid } from "$types";
 import { calculateDistance, calculateNBA, getRandomAttribute, randomizePosition } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
 import { BABY_HEIGHT, BABY_WIDTH, PLAY_MAT_HEIGHT } from "$constants";
 import { PLAY_MAT_WIDTH } from "$constants";
 import { toyStore } from "./ToyStore";
+import { Reasoner } from "$ai/Reasoner";
 
 const MAX_AVERSION_NEGATION = 0.2;
 const MAX_BOREDOM_BOOST = 2;
@@ -76,9 +77,17 @@ const createBabyStore = () => {
         return ({ ...data, currentToy: toy })
       })
     },
+    getDecision: (toys: ToyState[], grid: Grid) => {
+      update(data => {
+        const decision = Reasoner(data, toys, grid);
+
+        return data;
+      })
+    },
     setDesiredToy: (toys: ToyState[]) => {
       update(data => {
         const desiredToy = ToyAppraisal(data, toys);
+
         if (data.desiredToy?.id === desiredToy?.id) {
           return data;
         }
