@@ -8,6 +8,8 @@
   import type { Grid, ToyState } from "$types";
   import { moveTo, cleanupMovement, initializeMovement } from "$utils";
   import { calculateDistance } from "$helpers";
+  import { Reasoner } from "$ai/Reasoner";
+  import { CELL_SIZE } from "$constants";
 
   let toys: ToyState[];
   let isPaused = false;
@@ -53,17 +55,18 @@
     if (isPaused) return;
     babyStore.updateStats();
     babyStore.setDesiredToy(activeToys);
-    babyStore.getDecision(activeToys, grid);
 
-    if ($babyStore.desiredToy && $babyStore.currentToy === null) {
-      babyStore.updatePosition(moveTo($babyStore.position, $babyStore.desiredToy.position));
+    const targetPosition = Reasoner($babyStore, activeToys, grid);
+
+    if (targetPosition !== null && $babyStore.currentToy === null) {
+      babyStore.updatePosition(moveTo($babyStore.position, targetPosition));
     }
 
     // attempt to pickup toy in range (TEMP)
     activeToys.forEach(toy => {
       const distance = calculateDistance($babyStore.position, toy.position);
 
-      if (distance > 75) return;
+      if (distance > CELL_SIZE) return;
 
       toyStore.moveToy(
         toy.id,

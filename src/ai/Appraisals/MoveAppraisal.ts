@@ -8,11 +8,12 @@
 
 import { DistanceConsideration } from "$ai/Considerations";
 import type { Context } from "$ai/Reasoner";
+import { CELL_SIZE } from "$constants";
 import { gridStore } from "$stores";
 import type { Position } from "$types";
 
 // the maximum positive value a tile can have
-const MAX_VALUE = 2;
+const MAX_VALUE = 1;
 
 export const MoveAppraisal = (context: Context, targetPosition: Position) => {
   const { x, y } = targetPosition;
@@ -30,7 +31,7 @@ export const MoveAppraisal = (context: Context, targetPosition: Position) => {
   const baseValue = DistanceConsideration(
     context.baby.position,
     gridCoordinates,
-    50,
+    CELL_SIZE,
     1000
   );
 
@@ -44,7 +45,7 @@ export const MoveAppraisal = (context: Context, targetPosition: Position) => {
       gridCoordinates,
       { x: item.x, y: item.y },
       0,
-      100 
+      CELL_SIZE * 2 
     );
 
     scores.push(value * distance);

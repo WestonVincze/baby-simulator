@@ -3,6 +3,7 @@
  */
 
 import { MoveAppraisal } from "$ai/Appraisals/MoveAppraisal"
+import { AversionConsideration, PreferenceConsideration, RecentInteractionsConsideration } from "$ai/Considerations"
 import { gridStore } from "$stores"
 import type { BabyData, Grid, ToyState } from "$types"
 
@@ -21,7 +22,22 @@ export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
    */
   const toyValue: Record<string, number> = {}
 
-  toys.forEach(toy => toyValue[toy.id] = 1);
+  toys.forEach(toy => {
+    const scores: number[] = [];
+    // aversion score
+    const aversionScore = AversionConsideration(baby.aversions, toy.data.attributes);
+    scores.push(aversionScore);
+
+    // preference score
+    const preferenceScore = PreferenceConsideration(baby.preferences, toy.data.attributes);
+    scores.push(preferenceScore);
+
+    // recent interactions score
+    const recentInteractionsScore = toy.interactions ? RecentInteractionsConsideration(toy.interactions, 5000) : 0;
+    scores.push(recentInteractionsScore);
+
+    toyValue[toy.id] = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+  });
 
   const context: Context = {
     baby,
@@ -49,12 +65,20 @@ export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
    * MOVE
    * * assess value for each tile
    */
-  const gridScores: number[][] = []
+  const gridScores: number[][] = [];
+
+  let bestPosition = null;
+  let bestScore = 0;
+
   for (let i = 0; i < grid.length; i++) {
     const rowScores: number[] = []
     for (let j = 0; j < grid[i].length; j++) {
       const score = MoveAppraisal(context, { x: j,  y: i });
-      rowScores.push(parseFloat(score.toFixed(2)))
+      if (score > bestScore) {
+        bestScore = score;
+        bestPosition = grid[i][j].coordinates;
+      }
+      rowScores.push(parseFloat(score.toFixed(2)));
       gridStore.setTileValue(j, i, parseFloat(score.toFixed(2)));
     }
     gridScores.push(rowScores);
@@ -65,4 +89,5 @@ export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
    * DROP
    * * add if a toy is being held
    */
+  return bestPosition;
 }

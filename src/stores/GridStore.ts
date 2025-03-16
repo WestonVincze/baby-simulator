@@ -11,8 +11,8 @@ function initializeGrid(rows: number, cols: number): Grid {
         id: `tile-${i}-${j}`,
         position: { x: j, y: i },
         coordinates: {
-          x: Math.floor((j * CELL_SIZE) + CELL_SIZE / 2),
-          y: Math.floor((i * CELL_SIZE) + CELL_SIZE / 2)
+          x: Math.floor(j * CELL_SIZE) + CELL_SIZE / 2,
+          y: Math.floor(i * CELL_SIZE) + CELL_SIZE / 2
         },
         walkable: true,
         items: [],

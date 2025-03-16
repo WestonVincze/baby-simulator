@@ -9,7 +9,7 @@
     debugInfo = data;
   });
 
-  $: preferences = Object.keys(debugInfo.babyData.preferences).map(k => ({ name: k, value: debugInfo.babyData.preferences[k as ToyAttribute]?.value}));
+  $: preferences = debugInfo ? Object.keys(debugInfo.babyData.preferences).map(k => ({ name: k, value: debugInfo.babyData.preferences[k as ToyAttribute]?.value})) : [];
 
   onDestroy(() => {
     unsubscribe();

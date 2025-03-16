@@ -27,7 +27,6 @@ const updatePosition = () => {
     x += 10;
   }
 
-  console.log(`moving x: ${x} and y: ${y}`);
   babyStore.updatePosition({ x, y });
 };
 
