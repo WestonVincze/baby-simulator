@@ -10,6 +10,8 @@ import { Reasoner } from "$ai/Reasoner";
 const MAX_AVERSION_NEGATION = 0.2;
 const MAX_BOREDOM_BOOST = 2;
 
+const lerp = (start: number, end: number, t: number) => start + t * (end - start);
+
 const setOrIncrementAttribute = (attributeMap: ToyAttributes, property: ToyAttribute, value: number, category: AttributeCategory) => {
   if (attributeMap[property]) {
     attributeMap[property].value = Math.min(attributeMap[property].value + value / 100, 1); 
@@ -38,6 +40,33 @@ const constrainPosition = (position: { x: number, y: number }, xMin: number, yMi
 const createBabyStore = () => {
   const { subscribe, update } = writable<BabyData>(setInitialState());
 
+  let animationFrameId: number;
+
+  const updatePositionSmoothly = (targetPosition: { x: number, y: number }) => {
+    const step = () => {
+      update(currentState => {
+        const { position } = currentState;
+        const t = 0.2; // interpolation factor (0 < t <= 1)
+        const newPosition = {
+          x: lerp(position.x, targetPosition.x, t),
+          y: lerp(position.y, targetPosition.y, t)
+        };
+
+        if (Math.abs(newPosition.x - targetPosition.x) < 0.5 && Math.abs(newPosition.y - targetPosition.y) < 0.5) {
+          cancelAnimationFrame(animationFrameId);
+          return { ...currentState, position: targetPosition };
+        }
+
+        return { ...currentState, position: newPosition };
+      });
+
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = requestAnimationFrame(step);
+  };
+
   return {
     subscribe,
     updatePosition: (position: { x?: number, y?: number }) => {
@@ -45,7 +74,7 @@ const createBabyStore = () => {
       if (x === 0 && y === 0) return;
 
       update(state => {
-        const constrainedPosition = constrainPosition(
+        const targetPosition = constrainPosition(
           {
             x: state.position.x + (x || 0),
             y: state.position.y + (y || 0)
@@ -55,10 +84,10 @@ const createBabyStore = () => {
           PLAY_MAT_WIDTH - BABY_WIDTH / 2,
           PLAY_MAT_HEIGHT - BABY_HEIGHT / 2
         );
-        return ({
-          ...state,
-          position: constrainedPosition
-        });
+
+        updatePositionSmoothly(targetPosition);
+
+        return state;
       });
     },
     // TODO: use this function
