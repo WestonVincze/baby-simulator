@@ -20,8 +20,8 @@ function initializeGrid(rows: number, cols: number): Grid {
 }
 
 const createGridStore = () => {
-  const cols = Math.floor(PLAY_MAT_WIDTH / CELL_SIZE);
   const rows = Math.floor(PLAY_MAT_HEIGHT / CELL_SIZE);
+  const cols = Math.floor(PLAY_MAT_WIDTH / CELL_SIZE);
 
   const initialGrid = initializeGrid(rows, cols);
 
@@ -76,12 +76,19 @@ const createGridStore = () => {
     return adjacentItems;
   }
 
+  const resetGrid = () => {
+    update(_state => {
+      return initializeGrid(rows, cols);
+    })
+  }
+
   return {
     subscribe,
     addItem,
     removeItem,
     getGridCoordinates,
-    getAdjacentItems
+    getAdjacentItems,
+    resetGrid
   }
 }
 

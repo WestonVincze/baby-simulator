@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 import { babyStore } from "./BabyStore";
 import { toyStore } from "./ToyStore";
+import { gridStore } from "./GridStore";
 
 export enum Scene {
   MainMenu,
@@ -71,6 +72,7 @@ export const startGame = (detailedMode: boolean = false) => {
   // reset stores
   babyStore.resetBabyStore();
   toyStore.resetToys();
+  gridStore.resetGrid();
 
   babyStore.initializePreferences(3);
 };
