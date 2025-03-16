@@ -3,7 +3,7 @@
  */
 
 import { MoveAppraisal } from "$ai/Appraisals/MoveAppraisal"
-import { calculateDistance } from "$helpers"
+import { gridStore } from "$stores"
 import type { BabyData, Grid, ToyState } from "$types"
 
 export type Context = {
@@ -55,6 +55,7 @@ export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
     for (let j = 0; j < grid[i].length; j++) {
       const score = MoveAppraisal(context, { x: j,  y: i });
       rowScores.push(parseFloat(score.toFixed(2)))
+      gridStore.setTileValue(j, i, parseFloat(score.toFixed(2)));
     }
     gridScores.push(rowScores);
   }

@@ -10,8 +10,13 @@ function initializeGrid(rows: number, cols: number): Grid {
       row.push({
         id: `tile-${i}-${j}`,
         position: { x: j, y: i },
+        coordinates: {
+          x: Math.floor((j * CELL_SIZE) + CELL_SIZE / 2),
+          y: Math.floor((i * CELL_SIZE) + CELL_SIZE / 2)
+        },
         walkable: true,
-        items: []
+        items: [],
+        value: 0
       });
     }
     grid.push(row);
@@ -58,7 +63,7 @@ const createGridStore = () => {
   }
 
   const getAdjacentItems = (x: number, y: number) => {
-    const { x: gridX, y: gridY } = getGridCoordinates(x, y);
+    const { x: gridX, y: gridY } = {x, y } //getGridCoordinates(x, y);
     const adjacentItems: GridItem[] = [];
     const grid = get(gridStore);
 
@@ -76,6 +81,14 @@ const createGridStore = () => {
     return adjacentItems;
   }
 
+  const setTileValue = (x: number, y: number, value: number) => {
+    update(state => { 
+      state[y][x].value = value;
+
+      return state;
+    })
+  }
+
   const resetGrid = () => {
     update(_state => {
       return initializeGrid(rows, cols);
@@ -88,7 +101,8 @@ const createGridStore = () => {
     removeItem,
     getGridCoordinates,
     getAdjacentItems,
-    resetGrid
+    setTileValue,
+    resetGrid,
   }
 }
 

@@ -97,8 +97,10 @@ export type GridItem = {
 export type Tile = {
   id: string,
   position: Position,
+  coordinates: Position,
   walkable: boolean,
   items: GridItem[],
+  value: number // for debugging
 }
 
 export type Grid = Tile[][];

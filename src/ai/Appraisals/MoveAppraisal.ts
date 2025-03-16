@@ -8,12 +8,15 @@
 
 import { DistanceConsideration } from "$ai/Considerations";
 import type { Context } from "$ai/Reasoner";
-import { CELL_SIZE } from "$constants";
 import { gridStore } from "$stores";
 import type { Position } from "$types";
 
+// the maximum positive value a tile can have
+const MAX_VALUE = 2;
+
 export const MoveAppraisal = (context: Context, targetPosition: Position) => {
   const { x, y } = targetPosition;
+  // TODO: increase value of tiles that have items to interact with... OR have an "objectInRange" variant of moveAppraisal that has a higher base value to force baby to move toward objects
   const itemsInRange = [
     ...context.grid[y][x].items,
     ...gridStore.getAdjacentItems(x, y)
@@ -21,14 +24,31 @@ export const MoveAppraisal = (context: Context, targetPosition: Position) => {
 
   if (itemsInRange.length === 0) return 0;
 
+  const gridCoordinates = context.grid[y][x].coordinates;
+
+  // calculate value of tile based on its distance
+  const baseValue = DistanceConsideration(
+    context.baby.position,
+    gridCoordinates,
+    50,
+    1000
+  );
+
   const scores = [];
 
+  // calculate scores of items near tile
   for (const item of itemsInRange) {
+    // TODO: value should be based on the NBA, and can be positive or negative
     const value = context.toyValue[item.id];
-    const distance = DistanceConsideration({ x: x * CELL_SIZE, y: y * CELL_SIZE }, { x: item.x, y: item.y })
+    const distance = DistanceConsideration(
+      gridCoordinates,
+      { x: item.x, y: item.y },
+      0,
+      100 
+    );
 
     scores.push(value * distance);
   }
 
-  return scores.reduce((prev, curr) => prev += curr, 0) / scores.length;
+  return baseValue * (scores.reduce((prev, curr) => prev += curr, 0) / MAX_VALUE); // context.toys.length;// scores.length;
 }
