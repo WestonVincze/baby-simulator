@@ -68,3 +68,4 @@ const createToyStore = () => {
 }
 
 export const toyStore = createToyStore();
+export type ToyStore = typeof toyStore;

@@ -100,6 +100,12 @@ const createBabyStore = () => {
         return ({ ...data, currentToy: toy })
       })
     },
+    dropToy: () => {
+      update(data => {
+        if (data.currentToy === null) return data;
+        return ({ ...data, currentToy: null })
+      })
+    },
     setCurrentToy: (toy: ToyState | null) => {
       update(data => {
         return ({ ...data, currentToy: toy })
@@ -219,3 +225,4 @@ const createBabyStore = () => {
 }
 
 export const babyStore = createBabyStore();
+export type BabyStore = typeof babyStore;

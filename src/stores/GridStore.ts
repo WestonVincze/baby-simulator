@@ -106,3 +106,4 @@ const createGridStore = () => {
 }
 
 export const gridStore = createGridStore();
+export type GridStore = typeof gridStore;
