@@ -13,7 +13,7 @@ import { gridStore } from "$stores";
 import type { Position } from "$types";
 
 // the maximum positive value a tile can have
-const MAX_VALUE = 1;
+const MAX_VALUE = 0.5;
 
 export const MoveAppraisal = (context: Context, targetPosition: Position) => {
   const { x, y } = targetPosition;

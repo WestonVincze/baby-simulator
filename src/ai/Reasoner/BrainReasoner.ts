@@ -2,10 +2,12 @@
  * 
  */
 
+import type { Action } from "$ai/Actions/ActionSystem"
 import { MoveAppraisal } from "$ai/Appraisals/MoveAppraisal"
 import { AversionConsideration, PreferenceConsideration, RecentInteractionsConsideration } from "$ai/Considerations"
-import { gridStore } from "$stores"
+import { type BabyStore, type GridStore, type ToyStore } from "$stores"
 import type { BabyData, Grid, ToyState } from "$types"
+import { get } from "svelte/store"
 
 export type Context = {
   baby: BabyData
@@ -14,13 +16,21 @@ export type Context = {
   grid: Grid
 }
 
-export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
+export const Reasoner = (
+  babyStore: BabyStore,
+  toyStore: ToyStore,
+  gridStore: GridStore
+): Action => {
   /**
-   * CONTEXT
+   * BUILD CONTEXT
    * * value of each toy
    * * * aversion, 
    */
+  let action: Action = { type: "idle" };
   const toyValue: Record<string, number> = {}
+  const baby = get(babyStore);
+  const grid = get(gridStore);
+  const toys = get(toyStore);
 
   toys.forEach(toy => {
     const scores: number[] = [];
@@ -86,10 +96,13 @@ export const Reasoner = (baby: BabyData, toys: ToyState[], grid: Grid) => {
     gridScores.push(rowScores);
   }
   // console.table(gridScores);
+  if (bestPosition) {
+    action = { type: "move", target: bestPosition }
+  }
 
   /**
    * DROP
    * * add if a toy is being held
    */
-  return bestPosition;
+  return action;
 }

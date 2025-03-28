@@ -57,7 +57,15 @@ export type ToyState = {
   data: ToyData
 }
 
+export type BabyState =
+  | "IDLE"
+  | "MOVING"
+  | "PLAYING"
+  | "PICKING_UP_OBJECT"
+  | "DROPPING_OBJECT";
+
 export type BabyData = {
+  state: BabyState,
   position: { x: number, y: number },
   currentToy: ToyState | null,
   desiredToy: ToyState | null,

@@ -4,8 +4,10 @@
   import PlayMat from "$lib/PlayMat.svelte";
   import ToyBox from "$lib/ToyBox.svelte";
   import { onDestroy, onMount } from "svelte";
-  import { babyStore, gameStore, mainMenu, sfxStore } from "$stores";
+  import { babyStore, gameStore, gridStore, mainMenu, sfxStore, toyStore } from "$stores";
   import Modal from "$lib/Modal.svelte";
+  import { Reasoner } from "$ai/Reasoner";
+    import { ActionSystem } from "$ai/Actions/ActionSystem";
 
   let showDebugScreen = false;
   let showPauseMenu = false;
@@ -36,12 +38,18 @@
     showDebugScreen = !showDebugScreen;
   }
 
+  const update = setInterval(() => {
+    const decision = Reasoner(babyStore, toyStore, gridStore);
+    ActionSystem.executeAction(decision, babyStore, toyStore, gridStore);
+  }, 100)
+
   onMount(() => {
     window.addEventListener('keydown', handleKeyDown);
   });
 
   onDestroy(() => {
     window.removeEventListener('keydown', handleKeyDown);
+    clearInterval(update);
   });
 </script>
 

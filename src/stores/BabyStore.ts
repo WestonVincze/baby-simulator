@@ -1,11 +1,11 @@
 import { writable } from "svelte/store";
-import type { ToyState, ToyAttribute, BabyData, ToyAttributes, AttributeCategory, Grid } from "$types";
+import { type ToyState, type ToyAttribute, type BabyData, type ToyAttributes, type AttributeCategory, type Grid, type Position } from "$types";
 import { calculateDistance, calculateNBA, getRandomAttribute, randomizePosition } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
 import { BABY_HEIGHT, BABY_WIDTH, PLAY_MAT_HEIGHT } from "$constants";
 import { PLAY_MAT_WIDTH } from "$constants";
 import { toyStore } from "./ToyStore";
-import { Reasoner } from "$ai/Reasoner";
+import { moveTo } from "$utils";
 
 const MAX_AVERSION_NEGATION = 0.2;
 const MAX_BOREDOM_BOOST = 2;
@@ -21,7 +21,8 @@ const setOrIncrementAttribute = (attributeMap: ToyAttributes, property: ToyAttri
   return property;
 }
 
-const setInitialState = () => ({
+const setInitialState = (): BabyData => ({
+  state: "IDLE",
   position: { x: 400, y: 250 },
   boredom: 0,
   currentToy: null,
@@ -67,12 +68,40 @@ const createBabyStore = () => {
     animationFrameId = requestAnimationFrame(step);
   };
 
+  /*
+  let taskTimeout: NodeJS.Timeout | null = null;
+
+  const lockState = (duration: number, onComplete?: () => void) => {
+    update(state => ({ ...state, locked: true }));
+
+    taskTimeout = setTimeout(() => {
+      update(state => ({ ...state, locked: false }));
+      if (onComplete) onComplete();
+    }, duration)
+  }
+
+  const abortTask = () => {
+    if (taskTimeout) {
+      clearTimeout(taskTimeout);
+      taskTimeout = null;
+      update(state => ({ ...state, locked: false }));
+      console.log("Task Aborted.")
+    }
+  };
+
+  const pickupToy = (toy: ToyState, grid: Grid) => {
+    update(state => {
+      return state
+    })
+  }
+  */
+
   return {
     subscribe,
-    updatePosition: (position: { x?: number, y?: number }) => {
-      const { x, y } = position;
-
+    updatePosition: (target: { x: number, y: number }) => {
       update(state => {
+        const { x, y } = moveTo(state.position, target);
+
         const targetPosition = constrainPosition(
           {
             x: state.position.x + (x || 0),
@@ -109,13 +138,6 @@ const createBabyStore = () => {
     setCurrentToy: (toy: ToyState | null) => {
       update(data => {
         return ({ ...data, currentToy: toy })
-      })
-    },
-    getDecision: (toys: ToyState[], grid: Grid) => {
-      update(data => {
-        const decision = Reasoner(data, toys, grid);
-
-        return data;
       })
     },
     setDesiredToy: (toys: ToyState[]) => {

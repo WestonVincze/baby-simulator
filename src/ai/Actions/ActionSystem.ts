@@ -3,14 +3,14 @@ import type { BabyStore, GridStore, ToyStore } from "$stores";
 import type { BabyData, Grid, Position, ToyState } from "$types";
 import { get } from "svelte/store";
 
-type Action = 
+export type Action = 
   | { type: "move"; target: Position }
   | { type : "pickupToy", toy: ToyState }
   | { type : "dropToy" }
   | { type : "idle" };
 
 const validateMove = (target: Position, grid: Grid) => {
-  return grid[target.x][target.y].walkable;
+  return grid[target.y][target.x].walkable;
 }
 
 const validatePickup = (
@@ -18,10 +18,10 @@ const validatePickup = (
   baby: BabyData,
   gridStore: GridStore
 ) => {
-    const babyCoordinates = gridStore.getGridCoordinates(baby.position.x, baby.position.y)
-    const items = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
+  const babyCoordinates = gridStore.getGridCoordinates(baby.position.x, baby.position.y)
+  const items = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
 
-    return items.filter(item => toy.id === item.id);
+  return items.filter(item => toy.id === item.id);
 }
 
 export const ActionSystem = {
@@ -36,7 +36,8 @@ export const ActionSystem = {
     const toys = get(toyStore);
     switch (action.type) {
       case 'move':
-        const isValidMove = validateMove(action.target, grid);
+        const targetCoordinates = gridStore.getGridCoordinates(action.target.x, action.target.y);
+        const isValidMove = validateMove(targetCoordinates, grid);
         if (isValidMove) {
           babyStore.updatePosition(action.target);
         }

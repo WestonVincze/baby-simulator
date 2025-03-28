@@ -1,15 +1,11 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-
   import Toy from "./Toy.svelte";
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { dragDrop } from "$actions/dragDropAction";
   import { gameStore, babyStore, toyStore, gridStore, Scene } from "$stores";
   import type { Grid, ToyState } from "$types";
-  import { moveTo, cleanupMovement, initializeMovement } from "$utils";
-  import { calculateDistance } from "$helpers";
-  import { Reasoner } from "$ai/Reasoner";
-  import { CELL_SIZE } from "$constants";
+  import { cleanupMovement, initializeMovement } from "$utils";
 
   let toys: ToyState[];
   let isPaused = false;
@@ -27,7 +23,7 @@
 
   const unsubscribeGrid = gridStore.subscribe(data => {
     grid = data;
-  });
+  })
 
   $: currentToy = $toyStore.filter(toy => toy.loc === "Baby")[0] ?? null;
   $: babyStore.setCurrentToy(currentToy);
@@ -51,30 +47,34 @@
     );
   }
 
+  // TODO: move to GameManager
   const update = setInterval(() => {
     if (isPaused) return;
     babyStore.updateStats();
     babyStore.setDesiredToy(activeToys);
 
+    /*
     const targetPosition = Reasoner($babyStore, activeToys, grid);
 
     if (targetPosition !== null && $babyStore.currentToy === null) {
       babyStore.updatePosition(moveTo($babyStore.position, targetPosition));
     }
+    */
 
     // attempt to pickup toy in range (TEMP)
-    activeToys.forEach(toy => {
-      const distance = calculateDistance($babyStore.position, toy.position);
+    const babyCoordinates = gridStore.getGridCoordinates($babyStore.position.x, $babyStore.position.y)
+    const items = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
 
-      if (distance > CELL_SIZE) return;
+    if (!$babyStore.currentToy && items.length > 0) {
+      const randomIndex = Math.floor(Math.random() * items.length);
 
       toyStore.moveToy(
-        toy.id,
+        items[randomIndex].id,
         "Baby",
         $babyStore.position.x,
         $babyStore.position.y,
       )
-    });
+    }
   }, 100);
 
   onMount(() => {
@@ -99,7 +99,7 @@
 
 <div
   class="baby-container"
-    style="left: {$babyStore.position.x - 100}px; top: {$babyStore.position.y - 100}px"
+  style="left: {$babyStore.position.x - 75}px; top: {$babyStore.position.y - 75}px"
   use:dragDrop={{ dropZone: "Baby", onDrop: handleDrop }}
 >
   {#if showThoughtBubble && $babyStore.desiredToy}
@@ -134,8 +134,8 @@
   .baby-container {
     display: flex;
     position: absolute;
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
   }
   .desired-toy {
     position: absolute;
@@ -160,7 +160,7 @@
     opacity: 0.5;
   }
   .baby {
-    width: 200px;
+    width: 150px;
     pointer-events: none;
     z-index: 3;
   }
