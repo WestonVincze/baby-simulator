@@ -4,13 +4,12 @@
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { dragDrop } from "$actions/dragDropAction";
   import { gameStore, babyStore, toyStore, gridStore, Scene } from "$stores";
-  import type { Grid, ToyState } from "$types";
+  import type { ToyState } from "$types";
   import { cleanupMovement, initializeMovement } from "$utils";
 
   let toys: ToyState[];
   let isPaused = false;
   let showThoughtBubble = true;
-  let grid: Grid;
 
   const unsubscribeToys = toyStore.subscribe(data => {
     toys = data
@@ -19,10 +18,6 @@
   const unsubscribeGame = gameStore.subscribe(data => {
     showThoughtBubble = data.activeScene === Scene.Playing;
     isPaused = data.isPaused;
-  })
-
-  const unsubscribeGrid = gridStore.subscribe(data => {
-    grid = data;
   })
 
   $: currentToy = $toyStore.filter(toy => toy.loc === "Baby")[0] ?? null;
@@ -53,14 +48,6 @@
     babyStore.updateStats();
     babyStore.setDesiredToy(activeToys);
 
-    /*
-    const targetPosition = Reasoner($babyStore, activeToys, grid);
-
-    if (targetPosition !== null && $babyStore.currentToy === null) {
-      babyStore.updatePosition(moveTo($babyStore.position, targetPosition));
-    }
-    */
-
     // attempt to pickup toy in range (TEMP)
     const babyCoordinates = gridStore.getGridCoordinates($babyStore.position.x, $babyStore.position.y)
     const items = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
@@ -85,7 +72,6 @@
     clearInterval(update);
     unsubscribeToys();
     unsubscribeGame();
-    unsubscribeGrid();
     cleanupMovement();
   })
 

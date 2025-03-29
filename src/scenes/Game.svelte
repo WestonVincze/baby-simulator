@@ -7,7 +7,7 @@
   import { babyStore, gameStore, gridStore, mainMenu, sfxStore, toyStore } from "$stores";
   import Modal from "$lib/Modal.svelte";
   import { Reasoner } from "$ai/Reasoner";
-    import { ActionSystem } from "$ai/Actions/ActionSystem";
+  import { ActionSystem } from "$ai/Actions/ActionSystem";
 
   let showDebugScreen = false;
   let showPauseMenu = false;

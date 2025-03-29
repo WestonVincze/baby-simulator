@@ -68,34 +68,6 @@ const createBabyStore = () => {
     animationFrameId = requestAnimationFrame(step);
   };
 
-  /*
-  let taskTimeout: NodeJS.Timeout | null = null;
-
-  const lockState = (duration: number, onComplete?: () => void) => {
-    update(state => ({ ...state, locked: true }));
-
-    taskTimeout = setTimeout(() => {
-      update(state => ({ ...state, locked: false }));
-      if (onComplete) onComplete();
-    }, duration)
-  }
-
-  const abortTask = () => {
-    if (taskTimeout) {
-      clearTimeout(taskTimeout);
-      taskTimeout = null;
-      update(state => ({ ...state, locked: false }));
-      console.log("Task Aborted.")
-    }
-  };
-
-  const pickupToy = (toy: ToyState, grid: Grid) => {
-    update(state => {
-      return state
-    })
-  }
-  */
-
   return {
     subscribe,
     updatePosition: (target: { x: number, y: number }) => {
