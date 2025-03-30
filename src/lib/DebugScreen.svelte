@@ -25,7 +25,7 @@
     <li>{preference.name}: {preference.value}</li>
   {/each}
   </ul>
-  {#if debugInfo.considerations.length > 0}
+  {#if debugInfo && debugInfo.considerations.length > 0}
     <ul>
       {#each debugInfo.considerations as { name, scores }}
         <li>
