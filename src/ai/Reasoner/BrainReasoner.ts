@@ -1,7 +1,3 @@
-/**
- * 
- */
-
 import type { Action } from "$ai/Actions/ActionSystem"
 import { MoveAppraisal } from "$ai/Appraisals/MoveAppraisal"
 import { AversionConsideration, PreferenceConsideration, RecentInteractionsConsideration } from "$ai/Considerations"
@@ -26,7 +22,8 @@ export const Reasoner = (
    * * value of each toy
    * * * aversion, 
    */
-  let action: Action = { type: "idle" };
+  const actionScores: Record<number, Action> = {};
+  const defaultAction: Action = { type: "idle" };
   const toyValue: Record<string, number> = {}
   const baby = get(babyStore);
   const grid = get(gridStore);
@@ -60,16 +57,17 @@ export const Reasoner = (
    * PICKUP TOY
    * * add for each toy within range of being picked up
    */
-  /*
-  const toysInRange = toys.filter(toy =>
-    calculateDistance(toy.position, baby.position) < 150
-  );
+  const babyCoordinates = gridStore.getGridCoordinates(baby.position.x, baby.position.y)
+  const toysInRange = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
+  gridStore.getItemsWithinOneTile
 
   console.log("TOYS IN RANGE");
   for (const toy of toysInRange) {
-    console.log(toy.id);
+    const toyState = toyStore.getToyById(toy.id);
+    if (!toyState) continue;
+    const score = toyValue[toy.id];
+    actionScores[score] = { type: "pickupToy", toy: toyState }
   }
-  */
 
   /**
    * MOVE
@@ -96,13 +94,16 @@ export const Reasoner = (
     gridScores.push(rowScores);
   }
   // console.table(gridScores);
+
   if (bestPosition) {
-    action = { type: "move", target: bestPosition }
+    actionScores[bestScore] = { type: "move", target: bestPosition };
   }
 
   /**
    * DROP
    * * add if a toy is being held
    */
-  return action;
+
+  const bestActionScore = Math.max(...Object.keys(actionScores).map(Number));
+  return actionScores[bestActionScore];
 }

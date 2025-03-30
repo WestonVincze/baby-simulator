@@ -67,3 +67,19 @@ V = Attribute Value
 |     |     |     |      |
 |     |     |     |      |
 |     |     |     |      |
+
+
+
+## New concept for NBA to simplify math
+
+NBA should be 1 when the aversion is 1 and -1 when the aversion is 0
+
+technically, the NBA should be the result after all attributes are calculated
+
+each attribute will have a value of -1 to 1 and the NBA total is the average of the NBA of all attributes
+
+How should aversion affect boredom?
+- aversion has minimal impact at first but greatly increases?
+- gradual change?
+
+I'm thinking a logorithmic function where the extreme high and low have a greater impact 
