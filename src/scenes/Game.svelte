@@ -13,6 +13,12 @@
   let showPauseMenu = false;
   let sfxVolume = 0.3;
 
+  let isPaused = false;
+
+  const unsubscribeGame = gameStore.subscribe(data => {
+    isPaused = data.isPaused;
+  })
+
   const handleVolumeChange = (event: Event) => {
     const target = event.target as HTMLInputElement;
     sfxVolume = parseFloat(target.value);
@@ -39,6 +45,8 @@
   }
 
   const update = setInterval(() => {
+    if (isPaused) return;
+    babyStore.updateStats();
     const decision = Reasoner(babyStore, toyStore, gridStore);
     ActionSystem.executeAction(decision, babyStore, toyStore, gridStore);
   }, 100)
@@ -49,6 +57,7 @@
 
   onDestroy(() => {
     window.removeEventListener('keydown', handleKeyDown);
+    unsubscribeGame();
     clearInterval(update);
   });
 </script>

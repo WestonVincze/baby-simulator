@@ -22,14 +22,15 @@ export const Reasoner = (
    * * value of each toy
    * * * aversion, 
    */
-  const actionScores: Record<number, Action> = {};
-  const defaultAction: Action = { type: "idle" };
+  const actionScores: { score: number, action: Action }[] = [];
+
   const toyValue: Record<string, number> = {}
   const baby = get(babyStore);
   const grid = get(gridStore);
   const toys = get(toyStore);
 
   toys.forEach(toy => {
+    if (toy.loc === "ToyBox") return;
     const scores: number[] = [];
     // aversion score
     const aversionScore = AversionConsideration(baby.aversions, toy.data.attributes);
@@ -54,19 +55,40 @@ export const Reasoner = (
   }
 
   /**
+   * IDLE / PLAY
+   */
+  const currentToy = context.baby.currentToy;
+  actionScores.push({
+    score: currentToy ? context.toyValue[currentToy.id] : 0,
+    action: { type: "idle" }
+  });
+
+  /**
+   * DROP TOY
+   */
+  if (currentToy) {
+    console.log(toyValue[currentToy.id]);
+    actionScores.push({
+      score: Math.max(0, 0.5 - toyValue[currentToy.id]),
+      action: { type: "dropToy" }
+    })
+  }
+
+  /**
    * PICKUP TOY
    * * add for each toy within range of being picked up
    */
-  const babyCoordinates = gridStore.getGridCoordinates(baby.position.x, baby.position.y)
-  const toysInRange = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
-  gridStore.getItemsWithinOneTile
+  if (!currentToy) {
+    const babyCoordinates = gridStore.getGridCoordinates(baby.position.x, baby.position.y)
+    const toysInRange = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
+    gridStore.getItemsWithinOneTile
 
-  console.log("TOYS IN RANGE");
-  for (const toy of toysInRange) {
-    const toyState = toyStore.getToyById(toy.id);
-    if (!toyState) continue;
-    const score = toyValue[toy.id];
-    actionScores[score] = { type: "pickupToy", toy: toyState }
+    for (const toy of toysInRange) {
+      const toyState = toyStore.getToyById(toy.id);
+      if (!toyState) continue;
+      const score = toyValue[toy.id];
+      actionScores.push({ score, action: { type: "pickupToy", toy: toyState }});
+    }
   }
 
   /**
@@ -96,7 +118,7 @@ export const Reasoner = (
   // console.table(gridScores);
 
   if (bestPosition) {
-    actionScores[bestScore] = { type: "move", target: bestPosition };
+    actionScores.push({ score: bestScore, action: { type: "move", target: bestPosition }});
   }
 
   /**
@@ -104,6 +126,9 @@ export const Reasoner = (
    * * add if a toy is being held
    */
 
-  const bestActionScore = Math.max(...Object.keys(actionScores).map(Number));
-  return actionScores[bestActionScore];
+  // console.log(actionScores);
+  const bestActionScore = actionScores.reduce(
+    (prev, curr) => (curr.score > prev.score ? curr : prev)
+  );
+  return bestActionScore.action;
 }

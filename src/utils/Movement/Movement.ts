@@ -3,7 +3,9 @@ import { babyStore } from "$stores";
 const pressedKeys = new Set<string>();
 
 const handleKeydown = (event: KeyboardEvent) => {
-  pressedKeys.add(event.key.toLowerCase());
+  const key = event.key.toLocaleLowerCase();
+  if (!["w", "a", "s", "d"].includes(key)) return;
+  pressedKeys.add(key);
   updatePosition();
 };
 
@@ -27,7 +29,7 @@ const updatePosition = () => {
     x += 10;
   }
 
-  babyStore.updatePosition({ x, y });
+  babyStore.updatePosition({ x, y }, true);
 };
 
 export const initializeMovement = () => {

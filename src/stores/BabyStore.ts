@@ -70,9 +70,14 @@ const createBabyStore = () => {
 
   return {
     subscribe,
-    updatePosition: (target: { x: number, y: number }) => {
+    updatePosition: (
+      target: { x: number, y: number },
+      isRelativePosition: boolean = false
+    ) => {
       update(state => {
-        const { x, y } = moveTo(state.position, target);
+        const { x, y } = isRelativePosition
+          ? target
+          : moveTo(state.position, target);
 
         const targetPosition = constrainPosition(
           {
@@ -178,7 +183,7 @@ const createBabyStore = () => {
               nbaMultiplier = MAX_BOREDOM_BOOST * preference.value;
             }
 
-            setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, aversionIncrement * 2, category);
+            setOrIncrementAttribute(data.aversions, attribute as ToyAttribute, aversionIncrement, category);
             updatedProperties.push(attribute);
             let nba = calculateNBA(data.aversions![attribute as ToyAttribute]!.value || 0, aversionIncrement) 
 
@@ -203,11 +208,13 @@ const createBabyStore = () => {
 
         data.boredom = Math.min(Math.max(data.boredom + nbaTotal / 100, 0), 1);
 
+        /*
         if (data.currentToy && nbaTotal >= 0.5) {
           const { x, y } = randomizePosition(data.position);
           toyStore.moveToy(data.currentToy.id, "PlayMat", x, y);
           data.currentToy = null;
         }
+        */
 
         return data;
       })
