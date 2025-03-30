@@ -2,13 +2,11 @@
   import { onDestroy, onMount } from "svelte";
   import Toy from "./Toy.svelte";
   import ToyIcon from "$icons/ToyIcon.svelte";
-  import { dragDrop } from "$actions/dragDropAction";
   import { gameStore, babyStore, toyStore, gridStore, Scene } from "$stores";
   import type { ToyState } from "$types";
   import { cleanupMovement, initializeMovement } from "$utils";
 
   let toys: ToyState[];
-  let isPaused = false;
   let showThoughtBubble = true;
 
   const unsubscribeToys = toyStore.subscribe(data => {
@@ -17,59 +15,16 @@
 
   const unsubscribeGame = gameStore.subscribe(data => {
     showThoughtBubble = data.activeScene === Scene.Playing;
-    isPaused = data.isPaused;
   })
 
   $: currentToy = $toyStore.filter(toy => toy.loc === "Baby")[0] ?? null;
   $: babyStore.setCurrentToy(currentToy);
-  $: activeToys = toys.filter(toy => toy.loc === "PlayMat" || toy.loc === "Baby");
-
-  const handleDrop = (id: string) => {
-    if (!currentToy || currentToy.id === id) return;
-
-    const toy = toyStore.getToyById(id);
-
-    if (!toy) {
-      console.error(`Unexpected error; toy not found for for id ${id}`);
-      return;
-    }
-
-    toyStore.moveToy(
-      currentToy.id,
-      toy.loc,
-      toy.position.x,
-      toy.position.y
-    );
-  }
-
-  // TODO: move to GameManager
-  const update = setInterval(() => {
-    if (isPaused) return;
-    babyStore.updateStats();
-    babyStore.setDesiredToy(activeToys);
-
-    // attempt to pickup toy in range (TEMP)
-    const babyCoordinates = gridStore.getGridCoordinates($babyStore.position.x, $babyStore.position.y)
-    const items = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
-
-    if (!$babyStore.currentToy && items.length > 0) {
-      const randomIndex = Math.floor(Math.random() * items.length);
-
-      toyStore.moveToy(
-        items[randomIndex].id,
-        "Baby",
-        $babyStore.position.x,
-        $babyStore.position.y,
-      )
-    }
-  }, 100);
 
   onMount(() => {
     initializeMovement();
   })
 
   onDestroy(() => {
-    clearInterval(update);
     unsubscribeToys();
     unsubscribeGame();
     cleanupMovement();
@@ -86,7 +41,6 @@
 <div
   class="baby-container"
   style="left: {$babyStore.position.x - 75}px; top: {$babyStore.position.y - 75}px"
-  use:dragDrop={{ dropZone: "Baby", onDrop: handleDrop }}
 >
   {#if showThoughtBubble && $babyStore.desiredToy}
     <div class="desired-toy">
