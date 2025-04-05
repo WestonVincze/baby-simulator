@@ -17,11 +17,6 @@ export const Reasoner = (
   toyStore: ToyStore,
   gridStore: GridStore
 ): Action => {
-  /**
-   * BUILD CONTEXT
-   * * value of each toy
-   * * * aversion, 
-   */
   const actionScores: { score: number, action: Action }[] = [];
 
   const toyValue: Record<string, number> = {}
@@ -29,8 +24,31 @@ export const Reasoner = (
   const grid = get(gridStore);
   const toys = get(toyStore);
 
+  /**
+   * BUILD CONTEXT
+   * * value of each toy
+   * * * aversion, 
+   */
   toys.forEach(toy => {
     if (toy.loc === "ToyBox") return;
+
+    // mark the value of a toy as -1 if it was dropped within the last 5 seconds
+    if (
+      toy.interactions &&
+      toy.interactions
+        .filter(interaction => {
+          if (interaction.type !== "drop") return false;
+
+          const time = performance.now() - interaction.timestamp;
+          if (time <= 5000) return true;
+          return false
+        })
+        .length > 0
+    ) {
+      toyValue[toy.id] = -1;
+      return;
+    }
+
     const scores: number[] = [];
     // aversion score
     const aversionScore = AversionConsideration(baby.aversions, toy.data.attributes);
@@ -59,7 +77,7 @@ export const Reasoner = (
    */
   const currentToy = context.baby.currentToy;
   actionScores.push({
-    score: currentToy ? context.toyValue[currentToy.id] : 0,
+    score: currentToy ? context.toyValue[currentToy.id] * 1.2 : 0,
     action: { type: "idle" }
   });
 
@@ -67,7 +85,6 @@ export const Reasoner = (
    * DROP TOY
    */
   if (currentToy) {
-    console.log(toyValue[currentToy.id]);
     actionScores.push({
       score: Math.max(0, 0.5 - toyValue[currentToy.id]),
       action: { type: "dropToy" }

@@ -61,7 +61,7 @@ export const ActionSystem = {
         };
 
         const { x, y } = randomizePosition(baby.position);
-        toyStore.moveToy(baby.currentToy.id, "PlayMat", x, y);
+        toyStore.dropToy(baby.currentToy.id, x, y);
         babyStore.dropToy();
         break;
       case 'idle':

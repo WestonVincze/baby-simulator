@@ -49,6 +49,21 @@ const createToyStore = () => {
         return toys;
       });
     },
+    dropToy: (id: string, x: number, y: number) => {
+      update(toys => {
+        const toy = toys.find(toy => toy.id === id);
+        if (!toy) return toys;
+        toy.position = { x, y };
+
+        addInteraction(toy, "drop");
+
+        gridStore.addItem({ id: toy.id, x, y });
+
+        toy.loc = "PlayMat";
+
+        return toys;
+      });
+    },
     interactWithToy: (id: string) => {
       update(toys => {
         const toy = toys.find(toy => toy.id === id);

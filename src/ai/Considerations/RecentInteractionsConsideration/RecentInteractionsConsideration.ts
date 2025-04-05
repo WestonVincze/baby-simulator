@@ -35,7 +35,7 @@ export const RecentInteractionsConsideration = (interactions: Interaction[], max
         moveBonus *= 0.6;
       } else if (curr.type === "sound") {
         bonus = soundBonus;
-        soundBonus *= 0.6
+        soundBonus *= 0.6;
       }
       return prev += bonus * getTimeBonus(performance.now() - curr.timestamp, maxTime);
     }, 0);

@@ -42,7 +42,7 @@ export type ToyData = {
   attributes: ToyAttributes, // 0-1
 }
 
-export type InteractionType = "move" | "sound";
+export type InteractionType = "move" | "sound" | "drop";
 
 export type Interaction = {
   type: InteractionType,
