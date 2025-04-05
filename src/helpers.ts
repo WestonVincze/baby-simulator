@@ -2,6 +2,7 @@ import { AllAttributes } from "./toyAttributes";
 import { HexColors } from "./data/HexColors";
 import type { ToyAttribute } from "$types";
 import { calculateLogisticUtility } from "$ai/utilityCalculations";
+import { PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants";
 
 /**
  * @param defaultColors default colors for SVG
@@ -128,3 +129,24 @@ export const randomizePosition = (position: { x: number, y: number }): { x: numb
     y: position.y + randomOffset()
   };
 }
+
+/**
+ * Constrains an objects position to the PlayMat
+ * @param position The desired position (x, y)
+ * @param dimensions The width and height of the object
+ */
+export const constrainPositionToPlayMat = (
+  position: { x: number, y: number },
+  dimensions: { width: number, height: number},
+) => {
+  const xMin = dimensions.width / 2;
+  const yMin = dimensions.height / 2;
+  const xMax = PLAY_MAT_WIDTH - dimensions.width / 2;
+  const yMax = PLAY_MAT_HEIGHT - dimensions.height / 2;
+  return ({
+    x: Math.min(Math.max(xMin, position.x), xMax),
+    y: Math.min(Math.max(yMin, position.y), yMax),
+  })
+}
+
+export const lerp = (start: number, end: number, t: number) => start + t * (end - start);

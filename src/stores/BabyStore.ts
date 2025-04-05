@@ -1,16 +1,12 @@
 import { writable } from "svelte/store";
-import { type ToyState, type ToyAttribute, type BabyData, type ToyAttributes, type AttributeCategory, type Grid, type Position } from "$types";
-import { calculateDistance, calculateNBA, getRandomAttribute, randomizePosition } from "$helpers";
+import { type ToyState, type ToyAttribute, type BabyData, type ToyAttributes, type AttributeCategory } from "$types";
+import { calculateDistance, calculateNBA, constrainPositionToPlayMat, getRandomAttribute, lerp } from "$helpers";
 import { ToyAppraisal } from "$ai/Appraisals";
-import { BABY_HEIGHT, BABY_WIDTH, PLAY_MAT_HEIGHT } from "$constants";
-import { PLAY_MAT_WIDTH } from "$constants";
-import { toyStore } from "./ToyStore";
+import { BABY_HEIGHT, BABY_WIDTH } from "$constants";
 import { moveTo } from "$utils";
 
 const MAX_AVERSION_NEGATION = 0.2;
 const MAX_BOREDOM_BOOST = 2;
-
-const lerp = (start: number, end: number, t: number) => start + t * (end - start);
 
 const setOrIncrementAttribute = (attributeMap: ToyAttributes, property: ToyAttribute, value: number, category: AttributeCategory) => {
   if (attributeMap[property]) {
@@ -31,15 +27,8 @@ const setInitialState = (): BabyData => ({
   preferences: {}
 })
 
-const constrainPosition = (position: { x: number, y: number }, xMin: number, yMin: number, xMax: number, yMax: number) => {
-  return ({
-    x: Math.min(Math.max(xMin, position.x), xMax),
-    y: Math.min(Math.max(yMin, position.y), yMax),
-  })
-}
-
 const createBabyStore = () => {
-  const { subscribe, update } = writable<BabyData>(setInitialState());
+  const { subscribe, update, set } = writable<BabyData>(setInitialState());
 
   let animationFrameId: number;
 
@@ -79,15 +68,15 @@ const createBabyStore = () => {
           ? target
           : moveTo(state.position, target);
 
-        const targetPosition = constrainPosition(
+        const targetPosition = constrainPositionToPlayMat(
           {
             x: state.position.x + (x || 0),
             y: state.position.y + (y || 0)
           },
-          BABY_WIDTH / 2,
-          BABY_HEIGHT / 2,
-          PLAY_MAT_WIDTH - BABY_WIDTH / 2,
-          PLAY_MAT_HEIGHT - BABY_HEIGHT / 2
+          {
+            width: BABY_WIDTH,
+            height: BABY_HEIGHT
+          }
         );
 
         updatePositionSmoothly(targetPosition);
@@ -220,7 +209,8 @@ const createBabyStore = () => {
       })
     },
     resetBabyStore: () => {
-      update(_data => (setInitialState()))
+      cancelAnimationFrame(animationFrameId);
+      set(setInitialState());
     }
   }
 }

@@ -1,6 +1,8 @@
 import { get, writable } from "svelte/store"
 import type { DropZone, InteractionType, ToyState } from "$types";
 import { gridStore } from "./GridStore";
+import { constrainPositionToPlayMat, lerp } from "$helpers";
+import { TOY_SIZE } from "$constants";
 
 const MAX_INTERACTIONS = 10;
 
@@ -15,6 +17,38 @@ const createToyStore = () => {
     if (toy.interactions.length > MAX_INTERACTIONS) {
       toy.interactions.shift(); // only keep the last x interactions
     }
+  };
+
+  let animationFrameId: number;
+
+  const updatePositionSmoothly = (id: string, targetPosition: { x: number, y: number }) => {
+    const step = () => {
+      update(currentState => {
+        const toy = currentState.find(toy => toy.id === id);
+        if (!toy) return currentState;
+
+        const { position } = toy ;
+        const t = 0.2; // interpolation factor (0 < t <= 1)
+        const newPosition = {
+          x: lerp(position.x, targetPosition.x, t),
+          y: lerp(position.y, targetPosition.y, t)
+        };
+
+        if (Math.abs(newPosition.x - targetPosition.x) < 0.5 && Math.abs(newPosition.y - targetPosition.y) < 0.5) {
+          cancelAnimationFrame(animationFrameId);
+          toy.position = targetPosition;
+          return currentState;
+        }
+
+        toy.position = newPosition;
+        return currentState;
+      });
+
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = requestAnimationFrame(step);
   };
 
   return {
@@ -32,7 +66,11 @@ const createToyStore = () => {
       update(toys => {
         const toy = toys.find(toy => toy.id === id);
         if (!toy) return toys;
-        toy.position = { x, y };
+
+        toy.position = constrainPositionToPlayMat(
+          { x, y },
+          { width: TOY_SIZE, height: TOY_SIZE }
+        );
 
         addInteraction(toy, "move");
 
@@ -53,13 +91,17 @@ const createToyStore = () => {
       update(toys => {
         const toy = toys.find(toy => toy.id === id);
         if (!toy) return toys;
-        toy.position = { x, y };
+        const targetPosition = constrainPositionToPlayMat(
+          { x, y },
+          { width: TOY_SIZE, height: TOY_SIZE }
+        );
 
         addInteraction(toy, "drop");
 
         gridStore.addItem({ id: toy.id, x, y });
 
         toy.loc = "PlayMat";
+        updatePositionSmoothly(id, targetPosition);
 
         return toys;
       });
