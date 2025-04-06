@@ -2,8 +2,10 @@ import type { Action } from "$ai/Actions/ActionSystem"
 import { MoveAppraisal } from "$ai/Appraisals/MoveAppraisal"
 import { AversionConsideration, PreferenceConsideration, RecentInteractionsConsideration } from "$ai/Considerations"
 import { type BabyStore, type GridStore, type ToyStore } from "$stores"
-import type { BabyData, Grid, ToyState } from "$types"
+import type { BabyData, Grid, Position, ToyState } from "$types"
 import { get } from "svelte/store"
+import { Reasoner, type IAppraisal, type IConsideration } from "./Reasoner"
+import { CELL_SIZE, PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants"
 
 export type Context = {
   baby: BabyData
@@ -12,7 +14,84 @@ export type Context = {
   grid: Grid
 }
 
-export const Reasoner = (
+export const brainReasoner = new Reasoner<Context>();
+
+brainReasoner.addAppraisal({
+  id: "idle",
+  action: { type: "idle" },
+  considerations: [],
+  weight: 1,
+  scoringFunction: (_scores) => 0.0001,
+})
+
+const toyValueConsideration: IConsideration<Context, { toyId: string }> = {
+  evaluate: (context, params) => {
+    if (!params) return 0;
+
+    return context.toyValue[params.toyId] || 0;
+  },
+}
+
+export const createPickupToyAppraisals = (toyIds: string[]): IAppraisal<Context>[] => {
+  return toyIds.map(toyId => ({
+    id: `pickupToy-${toyId}`,
+    action: { type: "pickupToy", params: { toyId } },
+    considerations: [
+      {
+        consideration: toyValueConsideration,
+        params: { toyId },
+      },
+    ],
+    weight: 1,
+    scoringFunction: (scores) => scores.reduce((prev, curr) => prev + curr, 0),
+  }));
+}
+
+const dropToyConsideration: IConsideration<Context> = {
+  evaluate: (context) => {
+    const currentToy = context.baby.currentToy;
+
+    if (!currentToy) return -1;
+    
+    return Math.max(0, 0.5 - context.toyValue[currentToy.id]);
+  }
+}
+
+brainReasoner.addAppraisal({
+  id: "dropToy",
+  action: { type: "dropToy"},
+  considerations: [{
+    consideration: dropToyConsideration,
+  }],
+  weight: 1,
+  scoringFunction: (scores) => scores.reduce((prev, curr) => prev + curr, 0),
+})
+
+const rows = Math.floor(PLAY_MAT_HEIGHT / CELL_SIZE);
+const cols = Math.floor(PLAY_MAT_WIDTH / CELL_SIZE);
+
+for (let i = 0; i < rows; i++) {
+  for (let j = 0; j < cols; j++) {
+    brainReasoner.addAppraisal({
+      id: `moveTo-(${j},${i})`,
+      considerations: [{
+        consideration: {
+          evaluate: (context) => {
+            return MoveAppraisal(context, { x: j, y: i })
+          },
+        }
+      }],
+      action: {
+        type: "move",
+        params: { x: j, y: i }
+      }
+    })
+
+  }
+}
+
+/*
+export const BrainReasoner = (
   babyStore: BabyStore,
   toyStore: ToyStore,
   gridStore: GridStore
@@ -24,11 +103,6 @@ export const Reasoner = (
   const grid = get(gridStore);
   const toys = get(toyStore);
 
-  /**
-   * BUILD CONTEXT
-   * * value of each toy
-   * * * aversion, 
-   */
   toys.forEach(toy => {
     if (toy.loc === "ToyBox") return;
 
@@ -72,18 +146,12 @@ export const Reasoner = (
     grid
   }
 
-  /**
-   * IDLE / PLAY
-   */
   const currentToy = context.baby.currentToy;
   actionScores.push({
     score: currentToy ? context.toyValue[currentToy.id] * 1.2 : 0,
     action: { type: "idle" }
   });
 
-  /**
-   * DROP TOY
-   */
   if (currentToy) {
     actionScores.push({
       score: Math.max(0, 0.5 - toyValue[currentToy.id]),
@@ -91,10 +159,6 @@ export const Reasoner = (
     })
   }
 
-  /**
-   * PICKUP TOY
-   * * add for each toy within range of being picked up
-   */
   if (!currentToy) {
     const babyCoordinates = gridStore.getGridCoordinates(baby.position.x, baby.position.y)
     const toysInRange = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
@@ -108,10 +172,6 @@ export const Reasoner = (
     }
   }
 
-  /**
-   * MOVE
-   * * assess value for each tile
-   */
   const gridScores: number[][] = [];
 
   let bestPosition = null;
@@ -138,14 +198,10 @@ export const Reasoner = (
     actionScores.push({ score: bestScore, action: { type: "move", target: bestPosition }});
   }
 
-  /**
-   * DROP
-   * * add if a toy is being held
-   */
-
   // console.log(actionScores);
   const bestActionScore = actionScores.reduce(
     (prev, curr) => (curr.score > prev.score ? curr : prev)
   );
   return bestActionScore.action;
 }
+*/

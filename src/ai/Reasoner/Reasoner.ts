@@ -111,7 +111,7 @@ export class Reasoner<TContext extends IContext> {
 
     if (bestAction && bestAction === this.lastAction) {
       console.log("New decision, locking for 2 seconds");
-      this.lockDecision(2);
+      this.lockDecision(0.2);
     }
 
     if (bestAction) {
