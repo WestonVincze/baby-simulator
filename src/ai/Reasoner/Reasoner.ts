@@ -1,6 +1,4 @@
-import { babyStore, gridStore, toyStore } from "$stores";
 import type { BabyData, Grid, ToyState } from "$types";
-import { get } from "svelte/store";
 
 export type IContext = Record<string, any>;
 
@@ -8,43 +6,60 @@ export type ScoringFunction = (score: number[]) => number;
 
 export type CurveFunction = (score: number) => number;
 
-export interface IAppraisal<T> {
-  evaluate: (context: T) => number;
+export interface IConsideration<TContext, TParams = undefined> {
+  evaluate: (context: TContext, params?: TParams) => number;
   curveFunction?: CurveFunction;
 } 
 
-export interface IConsideration<T> {
+export interface IAppraisal<TContext> {
   id: string;
   action: { type: string; params?: Record<string, any> };
-  appraisals: IAppraisal<T>[];
-  weight: number;
-  scoringFunction: ScoringFunction;
+  considerations: {
+    consideration: IConsideration<TContext, any>,
+    params?: any
+  }[],
+  weight?: number;
+  scoringFunction?: ScoringFunction;
 }
 
-export class Reasoner<T extends IContext> {
-  private considerations: IConsideration<T>[] = [];
+export class Reasoner<TContext extends IContext> {
+  private appraisals: IAppraisal<TContext>[] = [];
   private lastAction: { type: string; parameters?: Record<string, any> } | null = null;
   private decisionLock: { isLocked: boolean; unlockTime: number } = { isLocked: false, unlockTime: 0 };
+
+  private defaultScoringFunction: ScoringFunction;
+  private defaultWeight: number;
+
+  constructor(appraisals?: IAppraisal<TContext>[], defaultScoringFunction?: ScoringFunction) {
+    if (appraisals) this.appraisals = appraisals;
+
+    this.defaultScoringFunction = defaultScoringFunction ?? ((scores: number[]) =>
+      scores.reduce((prev, curr) => prev += curr, 0) / scores.length);
+
+    this.defaultWeight = 1;
+  }
 
   /**
    * Add a consideration to the reasoner
    */
-  addConsideration(consideration: IConsideration<T>) {
-    this.considerations.push(consideration);
+  addAppraisal(appraisal: IAppraisal<TContext>): void {
+    this.appraisals.push(appraisal);
   }
   
   /**
    * Remove a consideration to the reasoner
    */
-  removeConsiderationById(id: string) {
-    this.considerations = this.considerations.filter(consideration => consideration.id === id);
+  removeAppraisalById(id: string) {
+    this.appraisals = this.appraisals.filter(
+      consideration => consideration.id === id
+    );
   }
 
   /**
    * Remove all considerations of a specific action type
    */
-  removeConsiderationsByActionType(actionType: string) {
-    this.considerations = this.considerations.filter(consideration => consideration.action.type !== actionType);
+  removeAppraisalsByActionType(actionType: string) {
+    this.appraisals = this.appraisals.filter(consideration => consideration.action.type !== actionType);
   }
 
   /**
@@ -68,9 +83,14 @@ export class Reasoner<T extends IContext> {
   }
 
   /**
-   * Evaluate all actions and return the best one
+   * @param context The context used by appraisals
+   * @param dynamicAppraisals Optional additional appraisals
+   * @returns 
    */
-  getBestAction(context: T): { type: string; parameters?: Record<string, any> } | null {
+  getBestAction(
+    context: TContext,
+    dynamicAppraisals: IAppraisal<TContext>[] = []
+  ): { type: string; parameters?: Record<string, any> } | null {
     if (this.isDecisionLocked()) {
       return this.lastAction;
     }
@@ -78,30 +98,14 @@ export class Reasoner<T extends IContext> {
     let bestAction: { type: string; parameters?: Record<string, any> } | null = null;
     let bestScore = -Infinity;
 
-    for (const consideration of this.considerations) {
-      // Calculate the total score for the consideration
-      const scores = consideration.appraisals.map((appraisal) => {
-        const appraisalScore = appraisal.evaluate(context);
-        if (appraisal.curveFunction) {
-          return appraisal.curveFunction(appraisalScore);
-        }
-        return appraisal.evaluate(context);
-      });
+    const allAppraisals = [...this.appraisals, ...dynamicAppraisals];
 
-      // Apply the scoring function and weight
-      const weightedScore = consideration.scoringFunction(scores) * consideration.weight;
+    for (const appraisal of allAppraisals) {
+      const score = this.evaluateAppraisal(appraisal, context);
 
-      // Avoid repeating the last action unless necessary
-      /*
-      if (this.lastAction && this.lastAction.type === consideration.action.type) {
-        continue; // Skip this action to avoid oscillation
-      }
-      */
-
-      // Update the best action if this one has a higher score
-      if (weightedScore > bestScore) {
-        bestScore = weightedScore;
-        bestAction = consideration.action;
+      if (score > bestScore) {
+        bestScore = score;
+        bestAction = appraisal.action;
       }
     }
 
@@ -117,6 +121,21 @@ export class Reasoner<T extends IContext> {
 
     return null;
   }
+
+  private evaluateAppraisal(
+    appraisal: IAppraisal<TContext>,
+    context: TContext
+  ): number {
+    const scores = appraisal.considerations.map(({ consideration, params }) =>
+      consideration.evaluate(context, params)
+    );
+
+    const scoringFunction = appraisal.scoringFunction ?? this.defaultScoringFunction;
+    const weight = appraisal.weight ?? this.defaultWeight;
+
+    const totalScore = scoringFunction(scores);
+    return totalScore * weight;
+  }
 }
 
 
@@ -129,26 +148,61 @@ export interface Context extends IContext {
   grid: Grid
 }
 
-const reasoner = new Reasoner<Context>();
+export const reasoner = new Reasoner<Context>();
 
-reasoner.addConsideration({
+reasoner.addAppraisal({
   id: "idle",
   action: { type: "idle" },
-  appraisals: [],
+  considerations: [],
   weight: 1,
   scoringFunction: (_scores) => 0,
 })
 
-const toyValue: Record<string, number> = {}
-const baby = get(babyStore);
-const grid = get(gridStore);
-const toys = get(toyStore);
+reasoner.addAppraisal({
+  id: "moveTo",
+  action: { type: "move" },
+  considerations: [
 
-const context: Context = {
-  baby,
-  toys,
-  toyValue,
-  grid
+  ],
+  weight: 1,
+  scoringFunction: (scores) => scores.reduce((prev, curr) => prev += curr, 0) / scores.length
+
+})
+ 
+const toyValueConsideration: IConsideration<Context, { toyId: string }> = {
+  evaluate: (context, params) => {
+    console.log(params);
+    if (!params) return 0;
+
+    return context.toyValue[params.toyId] || 0;
+  },
 }
 
-reasoner.getBestAction(context);
+const pickupToyAppraisal: IAppraisal<Context> = {
+  id: "pickupToy",
+  action: { type: "pickupToy", params: { toyId: "toy1" } },
+  considerations: [{
+    consideration: toyValueConsideration,
+    params: { toyId: "toy1" }
+  }],
+  weight: 1,
+  scoringFunction: (score) => 0,
+};
+
+const createPickupToyAppraisal = (toyId: string): IAppraisal<Context> => {
+  return {
+    id: `pickupToy-${toyId}`,
+    action: { type: "pickupToy", params: { toyId } },
+    considerations: [
+      {
+        consideration: toyValueConsideration,
+        params: { toyId },
+      },
+    ],
+    weight: 1,
+    scoringFunction: (scores) => scores.reduce((prev, curr) => prev + curr, 0),
+  };
+}
+
+reasoner.addAppraisal(pickupToyAppraisal);
+

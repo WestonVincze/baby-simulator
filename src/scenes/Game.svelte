@@ -47,8 +47,8 @@
   const update = setInterval(() => {
     if (isPaused) return;
     babyStore.updateStats();
-    const decision = Reasoner(babyStore, toyStore, gridStore);
-    ActionSystem.executeAction(decision, babyStore, toyStore, gridStore);
+    const decision = BrainReasoner(babyStore, toyStore, gridStore);
+    ActionSystem.executeAction(decision);
   }, 100)
 
   onMount(() => {

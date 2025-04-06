@@ -1,5 +1,5 @@
 import { randomizePosition } from "$helpers";
-import type { BabyStore, GridStore, ToyStore } from "$stores";
+import { babyStore, gridStore, toyStore, type GridStore } from "$stores";
 import type { BabyData, Grid, Position, ToyState } from "$types";
 import { get } from "svelte/store";
 
@@ -27,13 +27,9 @@ const validatePickup = (
 export const ActionSystem = {
   executeAction: (
     action: Action,
-    babyStore: BabyStore,
-    toyStore: ToyStore,
-    gridStore: GridStore
   ) => {
     const baby = get(babyStore);
     const grid = get(gridStore);
-    const toys = get(toyStore);
     switch (action.type) {
       case 'move':
         const targetCoordinates = gridStore.getGridCoordinates(action.target.x, action.target.y);
