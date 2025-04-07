@@ -24,6 +24,21 @@ brainReasoner.addAppraisal({
   scoringFunction: (_scores) => 0.0001,
 })
 
+const currentToyValueConsideration: IConsideration<Context> = {
+  evaluate: (context) => {
+    if (!context.baby.currentToy) return 0;
+
+    return context.toyValue[context.baby.currentToy.id] || 0;
+  },
+}
+
+brainReasoner.addAppraisal({
+  id: "play",
+  action: { type: "play" },
+  considerations: [{ consideration: currentToyValueConsideration }],
+  weight: 1.2,
+})
+
 const toyValueConsideration: IConsideration<Context, { toyId: string }> = {
   evaluate: (context, params) => {
     if (!params) return 0;

@@ -24,8 +24,10 @@ const createToyStore = () => {
   const updatePositionSmoothly = (id: string, targetPosition: { x: number, y: number }) => {
     const step = () => {
       update(currentState => {
-        const toy = currentState.find(toy => toy.id === id);
-        if (!toy) return currentState;
+        const toyIndex = currentState.findIndex(toy => toy.id === id);
+        if (toyIndex === -1) return currentState;
+
+        const toy = currentState[toyIndex];
 
         const { position } = toy ;
         const t = 0.2; // interpolation factor (0 < t <= 1)
@@ -101,7 +103,9 @@ const createToyStore = () => {
         gridStore.addItem({ id: toy.id, x, y });
 
         toy.loc = "PlayMat";
-        updatePositionSmoothly(id, targetPosition);
+        toy.position = targetPosition;
+        /** TODO: fix how position state is managed... not worth the time right now */
+        // updatePositionSmoothly(id, targetPosition);
 
         return toys;
       });

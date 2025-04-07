@@ -66,6 +66,9 @@ export const ActionSystem = {
       case 'idle':
         console.log('Baby is idling...');
         break;
+      case 'play':
+        console.log('Baby is playing...');
+        break;
       default:
         console.error('Unknown action.');
     }
