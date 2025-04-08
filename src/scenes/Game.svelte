@@ -1,16 +1,16 @@
 <script lang="ts">
-  import BabyStats from "$lib/BabyStats.svelte";
   import DebugScreen from "$lib/DebugScreen.svelte";
-  import PlayMat from "$lib/PlayMat.svelte";
-  import ToyBox from "$lib/ToyBox.svelte";
   import { onDestroy, onMount } from "svelte";
   import { babyStore, gameStore, gridStore, mainMenu, sfxStore, toyStore } from "$stores";
   import Modal from "$lib/Modal.svelte";
   import { brainReasoner, createPickupToyAppraisals, type Context } from "$ai/Reasoner";
   import { ActionSystem } from "$ai/Actions/ActionSystem";
   import { get } from "svelte/store";
-    import { AversionConsideration, PreferenceConsideration, RecentInteractionsConsideration } from "$ai/Considerations";
+  import { AversionConsideration, PreferenceConsideration, RecentInteractionsConsideration } from "$ai/Considerations";
+  import Simulation from "./Simulation.svelte";
+  import Detailed from "./Detailed.svelte";
 
+  export let mode: "detailed" | "simulation" = "detailed";
   let showDebugScreen = false;
   let showPauseMenu = false;
   let sfxVolume = 0.3;
@@ -124,14 +124,11 @@
 </script>
 
 <div class="game">
-  <aside>
-    <BabyStats />
-  </aside>
-
-  <section>
-    <PlayMat />
-    <ToyBox />
-  </section>
+  {#if mode === "detailed"}
+    <Detailed />
+  {:else if mode === "simulation"}
+    <Simulation />
+  {/if}
 
   {#if showDebugScreen}
     <DebugScreen />
@@ -163,17 +160,6 @@
   .game { 
     display: flex;
     gap: 15px;
-  }
-  section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  aside {
-    width: 225px;
-    background-color: #49243E;
-    padding: 15px;
-    border-radius: 15px;
   }
   .button-group {
     flex-direction: row;
