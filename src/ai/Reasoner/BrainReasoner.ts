@@ -1,7 +1,7 @@
 import type { Action } from "$ai/Actions/ActionSystem"
 import { MoveAppraisal } from "$ai/Appraisals/MoveAppraisal"
 import { AversionConsideration, PreferenceConsideration, RecentInteractionsConsideration } from "$ai/Considerations"
-import { type BabyStore, type GridStore, type ToyStore } from "$stores"
+import { gridStore, type BabyStore, type GridStore, type ToyStore } from "$stores"
 import type { BabyData, Grid, Position, ToyState } from "$types"
 import { get } from "svelte/store"
 import { Reasoner, type IAppraisal, type IConsideration } from "./Reasoner"
@@ -35,7 +35,9 @@ const currentToyValueConsideration: IConsideration<Context> = {
 brainReasoner.addAppraisal({
   id: "play",
   action: { type: "play" },
-  considerations: [{ consideration: currentToyValueConsideration }],
+  considerations: [
+    { consideration: currentToyValueConsideration }
+  ],
   weight: 1.2,
 })
 
@@ -88,11 +90,13 @@ const cols = Math.floor(PLAY_MAT_WIDTH / CELL_SIZE);
 for (let i = 0; i < rows; i++) {
   for (let j = 0; j < cols; j++) {
     brainReasoner.addAppraisal({
-      id: `moveTo-(${j},${i})`,
+      id: `moveTo-(${i},${j})`,
       considerations: [{
         consideration: {
           evaluate: (context) => {
-            return MoveAppraisal(context, { x: j, y: i })
+            const score = MoveAppraisal(context, { x: j, y: i })
+            gridStore.setTileValue(j, i, parseFloat(score.toFixed(2)));
+            return score;
           },
         }
       }],
