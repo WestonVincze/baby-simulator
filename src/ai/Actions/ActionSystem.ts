@@ -28,7 +28,7 @@ export const ActionSystem = {
     const grid = get(gridStore);
     switch (action.type) {
       case 'move':
-        if (!action.params || !action.params.x || !action.params.y) break;
+        if (!action.params || action.params.x === undefined || action.params.y === undefined) break;
 
         const isValidMove = validateMove({ x: action.params.x, y: action.params.y }, grid);
         if (isValidMove) {
