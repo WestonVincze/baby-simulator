@@ -109,9 +109,10 @@ export class Reasoner<TContext extends IContext> {
       }
     }
 
+    // TODO: this only locks when an action is chosen twice in a row
     if (bestAction && bestAction === this.lastAction) {
-      console.log("New decision, locking for 2 seconds");
-      this.lockDecision(0.2);
+      this.lockDecision(0.3);
+      return bestAction;
     }
 
     if (bestAction) {

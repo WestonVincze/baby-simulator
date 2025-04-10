@@ -36,7 +36,7 @@ const createBabyStore = () => {
     const step = () => {
       update(currentState => {
         const { position } = currentState;
-        const t = 0.2; // interpolation factor (0 < t <= 1)
+        const t = 0.1; // interpolation factor (0 < t <= 1)
         const newPosition = {
           x: lerp(position.x, targetPosition.x, t),
           y: lerp(position.y, targetPosition.y, t)
