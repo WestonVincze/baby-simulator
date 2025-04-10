@@ -1,12 +1,11 @@
 <script lang="ts">
   import DebugScreen from "$lib/DebugScreen.svelte";
   import { onDestroy, onMount } from "svelte";
-  import { babyStore, gameStore, gridStore, mainMenu, sfxStore, toyStore } from "$stores";
+  import { babyStore, gameStore, gridStore, mainMenu, sfxStore, contextStore } from "$stores";
   import Modal from "$lib/Modal.svelte";
-  import { brainReasoner, createPickupToyAppraisals, type Context } from "$ai/Reasoner";
+  import { brainReasoner, createPickupToyAppraisals } from "$ai/Reasoner";
   import { ActionSystem } from "$ai/Actions/ActionSystem";
   import { get } from "svelte/store";
-  import { AversionConsideration, PreferenceConsideration, RecentInteractionsConsideration } from "$ai/Considerations";
   import Simulation from "./Simulation.svelte";
   import Detailed from "./Detailed.svelte";
 
@@ -50,55 +49,9 @@
     if (isPaused) return;
     babyStore.updateStats();
 
-    const toyValue: Record<string, number> = {}
-    const baby = get(babyStore);
-    const grid = get(gridStore);
-    const toys = get(toyStore);
+    const context = get(contextStore);
 
-    toys.forEach(toy => {
-      if (toy.loc === "ToyBox") return;
-
-      // mark the value of a toy as -1 if it was dropped within the last 5 seconds
-      if (
-        toy.interactions &&
-        toy.interactions
-          .filter(interaction => {
-            if (interaction.type !== "drop") return false;
-
-            const time = performance.now() - interaction.timestamp;
-            if (time <= 5000) return true;
-            return false
-          })
-          .length > 0
-      ) {
-        toyValue[toy.id] = -1;
-        return;
-      }
-
-      const scores: number[] = [];
-      // aversion score
-      const aversionScore = AversionConsideration(baby.aversions, toy.data.attributes);
-      scores.push(aversionScore);
-
-      // preference score
-      const preferenceScore = PreferenceConsideration(baby.preferences, toy.data.attributes);
-      scores.push(preferenceScore);
-
-      // recent interactions score
-      const recentInteractionsScore = toy.interactions ? RecentInteractionsConsideration(toy.interactions, 5000) : 0;
-      scores.push(recentInteractionsScore);
-
-      toyValue[toy.id] = scores.reduce((sum, score) => sum + score, 0) / scores.length;
-    });
-
-    const context = {
-      baby,
-      toys,
-      toyValue,
-      grid
-    }
-
-    const babyCoordinates = gridStore.getGridCoordinates(baby.position.x, baby.position.y)
+    const babyCoordinates = gridStore.getGridCoordinates(context.baby.position.x, context.baby.position.y)
     const toysInRange = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
 
     const dynamicAppraisals = createPickupToyAppraisals(
