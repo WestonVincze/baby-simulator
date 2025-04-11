@@ -1,13 +1,9 @@
 import { randomizePosition } from "$helpers";
-import type { BabyStore, GridStore, ToyStore } from "$stores";
+import { babyStore, gridStore, toyStore, type GridStore } from "$stores";
 import type { BabyData, Grid, Position, ToyState } from "$types";
 import { get } from "svelte/store";
 
-export type Action = 
-  | { type: "move"; target: Position }
-  | { type : "pickupToy", toy: ToyState }
-  | { type : "dropToy" }
-  | { type : "idle" };
+export type Action = { type: string; params?: Record<string, any> };
 
 const validateMove = (target: Position, grid: Grid) => {
   return grid[target.y][target.x].walkable;
@@ -27,27 +23,30 @@ const validatePickup = (
 export const ActionSystem = {
   executeAction: (
     action: Action,
-    babyStore: BabyStore,
-    toyStore: ToyStore,
-    gridStore: GridStore
   ) => {
     const baby = get(babyStore);
     const grid = get(gridStore);
-    const toys = get(toyStore);
     switch (action.type) {
       case 'move':
-        const targetCoordinates = gridStore.getGridCoordinates(action.target.x, action.target.y);
-        const isValidMove = validateMove(targetCoordinates, grid);
+        if (!action.params || action.params.x === undefined || action.params.y === undefined) break;
+
+        const isValidMove = validateMove({ x: action.params.x, y: action.params.y }, grid);
         if (isValidMove) {
-          babyStore.updatePosition(action.target);
+          const targetPosition = grid[action.params.y][action.params.x].coordinates;
+          babyStore.updatePosition(targetPosition);
         }
         break;
       case 'pickupToy':
-        const isValidPickup = validatePickup(action.toy, baby, gridStore);
+        if (!action.params || !action.params.toyId) break;
+
+        const toy = toyStore.getToyById(action.params.toyId);
+        if (!toy) break;
+        const isValidPickup = validatePickup(toy, baby, gridStore);
+
         if (isValidPickup) {
-          babyStore.pickupToy(action.toy);
+          babyStore.pickupToy(toy);
           toyStore.moveToy(
-            action.toy.id,
+            action.params.toyId,
             "Baby",
             baby.position.x,
             baby.position.y
@@ -66,6 +65,9 @@ export const ActionSystem = {
         break;
       case 'idle':
         console.log('Baby is idling...');
+        break;
+      case 'play':
+        console.log('Baby is playing...');
         break;
       default:
         console.error('Unknown action.');

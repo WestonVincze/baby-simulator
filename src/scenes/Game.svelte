@@ -1,14 +1,15 @@
 <script lang="ts">
-  import BabyStats from "$lib/BabyStats.svelte";
   import DebugScreen from "$lib/DebugScreen.svelte";
-  import PlayMat from "$lib/PlayMat.svelte";
-  import ToyBox from "$lib/ToyBox.svelte";
   import { onDestroy, onMount } from "svelte";
-  import { babyStore, gameStore, gridStore, mainMenu, sfxStore, toyStore } from "$stores";
+  import { babyStore, gameStore, gridStore, mainMenu, sfxStore, contextStore } from "$stores";
   import Modal from "$lib/Modal.svelte";
-  import { Reasoner } from "$ai/Reasoner";
+  import { brainReasoner, createPickupToyAppraisals } from "$ai/Reasoner";
   import { ActionSystem } from "$ai/Actions/ActionSystem";
+  import { get } from "svelte/store";
+  import Simulation from "./Simulation.svelte";
+  import Detailed from "./Detailed.svelte";
 
+  export let mode: "detailed" | "simulation" = "detailed";
   let showDebugScreen = false;
   let showPauseMenu = false;
   let sfxVolume = 0.3;
@@ -47,8 +48,21 @@
   const update = setInterval(() => {
     if (isPaused) return;
     babyStore.updateStats();
-    const decision = Reasoner(babyStore, toyStore, gridStore);
-    ActionSystem.executeAction(decision, babyStore, toyStore, gridStore);
+
+    const context = get(contextStore);
+
+    const babyCoordinates = gridStore.getGridCoordinates(context.baby.position.x, context.baby.position.y)
+    const toysInRange = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
+
+    const dynamicAppraisals = createPickupToyAppraisals(
+      toysInRange.map(toy => toy.id)
+    );
+
+    const decision = brainReasoner.getBestAction(context, dynamicAppraisals);
+
+    if (!decision) return;
+
+    ActionSystem.executeAction(decision);
   }, 100)
 
   onMount(() => {
@@ -63,14 +77,11 @@
 </script>
 
 <div class="game">
-  <aside>
-    <BabyStats />
-  </aside>
-
-  <section>
-    <PlayMat />
-    <ToyBox />
-  </section>
+  {#if mode === "detailed"}
+    <Detailed />
+  {:else if mode === "simulation"}
+    <Simulation />
+  {/if}
 
   {#if showDebugScreen}
     <DebugScreen />
@@ -102,17 +113,6 @@
   .game { 
     display: flex;
     gap: 15px;
-  }
-  section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  aside {
-    width: 225px;
-    background-color: #49243E;
-    padding: 15px;
-    border-radius: 15px;
   }
   .button-group {
     flex-direction: row;
