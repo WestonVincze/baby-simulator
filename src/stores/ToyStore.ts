@@ -29,7 +29,7 @@ const createToyStore = () => {
 
         const toy = currentState[toyIndex];
 
-        const { position } = toy ;
+        const { position } = toy;
         const t = 0.2; // interpolation factor (0 < t <= 1)
         const newPosition = {
           x: lerp(position.x, targetPosition.x, t),
@@ -42,7 +42,7 @@ const createToyStore = () => {
           return currentState;
         }
 
-        toy.position = newPosition;
+        currentState[toyIndex].position = newPosition;
         return currentState;
       });
 
