@@ -9,6 +9,7 @@ const MAX_INTERACTIONS = 10;
 const createToyStore = () => {
   const { subscribe, update } = writable<ToyState[]>([]);
 
+  // TODO: check if this reactivity breaking mutation is significant
   const addInteraction = (toy: ToyState, type: InteractionType) => {
     const timestamp = performance.now();
     if (!toy.interactions) toy.interactions = [];
@@ -74,7 +75,6 @@ const createToyStore = () => {
           { width: TOY_SIZE, height: TOY_SIZE }
         );
 
-        addInteraction(toy, "move");
 
         if (toy.loc === "PlayMat") {
           gridStore.removeItem(id);
@@ -82,6 +82,7 @@ const createToyStore = () => {
 
         if (loc === "PlayMat") {
           gridStore.addItem({ id: toy.id, x, y });
+          addInteraction(toy, "move");
         }
 
         toy.loc = loc;

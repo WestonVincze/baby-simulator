@@ -7,7 +7,7 @@
   import { Toys } from "$data/Toys";
   import { TOY_SIZE } from "../constants";
 
-  let toyOrder: number[] = [];
+  let toyOrder: string[] = []
 
   onMount(() => {
     if ($toyStore.length > 0) return;
@@ -21,25 +21,25 @@
           y: 0
         }
       })
-      toyOrder.push(i + 1);
+      toyOrder.push(`${i + 1}`);
     });
   });
 
   $: toyBoxToys = $toyStore
     .filter(toy => toy.loc === "ToyBox")
-    .sort((toyA, toyB) => toyA.position.x - toyB.position.x);
+    .sort((toyA, toyB) => toyOrder.findIndex(id => id === toyA.id) - toyOrder.findIndex(id => id === toyB.id));
 
-  /*
-  function handleDrop(draggedToyId, targetIndex) {
+  function handleDrop(draggedToyId: string, targetIndex?: number) {
+    if (targetIndex === undefined) return;
+
     const currentIndex = toyOrder.indexOf(draggedToyId);
 
     if (currentIndex !== -1) {
-      toyOrder.splice(currentIndex, 1); // Remove the toy from its current position
+      toyOrder.splice(currentIndex, 1);
     }
 
-    toyOrder.splice(targetIndex, 0, draggedToyId); // Insert the toy into the new position
+    toyOrder.splice(targetIndex, 0, draggedToyId);
   }
-  */
 </script>
 
 <div class="toy-box-container">
@@ -49,7 +49,7 @@
     class="toy-box"
     use:dragDrop={{
       dropZone: "ToyBox",
-      // onDrop: (event) => handleDrop(toyB)
+      onDrop: (id, target) => handleDrop(id, target)
     }}
     role="presentation"
   >

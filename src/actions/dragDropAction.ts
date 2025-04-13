@@ -5,7 +5,7 @@ import { PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH, TOY_SIZE } from "$constants";
 
 interface DragDropOptions {
   dropZone: DropZone;
-  onDrop?: (id: string) => void;
+  onDrop?: (id: string, target?: number) => void;
 }
 
 export const dragDrop: Action<HTMLElement, DragDropOptions> = (node, options) => {
@@ -35,14 +35,25 @@ export const dragDrop: Action<HTMLElement, DragDropOptions> = (node, options) =>
     const { id, height, width } = dragData;
 
     const rect = node.getBoundingClientRect();
-    const offsetX = event.clientX - rect.left;
-    const offsetY = event.clientY - rect.top;
 
-    const x = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_WIDTH - TOY_SIZE / 2, offsetX));
-    const y = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_HEIGHT - TOY_SIZE / 2, offsetY));
+    if (dropZone === "ToyBox") {
+      const offsetX = event.clientX - rect.left;
 
-    options.onDrop?.(id);
-    toyStore.moveToy(id, dropZone, x, y);
+      const targetIndex = Math.floor(offsetX / (TOY_SIZE + 15));
+
+      toyStore.moveToy(id, dropZone, 0, 0);
+
+      options.onDrop?.(id, targetIndex);
+    } else {
+      const offsetX = event.clientX - rect.left;
+      const offsetY = event.clientY - rect.top;
+
+      const x = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_WIDTH - TOY_SIZE / 2, offsetX));
+      const y = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_HEIGHT - TOY_SIZE / 2, offsetY));
+
+      toyStore.moveToy(id, dropZone, x, y);
+      options.onDrop?.(id);
+    }
   }
 
   node.addEventListener("dragover", handleDragOver);
