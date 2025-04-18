@@ -14,8 +14,6 @@ export const DistanceConsideration = (
   maxRange: number = 50,
 ) => {
   const distance = calculateDistance(babyPosition, toyPosition);
-  // console.log(distance);
 
-  // console.log(rescale(distance, minRange, maxRange));
   return clamp(1 - rescale(distance, minRange, maxRange));
 }

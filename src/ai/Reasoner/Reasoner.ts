@@ -139,71 +139,9 @@ export class Reasoner<TContext extends IContext> {
   }
 }
 
-
-/** TEST RUN - REFACTORING TO NEW SYSTEM */
-
 export interface Context extends IContext {
   baby: BabyData
   toys: ToyState[]
   toyValue: Record<string, number>
   grid: Grid
 }
-
-export const reasoner = new Reasoner<Context>();
-
-reasoner.addAppraisal({
-  id: "idle",
-  action: { type: "idle" },
-  considerations: [],
-  weight: 1,
-  scoringFunction: (_scores) => 0,
-})
-
-reasoner.addAppraisal({
-  id: "moveTo",
-  action: { type: "move" },
-  considerations: [
-
-  ],
-  weight: 1,
-  scoringFunction: (scores) => scores.reduce((prev, curr) => prev += curr, 0) / scores.length
-
-})
- 
-const toyValueConsideration: IConsideration<Context, { toyId: string }> = {
-  evaluate: (context, params) => {
-    console.log(params);
-    if (!params) return 0;
-
-    return context.toyValue[params.toyId] || 0;
-  },
-}
-
-const pickupToyAppraisal: IAppraisal<Context> = {
-  id: "pickupToy",
-  action: { type: "pickupToy", params: { toyId: "toy1" } },
-  considerations: [{
-    consideration: toyValueConsideration,
-    params: { toyId: "toy1" }
-  }],
-  weight: 1,
-  scoringFunction: (score) => 0,
-};
-
-const createPickupToyAppraisal = (toyId: string): IAppraisal<Context> => {
-  return {
-    id: `pickupToy-${toyId}`,
-    action: { type: "pickupToy", params: { toyId } },
-    considerations: [
-      {
-        consideration: toyValueConsideration,
-        params: { toyId },
-      },
-    ],
-    weight: 1,
-    scoringFunction: (scores) => scores.reduce((prev, curr) => prev + curr, 0),
-  };
-}
-
-reasoner.addAppraisal(pickupToyAppraisal);
-

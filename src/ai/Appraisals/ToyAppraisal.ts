@@ -2,17 +2,6 @@ import { AversionConsideration, DistanceConsideration, RecentInteractionsConside
 import type { BabyData, ToyState, DebugData } from "$types";
 import { debugStore } from "$stores";
 
-/**
- * Should appraisals have a shared context containing all necessary state data for all considerations
- * * singular merged context (derived)?
- * * for now, let's not worry and have the appraisal pass necessary parameters to each consideration
- * 
- * base consideration:
- * consideration(context, weight);
- * 
- * context = { babyData, toys }
- */
-
 export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
   let bestScore: number = -Infinity;
   let bestToy: ToyState | null = null;
