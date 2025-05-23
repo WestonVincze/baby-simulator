@@ -1,10 +1,10 @@
 import { MoveAppraisal } from "$ai/Appraisals/MoveAppraisal"
 import { gridStore } from "$stores"
 import type { BabyData, Grid, ToyState } from "$types"
-import { Reasoner, type IAppraisal, type IConsideration } from "./Reasoner"
 import { CELL_SIZE, PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants"
+import { Reasoner, type IConsideration, type IAppraisal, type IContext} from "utilitai"
 
-export type Context = {
+export interface Context extends IContext {
   baby: BabyData
   toys: ToyState[]
   toyValue: Record<string, number>

@@ -23,6 +23,7 @@
     "vitest": "^2.1.8"
   },
   "dependencies": {
-    "@svelte-plugins/tooltips": "^3.0.1"
+    "@svelte-plugins/tooltips": "^3.0.1",
+    "utilitai": "^0.0.4"
   }
 }
