@@ -1,5 +1,4 @@
 <script lang="ts">
-  import DebugScreen from "$lib/DebugScreen.svelte";
   import { onDestroy, onMount } from "svelte";
   import { babyStore, gameStore, gridStore, mainMenu, sfxStore, contextStore } from "$stores";
   import Modal from "$lib/Modal.svelte";
@@ -86,9 +85,9 @@
   {/if}
 
   {#if showDebugScreen}
-    <DebugScreen />
+    <DecisionChart />
+    <!--DebugScreen /-->
   {/if}
-  <DecisionChart />
 </div>
 
 {#if showPauseMenu}

@@ -39,17 +39,17 @@ export const MoveAppraisal = (context: Context, targetPosition: Position) => {
 
     scores.push(value * (distance * 0.2));
   }
+
+  const score = baseValue * (scores.reduce((prev, curr) => prev += curr, 0) / MAX_VALUE); // context.toys.length;// scores.length;
   // WIP
   debugStore.addOrUpdateAppraisal({
     name: `moveTo-(${x},${y})`,
-    score: 0,
-    considerations: [
-      {
-        name: 'distance',
-        score: baseValue * (scores.reduce((prev, curr) => prev += curr, 0) / MAX_VALUE)
-      }
-    ]
+    score,
+    considerations: scores.map((score, i) => ({
+      name: `item-${i}`,
+      score
+    }))
   })
 
-  return baseValue * (scores.reduce((prev, curr) => prev += curr, 0) / MAX_VALUE); // context.toys.length;// scores.length;
+  return score;
 }
