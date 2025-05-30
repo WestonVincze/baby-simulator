@@ -106,6 +106,7 @@ const createBabyStore = () => {
         return ({ ...data, currentToy: toy })
       })
     },
+    /* deprecated
     setDesiredToy: (toys: ToyState[]) => {
       update(data => {
         const desiredToy = ToyAppraisal(data, toys);
@@ -115,7 +116,7 @@ const createBabyStore = () => {
         }
         return { ...data, desiredToy }
       })
-    },
+    },*/
     getCurrentToyAttributes: () => {
       let currentAttributes: string[] = [];
       update(data => {

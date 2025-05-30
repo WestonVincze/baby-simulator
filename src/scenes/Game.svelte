@@ -8,6 +8,7 @@
   import { get } from "svelte/store";
   import Simulation from "./Simulation.svelte";
   import Detailed from "./Detailed.svelte";
+  import DecisionChart from "$lib/DecisionChart.svelte";
 
   export let mode: "detailed" | "simulation" = "detailed";
   let showDebugScreen = false;
@@ -47,6 +48,7 @@
 
   const update = setInterval(() => {
     if (isPaused) return;
+    // update baby's aversion scores
     babyStore.updateStats();
 
     const context = get(contextStore);
@@ -86,6 +88,7 @@
   {#if showDebugScreen}
     <DebugScreen />
   {/if}
+  <DecisionChart />
 </div>
 
 {#if showPauseMenu}

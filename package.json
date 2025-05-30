@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@svelte-plugins/tooltips": "^3.0.1",
+    "chart.js": "^4.4.9",
     "utilitai": "^0.0.4"
   }
 }
