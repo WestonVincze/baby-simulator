@@ -1,7 +1,6 @@
 import { writable } from "svelte/store";
 import { type ToyState, type ToyAttribute, type BabyData, type ToyAttributes, type AttributeCategory } from "$types";
 import { calculateDistance, calculateNBA, constrainPositionToPlayMat, getRandomAttribute, lerp } from "$helpers";
-import { ToyAppraisal } from "$ai/Appraisals";
 import { BABY_HEIGHT, BABY_WIDTH } from "$constants";
 import { moveTo } from "$utils";
 

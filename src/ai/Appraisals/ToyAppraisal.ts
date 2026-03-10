@@ -5,7 +5,7 @@ import { debugStore } from "$stores";
 /**
  * DEPRECATED
  */
-export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
+const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
   let bestScore: number = -Infinity;
   let bestToy: ToyState | null = null;
   // const debugInfo: DebugData = { appraisals: [] };

@@ -9,7 +9,6 @@ const MAX_VALUE = 0.5;
 
 export const MoveAppraisal = (context: Context, targetPosition: Position) => {
   const { x, y } = targetPosition;
-  // TODO: increase value of tiles that have items to interact with... OR have an "objectInRange" variant of moveAppraisal that has a higher base value to force baby to move toward objects
   const itemsInRange = gridStore.getItemsWithinOneTile(x, y);
 
   if (itemsInRange.length === 0) return 0;
