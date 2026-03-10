@@ -1,32 +1,69 @@
 ```mermaid
+---
+title: Baby Decision Making Flow
+config:
+  layout: elk
+  look: handDrawn
+  theme: dark
+---
 flowchart TD
 
-  subgraph M[Move To]
-    DC[Distance Consideration]
-    ANC[Aversions Nearby Consideration]
-    PNC[Preferences Nearby Consideration]
-  end
+  %% Full FlowChart
 
-  subgraph P[Pick Up Object]
-    AC[Aversion Consideration]
-    PC[Preference Consideration]
-  end
+  BS -.-> Context
+  TS -.-> Context
+  GS -.-> Context
+  Context --> Reasoner
 
-  subgraph D[Drop Object]
-    NBC[Net Boredom Consideration]
-    T[Time Spent With Object Consideration]
-  end
+  Reasoner --> Appraisals --> Action
 
-  subgraph I[Idle]
-  end
 
   subgraph Appraisals
-    M
-    P
-    D
-    I
+    direction LR
+    IA
+    MA
+    PA
+    PTA
+    DTA
   end
 
-  C[Context] --> R[Reasoner]
-  R --> Appraisals
+  %% Definitions
+
+  BS[(BabyStore)]
+  TS[(ToyStore)]
+  GS[(GridStore)]
+
+  IA["`
+    __Idle__
+    _default_
+  `"]
+  MA["`
+    __Move__
+    _move to a tile of the grid_
+  `"]
+  PA["`
+    __Play With Toy__
+    _play with current toy_
+  `"]
+  PTA["`
+    __Pickup Toy__
+    _pick up toy in range_
+  `"]
+  DTA["`
+    __Drop Toy__
+    _drop current toy_
+  `"]
+
+  Action@{ shape: diam, label: Action }
+
+  Context@{ shape: subproc, label: "__Context__
+  <hr /> *pre-calculated toy values*" }
+
+  %% Links
+  click BS "/src/stores/BabyStore.ts"
+
+  %% Classes
+  classDef test fill:#704264,border-radius:15px
+
+
 ```

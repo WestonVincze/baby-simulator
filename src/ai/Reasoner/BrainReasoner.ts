@@ -84,6 +84,7 @@ brainReasoner.addAppraisal({
 const rows = Math.floor(PLAY_MAT_HEIGHT / CELL_SIZE);
 const cols = Math.floor(PLAY_MAT_WIDTH / CELL_SIZE);
 
+// TODO: migrate to "points of interest" and dynamically add/remove move to tile appraisals
 for (let i = 0; i < rows; i++) {
   for (let j = 0; j < cols; j++) {
     brainReasoner.addAppraisal({
