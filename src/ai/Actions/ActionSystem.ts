@@ -28,6 +28,7 @@ export const ActionSystem = {
     const grid = get(gridStore);
     switch (action.type) {
       case 'move':
+        console.log('Baby is moving...');
         if (!action.params || action.params.x === undefined || action.params.y === undefined) break;
 
         const isValidMove = validateMove({ x: action.params.x, y: action.params.y }, grid);
@@ -37,6 +38,7 @@ export const ActionSystem = {
         }
         break;
       case 'pickupToy':
+        console.log('Baby is picking up toy...');
         if (!action.params || !action.params.toyId) break;
 
         const toy = toyStore.getToyById(action.params.toyId);
@@ -54,6 +56,7 @@ export const ActionSystem = {
         }
         break;
       case 'dropToy':
+        console.log('Baby is dropping toy...');
         if (!baby.currentToy) {
           console.error("Trying to drop toy when no toy is held...")
           break;

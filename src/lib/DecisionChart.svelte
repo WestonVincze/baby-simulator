@@ -1,6 +1,6 @@
 <script lang="ts">
   import { debugStore } from "$stores";
-  import { onDestroy, onMount } from "svelte";
+  import { onDestroy } from "svelte";
   import { destroyChart, renderChart } from "$utils";
   import type { AppraisalScore } from "$types";
 
@@ -104,18 +104,18 @@
   .tabs button {
     padding: 10px 20px;
     border: none;
-    background-color: #007bff;
+    background-color: #646cff;
     color: white;
     border-radius: 5px;
     cursor: pointer;
   }
 
   .tabs button.active {
-    background-color: #0056b3;
+    background-color: #535bf2;
   }
 
   .tabs button:hover {
-    background-color: #0056b3;
+    background-color: #535bf2;
   }
 
   .table-container {

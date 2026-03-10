@@ -97,8 +97,8 @@ export const clamp = (value: number) => {
  * * result is not restricted, use `clamp` to force result to a range of 0-1 (or any other specification) *
  * @param value original value
  * @param min minimum value
- * @param max maxiumum value
- * @returns a rescaled value where the min is represented as "0" and the the max is respresented as "1"
+ * @param max maximum value
+ * @returns a rescaled value where the min is represented as "0" and the the max is represented as "1"
  */
 export const rescale = (
   value: number,
