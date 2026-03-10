@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { type ToyState, type ToyAttribute, type BabyData, type ToyAttributes, type AttributeCategory } from "$types";
-import { calculateDistance, calculateNBA, constrainPositionToPlayMat, getRandomAttribute, lerp } from "$helpers";
+import { calculateDistance, calculateNBA, constrainPositionToPlayMat, getCategoryByToyAttribute, getRandomAttribute, lerp } from "$helpers";
 import { BABY_HEIGHT, BABY_WIDTH } from "$constants";
 import { moveTo } from "$utils";
 
@@ -83,7 +83,6 @@ const createBabyStore = () => {
         return state;
       });
     },
-    // TODO: use this function
     pickupToy: (toy: ToyState) => {
       update(data => {
         if (data.currentToy !== null) return data;
@@ -105,17 +104,6 @@ const createBabyStore = () => {
         return ({ ...data, currentToy: toy })
       })
     },
-    /* deprecated
-    setDesiredToy: (toys: ToyState[]) => {
-      update(data => {
-        const desiredToy = ToyAppraisal(data, toys);
-
-        if (data.desiredToy?.id === desiredToy?.id) {
-          return data;
-        }
-        return { ...data, desiredToy }
-      })
-    },*/
     getCurrentToyAttributes: () => {
       let currentAttributes: string[] = [];
       update(data => {
@@ -140,7 +128,7 @@ const createBabyStore = () => {
         attributes.forEach(attribute => {
           data.preferences[attribute] = {
             value: parseFloat(value.toFixed(1)),
-            category: "Other", // TODO: add a helper to get the category for a given attribute
+            category: getCategoryByToyAttribute(attribute),
           }
 
           value = Math.max(value - 0.2, 0.1);

@@ -1,6 +1,6 @@
-import { AllAttributes } from "./toyAttributes";
+import { AllAttributes, Colors, OtherAttributes, Patterns, Shapes, Sounds } from "./toyAttributes";
 import { HexColors } from "./data/HexColors";
-import type { ToyAttribute } from "$types";
+import type { AttributeCategory, ToyAttribute } from "$types";
 import { calculateLogisticUtility } from "$ai/utilityCalculations";
 import { PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants";
 
@@ -150,3 +150,15 @@ export const constrainPositionToPlayMat = (
 }
 
 export const lerp = (start: number, end: number, t: number) => start + t * (end - start);
+
+
+export const getCategoryByToyAttribute = (attribute: ToyAttribute): AttributeCategory => {
+  if (Shapes.find(shape => attribute === shape)) return "Shape";
+  if (Colors.find(color => attribute === color)) return "Color";
+  if (Patterns.find(pattern => attribute === pattern)) return "Pattern";
+  if (Sounds.find(sound => attribute === sound)) return "Sound";
+  if (OtherAttributes.find(other => attribute === other)) return "Other";
+
+  console.warn(`${attribute} ToyAttribute not found in any AttributeCategory. Returning Other.`)
+  return "Other";
+}
