@@ -2,11 +2,12 @@
   export let min: number;
   export let max: number;
   export let color: string = "slateblue";
+  export let height: string = "10px";
 
   $: percentage = min / max * 100;
 </script>
 
-<div class="progress-bar">
+<div class="progress-bar" style="--height: {height};">
   <div class="slider" style="--width: {percentage}%; --color: {color};" />
 </div>
 
@@ -15,8 +16,8 @@
     overflow: hidden;
     position: relative;
     width: 100%;
-    min-height: 10px;
-    height: 100%;
+    min-height: 5px;
+    height: var(--height);
     border-radius: 5px;
     background-color: #0004;
     box-shadow: inset 0 0 4px 3px #0008;

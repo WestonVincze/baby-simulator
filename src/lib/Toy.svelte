@@ -51,6 +51,7 @@
 
 <div
   id="{toy.id.toString()}"
+  data-toy-id={toy.id}
   class="toy"
   draggable="true"
   on:click={handleClick}

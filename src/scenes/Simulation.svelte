@@ -9,7 +9,7 @@
   <div class="boredom">
     <h2>Boredom</h2>
     <div class="bar">
-      <ProgressBar min={$babyStore.boredom} max={1} />
+      <ProgressBar min={$babyStore.boredom} max={1} height={"10px"}/>
     </div>
   </div>
   <PlayMat />

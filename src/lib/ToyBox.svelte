@@ -47,6 +47,7 @@
 
   <div
     class="toy-box"
+    data-dropzone="ToyBox"
     use:dragDrop={{
       dropZone: "ToyBox",
       onDrop: (id, target) => handleDrop(id, target)

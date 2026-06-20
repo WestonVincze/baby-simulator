@@ -18,7 +18,7 @@
   })
 </script>
 
-<div class="playMat" use:dragDrop={{ dropZone: "PlayMat" }} role="presentation">
+<div class="playMat" data-dropzone="PlayMat" use:dragDrop={{ dropZone: "PlayMat" }} role="presentation">
   {#if isDebug}
     <GridOverlay />
   {/if}
@@ -40,11 +40,12 @@
     background-color: #704264;
     /* height / width should match values in `constants.ts` */
     height: 500px;
-    width: 800px;
+    width: min(800px, 100%);
     border-radius: 15px;
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 25%;
+    overflow: hidden;
   }
 </style>
