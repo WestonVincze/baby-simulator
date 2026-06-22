@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-  import { babyStore, gameStore, gridStore, mainMenu, sfxStore, contextStore } from "$stores";
+  import { babyStore, gameStore, gridStore, mainMenu, sfxStore, contextStore, playMatStore } from "$stores";
   import Modal from "$lib/Modal.svelte";
-  import { brainReasoner, createPickupToyAppraisals } from "$ai/Reasoner";
+  import { brainReasoner, createPickupToyAppraisals, createMoveAppraisals } from "$ai/Reasoner";
   import { ActionSystem } from "$ai/Actions/ActionSystem";
   import { get } from "svelte/store";
   import Simulation from "./Simulation.svelte";
@@ -55,11 +55,13 @@
     const babyCoordinates = gridStore.getGridCoordinates(context.baby.position.x, context.baby.position.y)
     const toysInRange = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
 
-    const dynamicAppraisals = createPickupToyAppraisals(
+    const { cols, rows } = get(playMatStore);
+    const moveAppraisals = createMoveAppraisals(cols, rows);
+    const pickupAppraisals = createPickupToyAppraisals(
       toysInRange.map(toy => toy.id)
     );
 
-    const decision = brainReasoner.getBestAction(context, dynamicAppraisals);
+    const decision = brainReasoner.getBestAction(context, [...moveAppraisals, ...pickupAppraisals]);
 
     if (!decision) return;
 
@@ -77,18 +79,16 @@
   });
 </script>
 
-<div class="game">
-  {#if mode === "detailed"}
-    <Detailed />
-  {:else if mode === "simulation"}
-    <Simulation />
-  {/if}
+{#if mode === "detailed"}
+  <Detailed />
+{:else if mode === "simulation"}
+  <Simulation />
+{/if}
 
-  {#if showDebugScreen}
-    <DecisionChart />
-    <!--DebugScreen /-->
-  {/if}
-</div>
+{#if showDebugScreen}
+  <DecisionChart />
+  <!--DebugScreen /-->
+{/if}
 
 {#if showPauseMenu}
   <Modal title="Paused" onClose={() => togglePause()}>
@@ -112,15 +112,6 @@
 {/if}
 
 <style>
-  .game { 
-    display: flex;
-    gap: 15px;
-    max-width: 1100px;
-    margin: 0 auto;
-    width: 100%;
-    padding: 0 10px;
-    box-sizing: border-box;
-  }
   .button-group {
     flex-direction: row;
   }

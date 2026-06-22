@@ -3,11 +3,30 @@ import type { DropZone, InteractionType, ToyState } from "$types";
 import { gridStore } from "./GridStore";
 import { constrainPositionToPlayMat, lerp } from "$helpers";
 import { TOY_SIZE } from "$constants";
+import { playMatStore } from "./PlayMatStore";
 
 const MAX_INTERACTIONS = 10;
 
 const createToyStore = () => {
   const { subscribe, update } = writable<ToyState[]>([]);
+
+  playMatStore.subscribe(() => {
+    update(toys => {
+      let changed = false;
+      for (const toy of toys) {
+        if (toy.loc !== "PlayMat") continue;
+        const clamped = constrainPositionToPlayMat(
+          toy.position,
+          { width: TOY_SIZE, height: TOY_SIZE }
+        );
+        if (clamped.x !== toy.position.x || clamped.y !== toy.position.y) {
+          toy.position = clamped;
+          changed = true;
+        }
+      }
+      return toys;
+    });
+  });
 
   // TODO: check if this reactivity breaking mutation is significant
   const addInteraction = (toy: ToyState, type: InteractionType) => {

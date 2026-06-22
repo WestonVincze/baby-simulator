@@ -1,8 +1,9 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import { type ToyState, type ToyAttribute, type BabyData, type ToyAttributes, type AttributeCategory } from "$types";
 import { calculateDistance, calculateNBA, constrainPositionToPlayMat, getCategoryByToyAttribute, getRandomAttribute, lerp } from "$helpers";
 import { BABY_HEIGHT, BABY_WIDTH } from "$constants";
 import { moveTo } from "$utils";
+import { playMatStore } from "./PlayMatStore";
 
 const MAX_AVERSION_NEGATION = 0.2;
 const MAX_BOREDOM_BOOST = 2;
@@ -16,18 +17,39 @@ const setOrIncrementAttribute = (attributeMap: ToyAttributes, property: ToyAttri
   return property;
 }
 
-const setInitialState = (): BabyData => ({
-  state: "IDLE",
-  position: { x: 400, y: 250 },
-  boredom: 0,
-  currentToy: null,
-  desiredToy: null,
-  aversions: {},
-  preferences: {}
-})
+const setInitialState = (): BabyData => {
+  const { logicalWidth, logicalHeight } = get(playMatStore);
+  console.log(logicalWidth);
+  console.log(logicalHeight);
+  return {
+    state: "IDLE",
+    position: { x: -1, y: -1 },
+    boredom: 0,
+    currentToy: null,
+    desiredToy: null,
+    aversions: {},
+    preferences: {}
+  }
+}
 
 const createBabyStore = () => {
   const { subscribe, update, set } = writable<BabyData>(setInitialState());
+
+  playMatStore.subscribe(({ logicalHeight, logicalWidth }) => {
+    update(state => {
+      if (state.position.x === -1 && state.position.y == -1) {
+        return { ...state, position: { x: logicalWidth / 2, y: logicalHeight / 2 } }
+      }
+      const clamped = constrainPositionToPlayMat(
+        state.position,
+        { width: BABY_WIDTH, height: BABY_HEIGHT }
+      );
+      if (clamped.x !== state.position.x || clamped.y !== state.position.y) {
+        return { ...state, position: clamped };
+      }
+      return state;
+    });
+  });
 
   let animationFrameId: number;
 

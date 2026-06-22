@@ -43,8 +43,6 @@
 </script>
 
 <div class="toy-box-container">
-  <h2>Toy Box <InfoTooltip text="Toy Box contains all available toys. Moving a toy to the Play Mat will make it available to baby." /></h2>
-
   <div
     class="toy-box"
     data-dropzone="ToyBox"
@@ -62,22 +60,39 @@
 
 <style>
   .toy-box-container {
-    background-color: #BB8493;
-    border-radius: 15px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
   }
   .toy-box {
     position: relative;
+    border-radius: 15px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: #BB8493;
     width: 100%;
     height: 100px;
     padding: 15px;
     display: flex;
     align-items: center;
-    gap: 15px;
-  }
-  h2 {
-    display: flex;
     justify-content: center;
-    align-items: center;
-    gap: 5px;
+    gap: 15px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    scrollbar-width: thin;
+    filter: drop-shadow(0 -4px 8px rgba(0,0,0,0.50));
+  }
+  .toy-box::-webkit-scrollbar {
+    height: 4px;
+  }
+  .toy-box::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 2px;
   }
 </style>

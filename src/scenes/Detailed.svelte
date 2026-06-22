@@ -1,17 +1,15 @@
 <script lang="ts">
   import BabyStats from "$lib/BabyStats.svelte";
-  import PlayMat from "$lib/PlayMat.svelte";
-  import ToyBox from "$lib/ToyBox.svelte";
+  import Simulation from "./Simulation.svelte";
 </script>
 
 <div class="detailed-layout">
+  <section>
+    <Simulation />
+  </section>
   <aside>
     <BabyStats />
   </aside>
-  <section>
-    <PlayMat />
-    <ToyBox />
-  </section>
 </div>
 
 <style>
@@ -21,6 +19,9 @@
     flex: 1;
   }
   section {
+    height: 100svh;
+    width: calc(100svw - 240px);
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -28,19 +29,23 @@
     min-width: 0;
   }
   aside {
-    width: 225px;
-    min-width: 225px;
     background-color: #49243E;
+    width: 225px;
     padding: 15px;
-    border-radius: 15px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     .detailed-layout {
       flex-direction: column;
+      gap: 0;
     }
     aside {
       width: 100%;
-      min-width: unset;
+      border-radius: 0;
+    }
+    section {
+      width: 100%;
     }
   }
 </style>

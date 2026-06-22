@@ -5,3 +5,4 @@ export * from "./DebugStore";
 export * from "./SfxStore";
 export * from "./GridStore";
 export * from "./ContextStore";
+export * from "./PlayMatStore";

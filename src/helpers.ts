@@ -2,7 +2,8 @@ import { AllAttributes, Colors, OtherAttributes, Patterns, Shapes, Sounds } from
 import { HexColors } from "./data/HexColors";
 import type { AttributeCategory, ToyAttribute } from "$types";
 import { calculateLogisticUtility } from "$ai/utilityCalculations";
-import { PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants";
+import { get } from "svelte/store";
+import { playMatStore } from "$stores";
 
 /**
  * @param defaultColors default colors for SVG
@@ -139,10 +140,11 @@ export const constrainPositionToPlayMat = (
   position: { x: number, y: number },
   dimensions: { width: number, height: number},
 ) => {
+  const { logicalWidth, logicalHeight } = get(playMatStore);
   const xMin = dimensions.width / 2;
   const yMin = dimensions.height / 2;
-  const xMax = PLAY_MAT_WIDTH - dimensions.width / 2;
-  const yMax = PLAY_MAT_HEIGHT - dimensions.height / 2;
+  const xMax = logicalWidth - dimensions.width / 2;
+  const yMax = logicalHeight - dimensions.height / 2;
   return ({
     x: Math.min(Math.max(xMin, position.x), xMax),
     y: Math.min(Math.max(yMin, position.y), yMax),
