@@ -86,7 +86,7 @@
 
 <style>
   .debug-screen {
-    max-height: 650px;
+    margin-top: 100px;
     width: 100%;
     overflow: hidden;
     display: flex;
@@ -155,7 +155,7 @@
   }
 
   canvas {
-    max-width: 800px;
+    max-width: 1200px;
     width: 100%;
   }
   .hidden {

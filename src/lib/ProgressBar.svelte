@@ -18,7 +18,7 @@
     width: 100%;
     min-height: 5px;
     height: var(--height);
-    border-radius: 5px;
+    border-radius: 15px;
     background-color: #0004;
     box-shadow: inset 0 0 4px 3px #0008;
   }
