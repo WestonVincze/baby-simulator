@@ -4,9 +4,26 @@
 
   let showHowItWorks = false;
   let showHowToPlay = false;
+
+  const stars = Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    size: 1.5 + Math.random() * 2.5,
+    delay: Math.random() * 4,
+    duration: 1.5 + Math.random() * 3,
+  }));
 </script>
 
 <div class="main-menu">
+  <div class="stars">
+    {#each stars as star}
+      <span
+        class="star"
+        style="left: {star.left}%; top: {star.top}%; width: {star.size}px; height: {star.size}px; animation-delay: {star.delay}s; animation-duration: {star.duration}s;"
+      ></span>
+    {/each}
+  </div>
   <header>
     <h1>
       <span class="xl">Baby</span>
@@ -14,9 +31,16 @@
     </h1>
     <div class="img-container">
       <img
+        class="baby-img"
         draggable="false"
         src="sitting-baby.png"
         alt="Sitting baby"
+      />
+      <img
+        class="rug-img"
+        draggable="false"
+        src="rug.svg"
+        alt="Circular rug"
       />
     </div>
   </header>
@@ -62,15 +86,35 @@
   .main-menu {
     font-family: 'Mountains of Christmas', Inter, Helvetica;
     position: relative;
-    width: 100%;
+    width: 100svw;
+    height: 100svh;
     padding: 35px 15px;
-    background-color: #704264;
-    border-radius: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 20px;
+    background: #502f47;
+    background: radial-gradient(circle, rgba(112, 66, 100, 1) 20%, rgba(64, 38, 57, 1) 100%);
+    overflow: hidden;
+    gap: 100px;
+  }
+  .stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0;
+    animation: twinkle ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 0.8; }
+    100% { opacity: 0; transform: scale(1.2); }
   }
   header {
     display: flex;
@@ -90,15 +134,26 @@
     border-radius: 50%;
     background-color: rgba(50, 50, 50, 0.3);
     filter: blur(7px);
+    z-index: 1;
   }
-  img {
+  .baby-img {
     height: 150px;
     width: 150px; 
     position: relative;
+    z-index: 1;
+  }
+  .rug-img {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    height: 150px;
+    width: auto;
+    transform: translate(-50%, -50%);
   }
   h1 {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
   h1 .xl {
     font-size: 8rem;
@@ -128,8 +183,31 @@
     margin: 0 auto;
     flex-direction: row;
     flex-wrap: wrap;
+    z-index: 2;
   }
   button {
     min-width: 200px;
+  }
+  @media (max-width: 768px) {
+    .main-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      border-radius: 0;
+      justify-content: center;
+      padding: 25px 15px;
+    }
+    .button-group {
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+    }
+    .baby-img {
+      height: 120px;
+      width: 120px;
+    }
+    .rug-img {
+      height: 120px;
+    }
   }
 </style>
