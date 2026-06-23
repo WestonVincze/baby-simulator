@@ -1,4 +1,4 @@
-const Shapes = [
+export const Shapes = [
   "triangle",
   "circle",
   "square",
@@ -21,22 +21,14 @@ export const Colors = [
   "black",
 ] as const;
 
-const Patterns = [
+export const Patterns = [
   "dots",
   "letters",
   "stars",
   "stripes",
 ] as const;
 
-const OtherAttributes = [
-  "complexity",
-  "interactivity",
-  "symmetry",
-  "smoothness",
-  "luster",
-] as const;
-
-const Sounds = [
+export const Sounds = [
   "squeak",
   "rattle",
   "clank",
@@ -45,5 +37,14 @@ const Sounds = [
   "beep",
   "pop",
 ] as const
+
+export const OtherAttributes = [
+  "complexity",
+  "interactivity",
+  "symmetry",
+  "smoothness",
+  "luster",
+] as const;
+
 
 export const AllAttributes = [...Sounds, ...Shapes, ...Colors, ...Patterns, ...OtherAttributes] as const;

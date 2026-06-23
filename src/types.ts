@@ -75,20 +75,28 @@ export type BabyData = {
 }
 
 export type DebugData = {
-  babyData: BabyData,
-  considerations: ConsiderationScores[]
+  // babyData: BabyData,
+  appraisals: AppraisalScore[],
+  selectedAppraisal: AppraisalScore | null
 }
 
-export type ConsiderationScores = {
+export type AppraisalScore = {
   name: string,
-  scores: {
+  score: number,
+  considerations: ConsiderationScore[]
+}
+
+export type ConsiderationScore = {
+  name: string,
+  score: number,
+  /*scores: {
     aversion: number,
     preference: number,
     distance: number,
     recentInteractions: number,
     bonusWeight: number,
     total: number,
-  }
+  }*/
 }
 
 export type Position = {

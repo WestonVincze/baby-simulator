@@ -1,7 +1,7 @@
 import { DistanceConsideration } from "$ai/Considerations";
 import type { Context } from "$ai/Reasoner";
 import { CELL_SIZE } from "$constants";
-import { gridStore } from "$stores";
+import { debugStore, gridStore } from "$stores";
 import type { Position } from "$types";
 
 // the maximum positive value a tile can have
@@ -9,7 +9,6 @@ const MAX_VALUE = 0.5;
 
 export const MoveAppraisal = (context: Context, targetPosition: Position) => {
   const { x, y } = targetPosition;
-  // TODO: increase value of tiles that have items to interact with... OR have an "objectInRange" variant of moveAppraisal that has a higher base value to force baby to move toward objects
   const itemsInRange = gridStore.getItemsWithinOneTile(x, y);
 
   if (itemsInRange.length === 0) return 0;
@@ -40,5 +39,16 @@ export const MoveAppraisal = (context: Context, targetPosition: Position) => {
     scores.push(value * (distance * 0.2));
   }
 
-  return baseValue * (scores.reduce((prev, curr) => prev += curr, 0) / MAX_VALUE); // context.toys.length;// scores.length;
+  const score = baseValue * (scores.reduce((prev, curr) => prev += curr, 0) / MAX_VALUE); // context.toys.length;// scores.length;
+  // WIP
+  debugStore.addOrUpdateAppraisal({
+    name: `moveTo-(${x},${y})`,
+    score,
+    considerations: scores.map((score, i) => ({
+      name: `item-${i}`,
+      score
+    }))
+  })
+
+  return score;
 }

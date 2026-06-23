@@ -40,16 +40,28 @@
     background-color: #49243E;
     transform: translateY(-50%);
     z-index: 20;
+    border: 2px solid #f9f9f9;
   }
   .close {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 10px;
+    right: 10px;
     border: none;
     background: none;
     cursor: pointer;
+    padding: 0;
+    width: auto;
+    line-height: 36px;
   }
   h2 {
     margin-bottom: 2rem;
+  }
+  @media screen and (max-width: 768px) {
+    .modal {
+      width: 100%;
+      max-height: 100%;
+      left: 0;
+      padding: 10px 20px;
+    }
   }
 </style>

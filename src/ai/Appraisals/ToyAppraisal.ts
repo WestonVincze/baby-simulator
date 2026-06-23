@@ -1,11 +1,15 @@
 import { AversionConsideration, DistanceConsideration, RecentInteractionsConsideration, PreferenceConsideration } from "../Considerations";
-import type { BabyData, ToyState, DebugData } from "$types";
+import type { BabyData, ToyState, DebugData, ConsiderationScore } from "$types";
 import { debugStore } from "$stores";
 
-export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
+/**
+ * DEPRECATED
+ */
+const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
   let bestScore: number = -Infinity;
   let bestToy: ToyState | null = null;
-  const debugInfo: DebugData = { babyData: baby, considerations: []};
+  // const debugInfo: DebugData = { appraisals: [] };
+  const considerationScores: ConsiderationScore[] = [];
 
   for (const toy of toys) {
     const scores: number[] = [];
@@ -31,6 +35,7 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
     // final score
     const score = bonusWeight * (scores.reduce((sum, score) => sum + score, 0) / scores.length);
 
+    /*
     debugInfo.considerations.push({
       name: toy.data.name,
       scores: {
@@ -42,6 +47,33 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
         total: score,
       }
     });
+    */
+    debugStore.addOrUpdateAppraisal({
+      name: `ToyAppraisal-${toy.data.name}`,
+      score,
+      considerations: [
+        {
+          name: "distance",
+          score: distanceScore
+        },
+        {
+          name: "preference",
+          score: preferenceScore
+        },
+        {
+          name: "aversion",
+          score: aversionScore
+        },
+        {
+          name: "recentInteractions",
+          score: recentInteractionsScore
+        },
+        {
+          name: "bonusWeight",
+          score: bonusWeight 
+        },
+      ]
+    })
 
     if (score > bestScore) {
       bestScore = score;
@@ -49,7 +81,7 @@ export const ToyAppraisal = (baby: BabyData, toys: ToyState[]) => {
     }
   }
 
-  debugStore.set(debugInfo);
+  // debugStore.set(debugInfo);
 
   // return ToyID of most desired Toy
   return bestToy;

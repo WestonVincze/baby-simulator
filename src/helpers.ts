@@ -1,8 +1,9 @@
-import { AllAttributes } from "./toyAttributes";
+import { AllAttributes, Colors, OtherAttributes, Patterns, Shapes, Sounds } from "./toyAttributes";
 import { HexColors } from "./data/HexColors";
-import type { ToyAttribute } from "$types";
+import type { AttributeCategory, ToyAttribute } from "$types";
 import { calculateLogisticUtility } from "$ai/utilityCalculations";
-import { PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants";
+import { get } from "svelte/store";
+import { playMatStore } from "$stores";
 
 /**
  * @param defaultColors default colors for SVG
@@ -97,8 +98,8 @@ export const clamp = (value: number) => {
  * * result is not restricted, use `clamp` to force result to a range of 0-1 (or any other specification) *
  * @param value original value
  * @param min minimum value
- * @param max maxiumum value
- * @returns a rescaled value where the min is represented as "0" and the the max is respresented as "1"
+ * @param max maximum value
+ * @returns a rescaled value where the min is represented as "0" and the the max is represented as "1"
  */
 export const rescale = (
   value: number,
@@ -139,10 +140,11 @@ export const constrainPositionToPlayMat = (
   position: { x: number, y: number },
   dimensions: { width: number, height: number},
 ) => {
+  const { logicalWidth, logicalHeight } = get(playMatStore);
   const xMin = dimensions.width / 2;
   const yMin = dimensions.height / 2;
-  const xMax = PLAY_MAT_WIDTH - dimensions.width / 2;
-  const yMax = PLAY_MAT_HEIGHT - dimensions.height / 2;
+  const xMax = logicalWidth - dimensions.width / 2;
+  const yMax = logicalHeight - dimensions.height / 2;
   return ({
     x: Math.min(Math.max(xMin, position.x), xMax),
     y: Math.min(Math.max(yMin, position.y), yMax),
@@ -150,3 +152,15 @@ export const constrainPositionToPlayMat = (
 }
 
 export const lerp = (start: number, end: number, t: number) => start + t * (end - start);
+
+
+export const getCategoryByToyAttribute = (attribute: ToyAttribute): AttributeCategory => {
+  if (Shapes.find(shape => attribute === shape)) return "Shape";
+  if (Colors.find(color => attribute === color)) return "Color";
+  if (Patterns.find(pattern => attribute === pattern)) return "Pattern";
+  if (Sounds.find(sound => attribute === sound)) return "Sound";
+  if (OtherAttributes.find(other => attribute === other)) return "Other";
+
+  console.warn(`${attribute} ToyAttribute not found in any AttributeCategory. Returning Other.`)
+  return "Other";
+}

@@ -2,7 +2,7 @@
   import type { DragData, ToyState } from "$types";
   import ToyIcon from "$icons/ToyIcon.svelte";
   import { toyStore, sfxStore } from "$stores";
-    import { TOY_SIZE } from "$constants";
+  import { TOY_SIZE } from "$constants";
 
   export let toy: ToyState
   export let absolutePosition = false;
@@ -51,6 +51,7 @@
 
 <div
   id="{toy.id.toString()}"
+  data-toy-id={toy.id}
   class="toy"
   draggable="true"
   on:click={handleClick}

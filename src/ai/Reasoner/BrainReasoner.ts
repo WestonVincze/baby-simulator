@@ -1,7 +1,6 @@
 import { MoveAppraisal } from "$ai/Appraisals/MoveAppraisal"
 import { gridStore } from "$stores"
 import type { BabyData, Grid, ToyState } from "$types"
-import { CELL_SIZE, PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants"
 import { Reasoner, type IConsideration, type IAppraisal, type IContext} from "utilitai"
 
 export interface Context extends IContext {
@@ -81,27 +80,27 @@ brainReasoner.addAppraisal({
   scoringFunction: (scores) => scores.reduce((prev, curr) => prev + curr, 0),
 })
 
-const rows = Math.floor(PLAY_MAT_HEIGHT / CELL_SIZE);
-const cols = Math.floor(PLAY_MAT_WIDTH / CELL_SIZE);
-
-for (let i = 0; i < rows; i++) {
-  for (let j = 0; j < cols; j++) {
-    brainReasoner.addAppraisal({
-      id: `moveTo-(${i},${j})`,
-      considerations: [{
-        consideration: {
-          evaluate: (context) => {
-            const score = MoveAppraisal(context, { x: j, y: i })
-            gridStore.setTileValue(j, i, parseFloat(score.toFixed(2)));
-            return score;
-          },
+export function createMoveAppraisals(cols: number, rows: number): IAppraisal<Context>[] {
+  const appraisals: IAppraisal<Context>[] = [];
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      appraisals.push({
+        id: `moveTo-(${i},${j})`,
+        considerations: [{
+          consideration: {
+            evaluate: (context) => {
+              const score = MoveAppraisal(context, { x: j, y: i });
+              gridStore.setTileValue(j, i, parseFloat(score.toFixed(2)));
+              return score;
+            },
+          }
+        }],
+        action: {
+          type: "move",
+          params: { x: j, y: i }
         }
-      }],
-      action: {
-        type: "move",
-        params: { x: j, y: i }
-      }
-    })
-
+      });
+    }
   }
+  return appraisals;
 }

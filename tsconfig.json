@@ -21,6 +21,7 @@
       "$ai/*": ["ai/*"],
       "$data/*": ["data/*"],
       "$stores": ["stores"],
+      "$stores/*": ["stores/*"],
       "$icons/*": ["icons/*"],
       "$lib/*": ["lib/*"],
       "$utils": ["utils"],

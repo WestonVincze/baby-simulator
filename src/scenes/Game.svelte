@@ -1,13 +1,13 @@
 <script lang="ts">
-  import DebugScreen from "$lib/DebugScreen.svelte";
   import { onDestroy, onMount } from "svelte";
-  import { babyStore, gameStore, gridStore, mainMenu, sfxStore, contextStore } from "$stores";
+  import { babyStore, gameStore, gridStore, mainMenu, sfxStore, contextStore, playMatStore } from "$stores";
   import Modal from "$lib/Modal.svelte";
-  import { brainReasoner, createPickupToyAppraisals } from "$ai/Reasoner";
+  import { brainReasoner, createPickupToyAppraisals, createMoveAppraisals } from "$ai/Reasoner";
   import { ActionSystem } from "$ai/Actions/ActionSystem";
   import { get } from "svelte/store";
   import Simulation from "./Simulation.svelte";
   import Detailed from "./Detailed.svelte";
+  import DecisionChart from "$lib/DecisionChart.svelte";
 
   export let mode: "detailed" | "simulation" = "detailed";
   let showDebugScreen = false;
@@ -47,6 +47,7 @@
 
   const update = setInterval(() => {
     if (isPaused) return;
+    // update baby's aversion scores
     babyStore.updateStats();
 
     const context = get(contextStore);
@@ -54,11 +55,13 @@
     const babyCoordinates = gridStore.getGridCoordinates(context.baby.position.x, context.baby.position.y)
     const toysInRange = gridStore.getItemsWithinOneTile(babyCoordinates.x, babyCoordinates.y);
 
-    const dynamicAppraisals = createPickupToyAppraisals(
+    const { cols, rows } = get(playMatStore);
+    const moveAppraisals = createMoveAppraisals(cols, rows);
+    const pickupAppraisals = createPickupToyAppraisals(
       toysInRange.map(toy => toy.id)
     );
 
-    const decision = brainReasoner.getBestAction(context, dynamicAppraisals);
+    const decision = brainReasoner.getBestAction(context, [...moveAppraisals, ...pickupAppraisals]);
 
     if (!decision) return;
 
@@ -76,17 +79,16 @@
   });
 </script>
 
-<div class="game">
-  {#if mode === "detailed"}
-    <Detailed />
-  {:else if mode === "simulation"}
-    <Simulation />
-  {/if}
+{#if mode === "detailed"}
+  <Detailed />
+{:else if mode === "simulation"}
+  <Simulation />
+{/if}
 
-  {#if showDebugScreen}
-    <DebugScreen />
-  {/if}
-</div>
+{#if showDebugScreen}
+  <DecisionChart />
+  <!--DebugScreen /-->
+{/if}
 
 {#if showPauseMenu}
   <Modal title="Paused" onClose={() => togglePause()}>
@@ -110,10 +112,6 @@
 {/if}
 
 <style>
-  .game { 
-    display: flex;
-    gap: 15px;
-  }
   .button-group {
     flex-direction: row;
   }

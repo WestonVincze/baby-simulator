@@ -13,6 +13,7 @@
 
 <style>
   .game-over {
+    height: 100%;
     width: 100%;
     background-color: #49243E;
     border-radius: 15px;

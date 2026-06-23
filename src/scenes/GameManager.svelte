@@ -19,24 +19,12 @@
   });
 </script>
 
-<div class="game">
-  {#if state.activeScene === Scene.MainMenu}
-    <MainMenu />
-  {:else if state.activeScene === Scene.Playing}
-    <Game mode="detailed" />
-  {:else if state.activeScene === Scene.Simulation}
-    <Game mode="simulation" />
-  {:else if state.activeScene === Scene.GameOver}
-    <GameOver />
-  {/if}
-</div>
-
-<style>
-  .game {
-    position: relative;
-    width: 995px;
-    height: 650px;
-    display: flex;
-    justify-content: center;
-  }
-</style>
+{#if state.activeScene === Scene.MainMenu}
+  <MainMenu />
+{:else if state.activeScene === Scene.Playing}
+  <Game mode="detailed" />
+{:else if state.activeScene === Scene.Simulation}
+  <Game mode="simulation" />
+{:else if state.activeScene === Scene.GameOver}
+  <GameOver />
+{/if}

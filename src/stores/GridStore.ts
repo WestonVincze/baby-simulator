@@ -1,6 +1,7 @@
-import { CELL_SIZE, PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH } from "$constants";
+import { CELL_SIZE } from "$constants";
 import type { Grid, GridItem, Tile } from "$types";
 import { writable, get } from "svelte/store";
+import { playMatStore } from "./PlayMatStore";
 
 function initializeGrid(rows: number, cols: number): Grid {
   const grid: Grid = [];
@@ -25,12 +26,18 @@ function initializeGrid(rows: number, cols: number): Grid {
 }
 
 const createGridStore = () => {
-  const rows = Math.floor(PLAY_MAT_HEIGHT / CELL_SIZE);
-  const cols = Math.floor(PLAY_MAT_WIDTH / CELL_SIZE);
+  let rows = 10;
+  let cols = 16;
 
-  const initialGrid = initializeGrid(rows, cols);
+  const { subscribe, update, set } = writable<Grid>(initializeGrid(rows, cols));
 
-  const { subscribe, update } = writable<Grid>(initialGrid);
+  playMatStore.subscribe(dims => {
+    if (dims.rows !== rows || dims.cols !== cols) {
+      rows = dims.rows;
+      cols = dims.cols;
+      set(initializeGrid(rows, cols));
+    }
+  });
 
   const addItem = (item: GridItem) => {
     update(grid => {

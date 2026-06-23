@@ -3,5 +3,3 @@ export const BABY_WIDTH = 100;
 export const BABY_HEIGHT = 130;
 
 export const CELL_SIZE = 50;
-export const PLAY_MAT_WIDTH = 800;
-export const PLAY_MAT_HEIGHT = 500;
