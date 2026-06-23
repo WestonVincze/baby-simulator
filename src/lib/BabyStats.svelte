@@ -25,13 +25,6 @@
 
 <div class="container">
   <div class="babyStats">
-    <h2>Boredom <InfoTooltip text="Playing with toys reduces boredom but the meter fills to 100% the simulation ends." /></h2>
-    <div class="boredom">
-      <div class="bar">
-        <ProgressBar min={$babyStore.boredom} max={1} />
-      </div>
-    </div>
-
     <h2>Preferences <InfoTooltip text="Preferred attributes accumulate aversion at a slower rate." /></h2>
     {#each Object.entries($babyStore.preferences) as [preference, value]}
       <p>{preference}: {value.value}</p>
@@ -100,15 +93,6 @@
     text-align: right;
     font-style: italic;
   }
-  .boredom {
-    display: flex;
-    justify-content: right;
-    margin-bottom: 15px;
-  }
-  .boredom .bar {
-    width: 150px;
-    height: 15px;
-  }
   .aversions {
     display: flex;
     place-content: center;
@@ -123,5 +107,17 @@
   }
   .aversions .bar {
     width: 60px;
+  }
+  @media screen and (max-width: 1000px) {
+    h2 {
+      justify-content: left;
+    }
+    .aversions {
+      place-content: flex-start;
+    }
+    .babyStats, .accordion, .aversions > span {
+      text-align: left;
+    }
+
   }
 </style>
