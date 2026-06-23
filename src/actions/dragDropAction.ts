@@ -1,7 +1,8 @@
-import { toyStore } from "$stores";
+import { toyStore, playMatStore } from "$stores";
 import type { Action } from "svelte/action"
 import type { DragData, DropZone } from "$types";
-import { PLAY_MAT_HEIGHT, PLAY_MAT_WIDTH, TOY_SIZE } from "$constants";
+import { TOY_SIZE } from "$constants";
+import { get } from "svelte/store";
 
 interface DragDropOptions {
   dropZone: DropZone;
@@ -23,12 +24,23 @@ export const dragDrop: Action<HTMLElement, DragDropOptions> = (node, options) =>
   let draggedElement: HTMLElement | null = null;
   let ghostElement: HTMLElement | null = null;
 
-  function getDropZoneFromPoint(clientX: number, clientY: number): { dropZone: DropZone; rect: DOMRect } | null {
+  function getDropZoneFromPoint(clientX: number, clientY: number): { dropZone: DropZone; rect: DOMRect; element: HTMLElement } | null {
     const el = document.elementFromPoint(clientX, clientY);
     const dropZoneEl = el?.closest<HTMLElement>("[data-dropzone]");
     if (!dropZoneEl) return null;
     const zone = dropZoneEl.getAttribute("data-dropzone") as DropZone;
-    return { dropZone: zone, rect: dropZoneEl.getBoundingClientRect() };
+    console.log(zone);
+    return { dropZone: zone, rect: dropZoneEl.getBoundingClientRect(), element: dropZoneEl };
+  }
+
+  function logicalPlayMatCoords(offsetX: number, offsetY: number, rect: DOMRect): { x: number; y: number } {
+    const { logicalWidth, logicalHeight } = get(playMatStore);
+    const logicalX = (offsetX / rect.width) * logicalWidth;
+    const logicalY = (offsetY / rect.height) * logicalHeight;
+    return {
+      x: Math.max(TOY_SIZE / 2, Math.min(logicalWidth - TOY_SIZE / 2, logicalX)),
+      y: Math.max(TOY_SIZE / 2, Math.min(logicalHeight - TOY_SIZE / 2, logicalY)),
+    };
   }
 
   // Desktop drag and drop handlers
@@ -60,9 +72,11 @@ export const dragDrop: Action<HTMLElement, DragDropOptions> = (node, options) =>
     const rect = zoneInfo?.rect ?? node.getBoundingClientRect();
 
     if (dropZone === "ToyBox") {
-      const offsetX = event.clientX - rect.left;
-
-      const targetIndex = Math.floor(offsetX / (TOY_SIZE + 15));
+      const toyBoxEl = zoneInfo?.element ?? node;
+      const padding = 15;
+      const adjustedOffsetX = event.clientX - rect.left + toyBoxEl.scrollLeft;
+      const rawIndex = (adjustedOffsetX - padding) / (TOY_SIZE + 15);
+      const targetIndex = Math.max(0, Math.round(rawIndex));
 
       toyStore.moveToy(id, dropZone, 0, 0);
 
@@ -71,8 +85,7 @@ export const dragDrop: Action<HTMLElement, DragDropOptions> = (node, options) =>
       const offsetX = event.clientX - rect.left;
       const offsetY = event.clientY - rect.top;
 
-      const x = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_WIDTH - TOY_SIZE / 2, offsetX));
-      const y = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_HEIGHT - TOY_SIZE / 2, offsetY));
+      const { x, y } = logicalPlayMatCoords(offsetX, offsetY, rect);
 
       toyStore.moveToy(id, dropZone, x, y);
       options.onDrop?.(id);
@@ -142,12 +155,15 @@ export const dragDrop: Action<HTMLElement, DragDropOptions> = (node, options) =>
     const offsetY = touch.clientY - rect.top;
 
     if (dropZone === "ToyBox") {
-      const targetIndex = Math.floor(offsetX / (TOY_SIZE + 15));
+      const toyBoxEl = zoneInfo?.element ?? node;
+      const padding = 15;
+      const adjustedOffsetX = touch.clientX - rect.left + toyBoxEl.scrollLeft;
+      const rawIndex = (adjustedOffsetX - padding) / (TOY_SIZE + 15);
+      const targetIndex = Math.max(0, Math.round(rawIndex));
       toyStore.moveToy(touchData.id, dropZone, 0, 0);
       options.onDrop?.(touchData.id, targetIndex);
     } else {
-      const x = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_WIDTH - TOY_SIZE / 2, offsetX));
-      const y = Math.max(TOY_SIZE / 2, Math.min(PLAY_MAT_HEIGHT - TOY_SIZE / 2, offsetY));
+      const { x, y } = logicalPlayMatCoords(offsetX, offsetY, rect);
 
       toyStore.moveToy(touchData.id, dropZone, x, y);
       options.onDrop?.(touchData.id);

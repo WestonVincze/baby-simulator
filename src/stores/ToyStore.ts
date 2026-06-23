@@ -120,7 +120,7 @@ const createToyStore = () => {
 
         addInteraction(toy, "drop");
 
-        gridStore.addItem({ id: toy.id, x, y });
+        gridStore.addItem({ id: toy.id, x: targetPosition.x, y: targetPosition.y });
 
         toy.loc = "PlayMat";
         toy.position = targetPosition;
