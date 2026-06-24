@@ -17,7 +17,6 @@ flowchart TD
 
   Reasoner --> Appraisals --> Action
 
-
   subgraph Appraisals
     direction LR
     IA
@@ -60,10 +59,8 @@ flowchart TD
   <hr /> *pre-calculated toy values*" }
 
   %% Links
-  click BS "/src/stores/BabyStore.ts"
-
-  %% Classes
-  classDef test fill:#704264,border-radius:15px
-
+  click BS "https://github.com/WestonVincze/baby-simulator/blob/master/src/stores/BabyStore.ts"
+  click TS "https://github.com/WestonVincze/baby-simulator/blob/master/src/stores/ToyStore.ts"
+  click GS "https://github.com/WestonVincze/baby-simulator/blob/master/src/stores/GridStore.ts"
 
 ```
